@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 1. CAPA DE IDENTIDAD (Auth)
+// ==========================================
+
+enum SystemRole {
+  GLOBAL_ADMIN  // Super Admin del sistema
+  COMPANY_ADMIN // Admin de la empresa
+  USER          // Usuario estandar
+}
+
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  passwordHash  String?
+  isActive      Boolean     @default(true)
+  role          SystemRole  @default(USER)
+  
+  // Relación 1 a 1: Un usuario PUEDE tener un perfil de empleado
+  employee      Employee?
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("users")
+}
+
+// ==========================================
+// 2. CAPA DE RECURSOS HUMANOS (Core)
+// ==========================================
+
+enum ContractType {
+  FULL_TIME
+  PART_TIME
+  INTERNSHIP
+  CONTRACTOR
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  ON_LEAVE // Vacaciones o licencia
+  TERMINATED // Despedido/Renuncia
+}
+
+model Employee {
+  id            String    @id @default(uuid())
+  
+  // --- Datos Personales ---
+  firstName     String
+  lastName      String
+  birthDate     DateTime?
+  documentId    String?   @unique // DNI, Cédula, Pasaporte
+  personalEmail String?
+  phone         String?
+  address       String?
+  gender        String?   // Opcional: Male, Female, Other
+  
+  // --- Datos Laborales ---
+  hireDate      DateTime  // Fecha de ingreso
+  contractType  ContractType @default(FULL_TIME)
+  status        EmployeeStatus @default(ACTIVE)
+  
+  // --- Relación con Usuario (Login) ---
+  userId        String    @unique // Clave foránea única (1 a 1)
+  user          User      @relation(fields: [userId], references: [id])
+
+  // --- Estructura Organizacional ---
+  departmentId  String?
+  department    Department? @relation(fields: [departmentId], references: [id])
+
+  positionId    String?
+  position      Position?   @relation(fields: [positionId], references: [id])
+
+  // --- Jerarquía (Jefe Directo) ---
+  supervisorId  String?
+  supervisor    Employee?   @relation("Hierarchy", fields: [supervisorId], references: [id])
+  subordinates  Employee[]  @relation("Hierarchy") // A quiénes supervisa
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("employees")
+}
+
+// ==========================================
+// 3. CAPA ORGANIZACIONAL (Catálogos)
+// ==========================================
+
+model Department {
+  id          String     @id @default(uuid())
+  name        String     @unique // Ej: "Tecnología", "Ventas"
+  description String?
+  employees   Employee[]
+  
+  createdAt   DateTime   @default(now())
+  
+  @@map("departments")
+}
+
+model Position {
+  id          String     @id @default(uuid())
+  name        String     @unique // Ej: "Senior Developer", "Gerente"
+  description String?
+  employees   Employee[]
+
+  createdAt   DateTime   @default(now())
+
+  @@map("positions")
+}

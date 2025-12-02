@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    /* Configuración Básica */
+    "target": "es2020",                       /* Versión de JS a generar */
+    "module": "commonjs",                     /* Sistema de módulos estándar de Node.js */
+    "lib": ["es2020"],                        /* Librerías base disponibles */
+    "outDir": "./dist",                       /* Carpeta donde se guardará el código compilado */
+    "rootDir": "./src",                       /* Carpeta donde está tu código fuente */
+    
+    /* Configuración de Módulos */
+    "moduleResolution": "node",               /* Cómo buscar archivos (estilo Node) */
+    "esModuleInterop": true,                  /* Permite importar módulos CommonJS como ES6 */
+    "resolveJsonModule": true,                /* Permite importar archivos .json */
+
+    /* Comprobación Estricta (Buenas prácticas) */
+    "strict": true,                           /* Activa todas las comprobaciones estrictas */
+    "noImplicitAny": false,                   /* Permite 'any' (útil al empezar rápido) */
+    
+    /* Otros */
+    "skipLibCheck": true,                     /* Salta verificación de tipos en node_modules (ahorra tiempo) */
+    "forceConsistentCasingInFileNames": true  /* Evita errores por mayúsculas/minúsculas */
+  },
+  "include": ["src/**/*"],                    /* Incluir todo lo que esté en src */
+  "exclude": ["node_modules", "**/*.spec.ts"] /* Ignorar node_modules y tests */
+}
