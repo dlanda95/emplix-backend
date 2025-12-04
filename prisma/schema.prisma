@@ -7,35 +7,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ==========================================
-// 1. CAPA DE IDENTIDAD (Auth)
-// ==========================================
-
+// --- ENUMS ---
 enum SystemRole {
-  GLOBAL_ADMIN  // Super Admin del sistema
-  COMPANY_ADMIN // Admin de la empresa
-  USER          // Usuario estandar
+  GLOBAL_ADMIN
+  COMPANY_ADMIN
+  USER
 }
 
-model User {
-  id            String      @id @default(uuid())
-  email         String      @unique
-  passwordHash  String?
-  isActive      Boolean     @default(true)
-  role          SystemRole  @default(USER)
-  
-  // Relación 1 a 1: Un usuario PUEDE tener un perfil de empleado
-  employee      Employee?
-
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-
-  @@map("users")
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
-// ==========================================
-// 2. CAPA DE RECURSOS HUMANOS (Core)
-// ==========================================
+enum RequestType {
+  VACATION
+  PERMIT
+  SICK_LEAVE
+  HOME_OFFICE
+  PROFILE_UPDATE // <--- NUEVO TIPO PARA CAMBIOS DE DATOS
+}
 
 enum ContractType {
   FULL_TIME
@@ -46,43 +37,73 @@ enum ContractType {
 
 enum EmployeeStatus {
   ACTIVE
-  ON_LEAVE // Vacaciones o licencia
-  TERMINATED // Despedido/Renuncia
+  ON_LEAVE
+  TERMINATED
+}
+
+// --- MODELOS ---
+
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  passwordHash  String?
+  isActive      Boolean     @default(true)
+  role          SystemRole  @default(USER)
+  
+  employee      Employee?
+  requests      Request[]   // Un usuario hace solicitudes
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("users")
 }
 
 model Employee {
   id            String    @id @default(uuid())
   
-  // --- Datos Personales ---
-  firstName     String
-  lastName      String
-  birthDate     DateTime?
-  documentId    String?   @unique // DNI, Cédula, Pasaporte
+  // --- NOMBRES ATÓMICOS (Estructura Solicitada) ---
+  firstName      String   // Primer Nombre
+  middleName     String?  // Segundo Nombre (Opcional)
+  lastName       String   // Apellido Paterno
+  secondLastName String?  // Apellido Materno (Opcional)
+  
+  // --- FECHA ---
+  // Mantenemos 'birthDate' como pediste, formato DateTime
+  birthDate      DateTime?
+  
+  // Identificación
+  documentId    String?   @unique
+  gender        String?
+  
+  // Datos de Contacto
   personalEmail String?
   phone         String?
   address       String?
-  gender        String?   // Opcional: Male, Female, Other
   
-  // --- Datos Laborales ---
-  hireDate      DateTime  // Fecha de ingreso
+  // Datos de Emergencia
+  emergencyName  String?
+  emergencyPhone String?
+  emergencyRel   String?
+  
+  // Datos Laborales
+  hireDate      DateTime
   contractType  ContractType @default(FULL_TIME)
   status        EmployeeStatus @default(ACTIVE)
   
-  // --- Relación con Usuario (Login) ---
-  userId        String    @unique // Clave foránea única (1 a 1)
+  // Relaciones
+  userId        String    @unique
   user          User      @relation(fields: [userId], references: [id])
 
-  // --- Estructura Organizacional ---
   departmentId  String?
   department    Department? @relation(fields: [departmentId], references: [id])
 
   positionId    String?
   position      Position?   @relation(fields: [positionId], references: [id])
 
-  // --- Jerarquía (Jefe Directo) ---
   supervisorId  String?
   supervisor    Employee?   @relation("Hierarchy", fields: [supervisorId], references: [id])
-  subordinates  Employee[]  @relation("Hierarchy") // A quiénes supervisa
+  subordinates  Employee[]  @relation("Hierarchy")
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -90,28 +111,45 @@ model Employee {
   @@map("employees")
 }
 
-// ==========================================
-// 3. CAPA ORGANIZACIONAL (Catálogos)
-// ==========================================
+model Request {
+  id          String        @id @default(uuid())
+  type        RequestType
+  status      RequestStatus @default(PENDING)
+  
+  // Fechas (para vacaciones/permisos)
+  startDate   DateTime?
+  endDate     DateTime?
+  reason      String?
+  
+  // Payload de Datos (Para PROFILE_UPDATE)
+  // Aquí guardaremos el objeto JSON con los cambios solicitados:
+  // { "phone": "999...", "address": "Nueva Calle 123" }
+  data        Json?         
 
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("requests")
+}
+
+// Catálogos
 model Department {
   id          String     @id @default(uuid())
-  name        String     @unique // Ej: "Tecnología", "Ventas"
+  name        String     @unique
   description String?
   employees   Employee[]
-  
   createdAt   DateTime   @default(now())
-  
   @@map("departments")
 }
 
 model Position {
   id          String     @id @default(uuid())
-  name        String     @unique // Ej: "Senior Developer", "Gerente"
+  name        String     @unique
   description String?
   employees   Employee[]
-
   createdAt   DateTime   @default(now())
-
   @@map("positions")
 }
