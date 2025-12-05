@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import { login, register,checkEmailExists,getMe } from './auth.controller';
 import { authMiddleware } from '../../shared/middlewares/auth.middleware';
+
+import { validate } from '../../shared/middlewares/validate.middleware';
+import { loginSchema, registerSchema } from '../../shared/validators/auth.validators';
+
 const router = Router();
 
-// POST /api/auth/login
-router.post('/login', login);
-
-// POST /api/auth/register (Opcional, útil para seed inicial)
-router.post('/register', register);
-
+router.post('/login', validate(loginSchema), login);
+router.post('/register', validate(registerSchema), register);
 
 // --- NUEVA RUTA ---
 router.post('/check-email', checkEmailExists);
