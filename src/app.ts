@@ -11,6 +11,8 @@ import requestsRoutes from './modules/requests/requests.routes';
 
 import { globalErrorHandler } from './shared/middlewares/error.middleware';
 
+import employeesRoutes from './modules/employees/employees.routes';
+
 const app: Application = express();
 
 // 1. Middlewares Globales
@@ -27,6 +29,8 @@ app.use('/api/requests', requestsRoutes); // <--- NUEVA RUTA
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
+
+app.use('/api/employees', employeesRoutes);
 
 
 // Manejo de Errores (SIEMPRE AL FINAL)
