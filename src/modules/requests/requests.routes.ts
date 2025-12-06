@@ -11,4 +11,9 @@ router.use(authMiddleware); // Protección global para este módulo
 router.post('/', validate(createRequestSchema), controller.createRequest);
 router.get('/me', controller.getMyRequests);
 
+
+// Rutas Admin (Idealmente crear un middleware 'roleMiddleware')
+router.get('/pending', controller.getAllPending);
+router.patch('/:id/status', controller.processRequest);
+
 export default router;

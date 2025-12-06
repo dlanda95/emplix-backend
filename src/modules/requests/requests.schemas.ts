@@ -7,7 +7,7 @@ const profileDataSchema = z.object({
   middleName: z.string().optional(),
   lastName: z.string().optional(),
   secondLastName: z.string().optional(),
-  dateOfBirth: z.string().optional(), // Recibimos string ISO
+  birthDate: z.string().optional(), // Recibimos string ISO
   personalEmail: z.string().email().optional().or(z.literal('')),
   phone: z.string().optional(),
   address: z.string().optional(),
