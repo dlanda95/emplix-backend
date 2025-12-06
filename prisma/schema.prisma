@@ -141,15 +141,24 @@ model Department {
   name        String     @unique
   description String?
   employees   Employee[]
+  
+  // NUEVA RELACIÓN: Un departamento tiene muchos cargos
+  positions   Position[] 
+
   createdAt   DateTime   @default(now())
   @@map("departments")
 }
 
 model Position {
   id          String     @id @default(uuid())
-  name        String     @unique
+  name        String     @unique // Ojo: Si quieres "Analista" en varias áreas, quita el @unique
   description String?
   employees   Employee[]
+  
+  // NUEVA RELACIÓN: Un cargo pertenece a un departamento
+  departmentId String? 
+  department   Department? @relation(fields: [departmentId], references: [id])
+
   createdAt   DateTime   @default(now())
   @@map("positions")
 }

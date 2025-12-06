@@ -35,7 +35,10 @@ export const deleteDepartment = async (req: Request, res: Response, next: NextFu
 // --- CARGOS ---
 export const getPositions = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await service.getPositions();
+    // Leemos ?departmentId=... de la URL
+    const deptId = req.query.departmentId as string | undefined;
+    
+    const result = await service.getPositions(deptId);
     res.json(result);
   } catch (error) { next(error); }
 };

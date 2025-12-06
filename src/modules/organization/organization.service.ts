@@ -43,21 +43,34 @@ export class OrganizationService {
 
   // --- CARGOS (POSITIONS) ---
 
-  async createPosition(data: { name: string; description?: string }) {
+  async createPosition(data: { name: string; description?: string; departmentId?: string }) {
+    // Validamos duplicados
     const existing = await prisma.position.findUnique({ where: { name: data.name } });
     if (existing) throw new AppError('Ya existe un cargo con ese nombre', 409);
 
-    return await prisma.position.create({ data });
+    return await prisma.position.create({ 
+      data: {
+        name: data.name,
+        description: data.description,
+        departmentId: data.departmentId || null // Guardamos la relación
+      }
+    });
   }
 
-  async getPositions() {
+  async getPositions(departmentId?: string) {
+    const whereClause = departmentId ? { departmentId } : {};
+
     return await prisma.position.findMany({
-      include: { _count: { select: { employees: true } } },
+      where: whereClause, // Filtro dinámico
+      include: { 
+        _count: { select: { employees: true } },
+        department: { select: { name: true } } // Incluimos el nombre del área para mostrarlo
+      },
       orderBy: { name: 'asc' }
     });
   }
 
-  async updatePosition(id: string, data: { name?: string; description?: string }) {
+  async updatePosition(id: string, data: { name?: string; description?: string; departmentId?: string }) {
     return await prisma.position.update({ where: { id }, data });
   }
 
