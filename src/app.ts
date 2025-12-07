@@ -13,6 +13,11 @@ import { globalErrorHandler } from './shared/middlewares/error.middleware';
 
 import employeesRoutes from './modules/employees/employees.routes';
 
+import attendanceRoutes from './modules/attendance/attendance.routes';
+
+
+
+
 const app: Application = express();
 
 // 1. Middlewares Globales
@@ -25,6 +30,8 @@ app.use(morgan('dev'));  // Logs de peticiones en consola
 app.use('/api/auth', authRoutes);
 app.use('/api/org', organizationRoutes); // <--- REGISTRAR NUEVA RUTA
 app.use('/api/requests', requestsRoutes); // <--- NUEVA RUTA
+app.use('/api/attendance', attendanceRoutes);
+
 // 3. Ruta de prueba de salud
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });

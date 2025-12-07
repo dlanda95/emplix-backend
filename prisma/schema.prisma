@@ -104,6 +104,7 @@ model Employee {
   supervisorId  String?
   supervisor    Employee?   @relation("Hierarchy", fields: [supervisorId], references: [id])
   subordinates  Employee[]  @relation("Hierarchy")
+  attendances   Attendance[]
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -161,4 +162,26 @@ model Position {
 
   createdAt   DateTime   @default(now())
   @@map("positions")
+}
+
+
+model Attendance {
+  id          String    @id @default(uuid())
+  
+  // Fecha sin hora para agrupar reportes
+  date        DateTime  @db.Date 
+  
+  checkIn     DateTime  // Hora exacta de entrada
+  checkOut    DateTime? // Hora exacta de salida (puede ser nulo si sigue trabajando)
+  
+  // Relación con Empleado
+  employeeId  String
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Restricción: Un empleado solo puede tener una ficha de asistencia por día
+  @@unique([employeeId, date])
+  @@map("attendances")
 }
