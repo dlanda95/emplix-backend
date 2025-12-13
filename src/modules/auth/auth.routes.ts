@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, register,checkEmailExists,getMe } from './auth.controller';
+import { login, register,checkEmailExists,getMe,microsoftLogin } from './auth.controller';
 import { authMiddleware } from '../../shared/middlewares/auth.middleware';
 
 import { validate } from '../../shared/middlewares/validate.middleware';
@@ -8,6 +8,9 @@ import { loginSchema, registerSchema } from '../../shared/validators/auth.valida
 const router = Router();
 
 router.post('/login', validate(loginSchema), login);
+router.post('/microsoft',microsoftLogin);
+
+
 router.post('/register', validate(registerSchema), register);
 
 // --- NUEVA RUTA ---

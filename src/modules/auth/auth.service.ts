@@ -1,11 +1,18 @@
+
+
 import { prisma } from '../../config/prisma';
 import * as argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { User, SystemRole } from '@prisma/client'; // Importamos los tipos generados
-
+import { EntraService } from './entra/entra.services';
 const JWT_SECRET = process.env.JWT_SECRET || 'secreto_temporal';
 
+
+
+
 export class AuthService {
+
+  private entraService = new EntraService();
 
   // --- OBTENER PERFIL ---
   async getMyProfile(userId: string) {
@@ -119,4 +126,63 @@ export class AuthService {
       { expiresIn: '8h' }
     );
   }
+
+
+
+// --- NUEVO MÉTODO: LOGIN CON MICROSOFT ---
+  async loginWithMicrosoft(microsoftToken: string) {
+    
+    // 1. Validar token con Microsoft (Si falla, lanza error)
+    const payload = await this.entraService.verifyToken(microsoftToken);
+    
+    // Datos clave del token
+    const email = payload.preferred_username || payload.email; // Email del usuario
+    const oid = payload.oid; // ID único inmutable de Microsoft (Object ID)
+    const name = payload.name; // Nombre completo
+
+    if (!email) throw new Error('El token de Microsoft no contiene email');
+
+    // 2. Buscar usuario en nuestra BD
+    let user = await prisma.user.findUnique({ where: { email } });
+
+    // 3. Si no existe, lo REGISTRAMOS automáticamente (Auto-Provisioning)
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email,
+          provider: 'MICROSOFT',
+          providerId: oid,
+          role: 'USER', // <--- LEAST PRIVILEGE (Como pediste)
+          isActive: true,
+          // Creamos ficha de empleado vacía para que pueda llenar sus datos luego
+          employee: {
+            create: {
+              firstName: name.split(' ')[0] || 'Usuario',
+              lastName: name.split(' ').slice(1).join(' ') || 'Nuevo',
+              hireDate: new Date(),
+              personalEmail: email
+            }
+          }
+        }
+      });
+    } else {
+      // Si ya existe pero era LOCAL, actualizamos para vincularlo (Opcional, seguridad)
+      if (user.provider === 'LOCAL') {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { provider: 'MICROSOFT', providerId: oid }
+        });
+      }
+    }
+
+    // 4. Generar NUESTRO token (Intercambio)
+    // Usamos tu lógica existente de JWT para que el resto del sistema funcione igual
+    const token = this.generateToken(user); 
+
+    return { 
+      user: { id: user.id, email: user.email, role: user.role }, 
+      token 
+    };
+  }
+
 }

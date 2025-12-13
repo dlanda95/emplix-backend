@@ -1,6 +1,6 @@
 import { prisma } from '../../config/prisma';
 import { RequestType, RequestStatus } from '@prisma/client';
-
+import { differenceInMonths, differenceInDays } from 'date-fns'; // Necesitarás instalar date-fns o usar lógica nativa
 export class RequestsService {
 
   async createRequest(userId: string, payload: any) {
@@ -110,4 +110,73 @@ export class RequestsService {
 
 
 
+
+
+
+// --- CÁLCULO DE VACACIONES (KÁRDEX) ---
+
+
+async getVacationBalance(userId: string) {
+    // 1. Obtener datos del empleado
+    const employee = await prisma.employee.findUnique({
+      where: { userId },
+      select: { id: true, hireDate: true }
+    });
+
+    if (!employee) throw new Error('Empleado no encontrado');
+
+    // 2. Calcular días GANADOS (Devengados)
+    // Regla: 30 días por año = 2.5 días por mes completo trabajado
+    const today = new Date();
+    const monthsWorked = this.monthDiff(employee.hireDate, today);
+    const daysEarned = monthsWorked * 2.5;
+
+    // 3. Calcular días USADOS (Gozados)
+    // Sumamos todas las solicitudes de VACACIONES que estén APROBADAS
+    const approvedVacations = await prisma.request.findMany({
+      where: {
+        userId,
+        type: 'VACATION',
+        status: 'APPROVED'
+      }
+    });
+
+    let daysUsed = 0;
+    approvedVacations.forEach(req => {
+      if (req.startDate && req.endDate) {
+        // +1 porque si pides del 1 al 1, es 1 día.
+        const days = this.daysDiff(req.startDate, req.endDate) + 1; 
+        daysUsed += days;
+      }
+    });
+
+    // 4. Saldo Disponible
+    const balance = daysEarned - daysUsed;
+
+    return {
+      hireDate: employee.hireDate,
+      monthsWorked,
+      daysEarned,
+      daysUsed,
+      balance: parseFloat(balance.toFixed(2)) // Redondeo a 2 decimales
+    };
+  }
+
+  // --- Helpers de Fecha (Sin librerías externas para no complicarte) ---
+  private monthDiff(d1: Date, d2: Date): number {
+    let months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth();
+    months += d2.getMonth();
+    // Ajuste por días: si no ha cerrado el mes, no cuenta
+    if (d2.getDate() < d1.getDate()) { 
+        months--; 
+    }
+    return months <= 0 ? 0 : months;
+  }
+
+  private daysDiff(start: Date, end: Date): number {
+    const oneDay = 24 * 60 * 60 * 1000; // horas*min*seg*ms
+    return Math.round(Math.abs((start.getTime() - end.getTime()) / oneDay));
+  }
 }

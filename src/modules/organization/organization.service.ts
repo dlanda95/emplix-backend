@@ -15,7 +15,9 @@ export class OrganizationService {
 
   async getDepartments() {
     return await prisma.department.findMany({
-      include: { _count: { select: { employees: true } } }, // Incluimos conteo de empleados
+      include: { 
+        _count: { select: { employees: true } },
+      positions:true }, // Incluimos conteo de empleados
       orderBy: { name: 'asc' }
     });
   }

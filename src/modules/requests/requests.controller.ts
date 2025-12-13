@@ -52,3 +52,14 @@ export const processRequest = async (req: AuthRequest, res: Response, next: Next
     res.json(result);
   } catch (error) { next(error); }
 };
+
+
+export const getVacationBalance = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) throw new Error('Usuario no identificado');
+
+    const result = await service.getVacationBalance(userId);
+    res.json(result);
+  } catch (error) { next(error); }
+};

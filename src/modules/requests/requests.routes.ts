@@ -16,4 +16,9 @@ router.get('/me', controller.getMyRequests);
 router.get('/pending', controller.getAllPending);
 router.patch('/:id/status', controller.processRequest);
 
+
+// calculo vacaciones
+router.get('/balance', controller.getVacationBalance); // <--- NUEVA RUTA (Poner antes de /:id para evitar conflictos)
+// ...
+
 export default router;

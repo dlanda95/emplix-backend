@@ -40,13 +40,21 @@ enum EmployeeStatus {
   ON_LEAVE
   TERMINATED
 }
-
+// Enum para saber el origen
+enum AuthProvider {
+  LOCAL
+  MICROSOFT
+}
 // --- MODELOS ---
 
 model User {
   id            String      @id @default(uuid())
   email         String      @unique
   passwordHash  String?
+
+  provider      AuthProvider @default(LOCAL)
+  providerId    String?      // Guardaremos el OID (Object ID) de Azure aquí
+  
   isActive      Boolean     @default(true)
   role          SystemRole  @default(USER)
   
@@ -140,13 +148,18 @@ model Request {
 model Department {
   id          String     @id @default(uuid())
   name        String     @unique
+  code        String?    @unique // Ej: TI-001
   description String?
   employees   Employee[]
   
   // NUEVA RELACIÓN: Un departamento tiene muchos cargos
   positions   Position[] 
 
+  // Un departamento puede tener un "Líder" asignado
+  leaderId    String?
+
   createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   @@map("departments")
 }
 
@@ -161,6 +174,7 @@ model Position {
   department   Department? @relation(fields: [departmentId], references: [id])
 
   createdAt   DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   @@map("positions")
 }
 

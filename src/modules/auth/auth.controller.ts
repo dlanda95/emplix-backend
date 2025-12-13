@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response,NextFunction } from 'express';
 import { AuthService } from './auth.service';
 import { AuthRequest } from '../../shared/middlewares/auth.middleware';
 
@@ -36,6 +36,19 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
+
+
+export const microsoftLogin = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { token } = req.body; // El frontend manda { token: "..." }
+    if (!token) throw new Error('Token es requerido');
+
+    const result = await authService.loginWithMicrosoft(token);
+    res.json(result);
+  } catch (error) { next(error); }
+};
+
+
 
 export const register = async (req: Request, res: Response) => {
   try {
