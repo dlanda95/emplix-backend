@@ -3,12 +3,20 @@ import { AppError } from '../../shared/middlewares/error.middleware';
 
 export class OrganizationService {
 
-  // --- DEPARTAMENTOS ---
+  // ==========================================
+  // DEPARTAMENTOS
+  // ==========================================
 
-  async createDepartment(data: { name: string; description?: string }) {
-    // Verificar duplicados
-    const existing = await prisma.department.findUnique({ where: { name: data.name } });
-    if (existing) throw new AppError('Ya existe un departamento con ese nombre', 409);
+  async createDepartment(data: { name: string; description?: string; code?: string }) {
+    // 1. Verificar duplicados por Nombre
+    const existingName = await prisma.department.findUnique({ where: { name: data.name } });
+    if (existingName) throw new AppError('Ya existe un departamento con ese nombre', 409);
+
+    // 2. Verificar duplicados por Código (Si lo envías)
+    if (data.code) {
+      const existingCode = await prisma.department.findUnique({ where: { code: data.code } });
+      if (existingCode) throw new AppError('Ya existe un departamento con ese código', 409);
+    }
 
     return await prisma.department.create({ data });
   }
@@ -16,13 +24,20 @@ export class OrganizationService {
   async getDepartments() {
     return await prisma.department.findMany({
       include: { 
-        _count: { select: { employees: true } },
-      positions:true }, // Incluimos conteo de empleados
+        _count: { 
+          select: { 
+            employees: true, 
+            positions: true // <--- MEJORA: También cuenta cuántos cargos tiene el área
+          } 
+        },
+        positions: true 
+      }, 
       orderBy: { name: 'asc' }
     });
   }
 
-  async updateDepartment(id: string, data: { name?: string; description?: string }) {
+  async updateDepartment(id: string, data: { name?: string; description?: string; code?: string }) {
+    // Validar si el ID existe antes de actualizar (Opcional, Prisma lo maneja, pero es más limpio)
     return await prisma.department.update({
       where: { id },
       data
@@ -30,31 +45,52 @@ export class OrganizationService {
   }
 
   async deleteDepartment(id: string) {
-    // Verificar si tiene empleados asignados antes de borrar
+    // Verificar dependencias antes de borrar
     const dep = await prisma.department.findUnique({ 
       where: { id },
-      include: { _count: { select: { employees: true } } }
+      include: { 
+        _count: { 
+          select: { 
+            employees: true, 
+            positions: true // <--- MEJORA: Validar cargos también
+          } 
+        } 
+      }
     });
 
-    if (dep && dep._count.employees > 0) {
-      throw new AppError('No se puede eliminar el departamento porque tiene empleados asignados', 400);
+    if (!dep) throw new AppError('Departamento no encontrado', 404);
+
+    if (dep._count.employees > 0) {
+      throw new AppError('No se puede eliminar: Hay empleados asignados a este departamento.', 400);
+    }
+
+    if (dep._count.positions > 0) { // <--- MEJORA CRÍTICA
+      throw new AppError('No se puede eliminar: Hay cargos (puestos) definidos en este departamento. Elimínalos o muévelos antes.', 400);
     }
 
     return await prisma.department.delete({ where: { id } });
   }
 
-  // --- CARGOS (POSITIONS) ---
+  // ==========================================
+  // CARGOS (POSITIONS)
+  // ==========================================
 
-  async createPosition(data: { name: string; description?: string; departmentId?: string }) {
-    // Validamos duplicados
+  async createPosition(data: { name: string; description?: string; departmentId: string }) {
+    // 1. Validar nombre duplicado (OJO: Esto asume que el nombre es único globalmente según tu Schema)
     const existing = await prisma.position.findUnique({ where: { name: data.name } });
-    if (existing) throw new AppError('Ya existe un cargo con ese nombre', 409);
+    if (existing) throw new AppError(`El cargo '${data.name}' ya existe en el sistema`, 409);
+
+    // 2. Validar que el Departamento exista <--- MEJORA
+    if (data.departmentId) {
+      const depExists = await prisma.department.findUnique({ where: { id: data.departmentId } });
+      if (!depExists) throw new AppError('El departamento indicado no existe', 404);
+    }
 
     return await prisma.position.create({ 
       data: {
         name: data.name,
         description: data.description,
-        departmentId: data.departmentId || null // Guardamos la relación
+        departmentId: data.departmentId
       }
     });
   }
@@ -63,10 +99,10 @@ export class OrganizationService {
     const whereClause = departmentId ? { departmentId } : {};
 
     return await prisma.position.findMany({
-      where: whereClause, // Filtro dinámico
+      where: whereClause,
       include: { 
         _count: { select: { employees: true } },
-        department: { select: { name: true } } // Incluimos el nombre del área para mostrarlo
+        department: { select: { id: true, name: true } } // <--- MEJORA: Traemos nombre del depto
       },
       orderBy: { name: 'asc' }
     });
@@ -82,8 +118,10 @@ export class OrganizationService {
       include: { _count: { select: { employees: true } } }
     });
 
-    if (pos && pos._count.employees > 0) {
-      throw new AppError('No se puede eliminar el cargo porque tiene empleados asignados', 400);
+    if (!pos) throw new AppError('Cargo no encontrado', 404);
+
+    if (pos._count.employees > 0) {
+      throw new AppError('No se puede eliminar el cargo porque hay empleados ocupándolo actualmente.', 400);
     }
 
     return await prisma.position.delete({ where: { id } });

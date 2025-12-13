@@ -35,8 +35,10 @@ export const deleteDepartment = async (req: Request, res: Response, next: NextFu
 // --- CARGOS ---
 export const getPositions = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // Leemos ?departmentId=... de la URL
-    const deptId = req.query.departmentId as string | undefined;
+    // CORRECCIÓN:
+    // 1. Buscamos en params (para la ruta /departments/:departmentId/positions)
+    // 2. Si no está, buscamos en query (para la ruta /positions?departmentId=...)
+    const deptId = req.params.departmentId || (req.query.departmentId as string);
     
     const result = await service.getPositions(deptId);
     res.json(result);

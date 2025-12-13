@@ -28,7 +28,7 @@ app.use(morgan('dev'));  // Logs de peticiones en consola
 
 // 2. Rutas por Dominio
 app.use('/api/auth', authRoutes);
-app.use('/api/org', organizationRoutes); // <--- REGISTRAR NUEVA RUTA
+app.use('/api/organization', organizationRoutes); // <--- REGISTRAR NUEVA RUTA
 app.use('/api/requests', requestsRoutes); // <--- NUEVA RUTA
 app.use('/api/attendance', attendanceRoutes);
 

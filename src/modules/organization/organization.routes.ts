@@ -15,6 +15,11 @@ router.post('/departments', validate(departmentSchema), controller.createDepartm
 router.put('/departments/:id', validate(departmentSchema), controller.updateDepartment);
 router.delete('/departments/:id', controller.deleteDepartment);
 
+
+
+// --- CARGOS (POSITIONS) ---
+// OJO AQUÍ: Esta es la ruta crítica para que funcione el "getPositions(deptId)" del front
+router.get('/departments/:departmentId/positions', controller.getPositions);
 // --- CARGOS ---
 router.get('/positions', controller.getPositions);
 router.post('/positions', validate(positionSchema), controller.createPosition);
