@@ -1,4 +1,5 @@
 import { prisma } from '../../config/prisma';
+import { AppError } from '../../shared/middlewares/error.middleware'; // Asegúrate de tener esto
 
 export class EmployeesService {
 
@@ -7,7 +8,7 @@ export class EmployeesService {
     return await prisma.employee.findMany({
       where: { status: 'ACTIVE' }, // Solo activos
       include: {
-        department: { select: { id: true, name: true } },
+       department: { select: { id: true, name: true, code: true } }, // Agregué 'code'
         position: { select: { id: true, name: true } },
         supervisor: { 
           select: { 
@@ -25,6 +26,10 @@ export class EmployeesService {
   // Asignar Datos Administrativos (Jefe, Cargo, Dpto)
   async assignAdministrativeData(employeeId: string, data: any) {
     const { departmentId, positionId, supervisorId } = data;
+    // Validación extra: Un empleado no puede ser su propio jefe
+    if (supervisorId && supervisorId === employeeId) {
+      throw new AppError('Un colaborador no puede ser su propio supervisor', 400);
+    }
 
     return await prisma.employee.update({
       where: { id: employeeId },
