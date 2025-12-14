@@ -42,3 +42,19 @@ export const getDailyReport = async (req: AuthRequest, res: Response, next: Next
   } catch (error) { next(error); }
 };
 
+
+
+// NUEVO: Obtener historial personal
+export const getMyHistory = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) throw new Error('Usuario no identificado');
+
+    // Recibimos 'from' y 'to' como query params (ej: ?from=2025-12-01&to=2025-12-31)
+    const from = req.query.from ? new Date(req.query.from as string) : new Date();
+    const to = req.query.to ? new Date(req.query.to as string) : new Date();
+
+    const result = await service.getMyAttendanceHistory(userId, from, to);
+    res.json(result);
+  } catch (error) { next(error); }
+};

@@ -12,4 +12,5 @@ router.post('/clock-out', controller.clockOut);
 // NUEVA RUTA (Asegúrate de que solo admins puedan verla si tienes roles)
 router.get('/report', controller.getDailyReport); // GET /api/attendance/report
 
+router.get('/my-attendance',controller.getMyHistory)
 export default router;

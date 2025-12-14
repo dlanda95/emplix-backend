@@ -129,4 +129,50 @@ export class AttendanceService {
 
 
 
+  // Obtener historial personal (Rango de fechas)
+  async getMyAttendanceHistory(userId: string, from: Date, to: Date) {
+    const employee = await prisma.employee.findUnique({ where: { userId } });
+    if (!employee) throw new Error('Empleado no encontrado');
+
+    const logs = await prisma.attendance.findMany({
+      where: {
+        employeeId: employee.id,
+        date: {
+          gte: from,
+          lte: to
+        }
+      },
+      orderBy: { date: 'desc' } // Lo más reciente primero
+    });
+
+    // Enriquecer datos (Cálculo de horas, estado)
+    return logs.map(log => {
+      let status = 'PUNTUAL';
+      let hoursWorked = 0;
+
+      // Lógica simple de estado (Ejemplo: Tarde si llega después de las 9:15)
+      const limitTime = 9 * 60 + 15; 
+      const checkInMinutes = log.checkIn.getHours() * 60 + log.checkIn.getMinutes();
+      
+      if (checkInMinutes > limitTime) status = 'TARDE';
+
+      // Cálculo de horas trabajadas
+      if (log.checkOut) {
+        const diffMs = log.checkOut.getTime() - log.checkIn.getTime();
+        hoursWorked = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100; // 2 decimales
+      }
+
+      return {
+        id: log.id,
+        date: log.date,
+        checkIn: log.checkIn,
+        checkOut: log.checkOut,
+        status,
+        hoursWorked
+      };
+    });
+  }
+
+
+
 }
