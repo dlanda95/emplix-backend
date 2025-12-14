@@ -30,3 +30,15 @@ export const clockOut = async (req: AuthRequest, res: Response, next: NextFuncti
     res.json(result);
   } catch (error) { next(error); }
 };
+
+// NUEVO MÉTODO
+export const getDailyReport = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    // Recibimos la fecha por query param (?date=2025-12-14), si no, usa hoy
+    const dateQuery = req.query.date ? new Date(req.query.date as string) : new Date();
+    
+    const result = await service.getDailyReport(dateQuery);
+    res.json(result);
+  } catch (error) { next(error); }
+};
+
