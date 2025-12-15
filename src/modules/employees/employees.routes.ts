@@ -8,5 +8,6 @@ router.use(authMiddleware);
 
 router.get('/', controller.getDirectory);
 router.patch('/:id/assign', controller.updateAssignment);
+router.get('/my-team', controller.getMyTeam); // <--- NUEVA RUTA AQUÍ
 
 export default router;

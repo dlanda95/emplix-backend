@@ -45,4 +45,54 @@ export class EmployeesService {
       }
     });
   }
+
+
+
+  // Obtener el entorno de equipo del usuario (360°)
+  async getMyTeamContext(userId: string) {
+    // 1. Encontrar al empleado actual
+    const me = await prisma.employee.findUnique({
+      where: { userId },
+      include: { 
+        supervisor: { // Traer datos del Jefe
+          include: { 
+            position: true, 
+            user: { select: { email: true } } 
+          }
+        },
+        position: true
+      }
+    });
+
+    if (!me) throw new Error('Empleado no encontrado');
+
+    // 2. Buscar Pares (Mismo supervisor, excluyéndome a mí)
+    let peers: any[] = [];
+    if (me.supervisorId) {
+      peers = await prisma.employee.findMany({
+        where: {
+          supervisorId: me.supervisorId,
+          id: { not: me.id }, // No incluirme
+          status: 'ACTIVE'
+        },
+        include: { position: true, user: { select: { email: true } } }
+      });
+    }
+
+    // 3. Buscar Subordinados (Gente que me reporta a mí)
+    const subordinates = await prisma.employee.findMany({
+      where: {
+        supervisorId: me.id,
+        status: 'ACTIVE'
+      },
+      include: { position: true, user: { select: { email: true } } }
+    });
+
+    return {
+      me,
+      supervisor: me.supervisor,
+      peers,
+      subordinates
+    };
+  }
 }
