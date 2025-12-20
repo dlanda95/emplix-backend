@@ -13,6 +13,12 @@ enum SystemRole {
   COMPANY_ADMIN
   USER
 }
+// 1. Definimos los estados posibles
+enum EmployeeStatus {
+  ACTIVE      // Trabajando actualmente
+  TERMINATED  // Cesado
+  ON_LEAVE    // Licencia / Vacaciones (Opcional, pero útil)
+}
 
 enum RequestStatus {
   PENDING
@@ -35,11 +41,6 @@ enum ContractType {
   CONTRACTOR
 }
 
-enum EmployeeStatus {
-  ACTIVE
-  ON_LEAVE
-  TERMINATED
-}
 // Enum para saber el origen
 enum AuthProvider {
   LOCAL
@@ -69,6 +70,7 @@ model User {
 
 model Employee {
   id            String    @id @default(uuid())
+
   
   // --- NOMBRES ATÓMICOS (Estructura Solicitada) ---
   firstName      String   // Primer Nombre
@@ -113,6 +115,10 @@ model Employee {
   supervisor    Employee?   @relation("Hierarchy", fields: [supervisorId], references: [id])
   subordinates  Employee[]  @relation("Hierarchy")
   attendances   Attendance[]
+
+  // Relaciones para Kudos
+  sentKudos     Kudo[]  @relation("Sender")
+  receivedKudos Kudo[]  @relation("Receiver")
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -198,4 +204,21 @@ model Attendance {
   // Restricción: Un empleado solo puede tener una ficha de asistencia por día
   @@unique([employeeId, date])
   @@map("attendances")
+}
+
+
+// NUEVO MODELO
+model Kudo {
+  id            String   @id @default(uuid())
+  message       String
+  categoryCode  String   // 'TEAMWORK', 'LEADERSHIP', etc.
+  createdAt     DateTime @default(now())
+  
+  // Relación: Quién envió
+  senderId      String
+  sender        Employee @relation("Sender", fields: [senderId], references: [id])
+
+  // Relación: Quién recibió
+  receiverId    String
+  receiver      Employee @relation("Receiver", fields: [receiverId], references: [id])
 }

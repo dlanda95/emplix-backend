@@ -15,6 +15,8 @@ import employeesRoutes from './modules/employees/employees.routes';
 
 import attendanceRoutes from './modules/attendance/attendance.routes';
 
+import kudosRoutes from './modules/kudos/kudos.routes';
+
 
 
 
@@ -39,7 +41,12 @@ app.get('/health', (req, res) => {
 
 app.use('/api/employees', employeesRoutes);
 
+app.use('/api/kudos', kudosRoutes);
+
 
 // Manejo de Errores (SIEMPRE AL FINAL)
 app.use(globalErrorHandler);
+
+
+
 export default app;

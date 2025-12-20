@@ -9,5 +9,5 @@ router.use(authMiddleware);
 router.get('/', controller.getDirectory);
 router.patch('/:id/assign', controller.updateAssignment);
 router.get('/my-team', controller.getMyTeam); // <--- NUEVA RUTA AQUÍ
-
+router.get('/search', controller.searchEmployees); // <--- AGREGAR ESTA LÍNEA
 export default router;
