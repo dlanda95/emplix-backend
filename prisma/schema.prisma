@@ -46,11 +46,53 @@ enum AuthProvider {
   LOCAL
   MICROSOFT
 }
+
+
+
+
+enum TenantType {
+  SHARED    // Clientes pequeños/estándar (viven en la DB común)
+  ISOLATED  // Clientes Enterprise (tienen su propia DB física)
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED // Para falta de pago
+}
+
+model Tenant {
+  id          String       @id @default(uuid())
+  name        String
+  slug        String       @unique // El subdominio: "conexa", "techgans"
+  type        TenantType   @default(SHARED)
+  status      TenantStatus @default(ACTIVE)
+  
+  // Para clientes ISOLATED, aquí guardamos su cadena de conexión.
+  // Para clientes SHARED, esto puede ser nulo (usarán la default).
+  dbUrl       String?      
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relación inversa (Opcional, pero útil para integridad en DB compartida)
+  users       User[]
+  
+  @@map("tenants")
+}
+
+
+
 // --- MODELOS ---
 
 model User {
+  tenantId      String
+  tenant        Tenant      @relation(fields: [tenantId], references: [id])
+
   id            String      @id @default(uuid())
-  email         String      @unique
+
+ 
+  email         String
+  
   passwordHash  String?
 
   provider      AuthProvider @default(LOCAL)
@@ -65,10 +107,16 @@ model User {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
-  @@map("users")
+
+
+@@unique([email, tenantId])
+@@map("users")
 }
 
 model Employee {
+
+  // Multi-tenancy
+  tenantId    String
   id            String    @id @default(uuid())
 
   
@@ -123,11 +171,19 @@ model Employee {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+
+// Document ID único por empresa
+  @@unique([documentId, tenantId])
   @@map("employees")
 }
 
 model Request {
+    // Multi-tenancy
+  tenantId    String
+
   id          String        @id @default(uuid())
+ 
+
   type        RequestType
   status      RequestStatus @default(PENDING)
   
@@ -152,9 +208,15 @@ model Request {
 
 // Catálogos
 model Department {
+
+  // Multi-tenancy
+  tenantId    String
   id          String     @id @default(uuid())
-  name        String     @unique
-  code        String?    @unique // Ej: TI-001
+
+ 
+
+  name        String     
+  code        String?  
   description String?
   employees   Employee[]
   
@@ -166,12 +228,21 @@ model Department {
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+
+// El nombre del departamento es único SOLO dentro de esa empresa
+  @@unique([name, tenantId])
+  @@unique([code, tenantId])
+
   @@map("departments")
 }
 
 model Position {
+
+  // Multi-tenancy
+  tenantId    String
   id          String     @id @default(uuid())
-  name        String     @unique // Ojo: Si quieres "Analista" en varias áreas, quita el @unique
+
+  name        String     // Ojo: Si quieres "Analista" en varias áreas, quita el @unique
   description String?
   employees   Employee[]
   
@@ -186,7 +257,10 @@ model Position {
 
 
 model Attendance {
+  // Multi-tenancy
+  tenantId    String
   id          String    @id @default(uuid())
+
   
   // Fecha sin hora para agrupar reportes
   date        DateTime  @db.Date 
@@ -209,6 +283,8 @@ model Attendance {
 
 // NUEVO MODELO
 model Kudo {
+  // Multi-tenancy
+  tenantId    String
   id            String   @id @default(uuid())
   message       String
   categoryCode  String   // 'TEAMWORK', 'LEADERSHIP', etc.

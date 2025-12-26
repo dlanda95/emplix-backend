@@ -20,6 +20,16 @@
     "skipLibCheck": true,                     /* Salta verificación de tipos en node_modules (ahorra tiempo) */
     "forceConsistentCasingInFileNames": true  /* Evita errores por mayúsculas/minúsculas */
   },
+
+  "typeRoots": [
+      "./node_modules/@types",
+      "./src/@types"
+    ],
+    // ------
   "include": ["src/**/*"],                    /* Incluir todo lo que esté en src */
-  "exclude": ["node_modules", "**/*.spec.ts"] /* Ignorar node_modules y tests */
+  "exclude": ["node_modules", "**/*.spec.ts"] ,/* Ignorar node_modules y tests */
+
+  "ts-node": {
+    "files": true
+  }
 }

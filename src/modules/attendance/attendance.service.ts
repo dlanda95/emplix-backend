@@ -1,19 +1,24 @@
 import { prisma } from '../../config/prisma';
+import { AppError } from '../../shared/middlewares/error.middleware'; // Recomendado usar AppError
 
 export class AttendanceService {
 
-  // Obtener estado de hoy (¿Ya marcó? ¿Sigue trabajando?)
-  async getTodayStatus(userId: string) {
+  // Obtener estado de hoy
+  async getTodayStatus(userId: string, tenantId: string) {
     const today = new Date();
     
-    // Buscar el empleado asociado al usuario
-    const employee = await prisma.employee.findUnique({ where: { userId } });
-    if (!employee) throw new Error('Empleado no encontrado');
+    // Buscar el empleado VALIDANDO EMPRESA
+    const employee = await prisma.employee.findFirst({ 
+      where: { userId, tenantId } 
+    });
+    
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
 
     const record = await prisma.attendance.findFirst({
       where: {
         employeeId: employee.id,
-        date: today // Prisma compara automáticamente solo la parte de fecha si el campo es @db.Date
+        tenantId: tenantId, // <--- Filtro seguridad
+        date: today 
       }
     });
 
@@ -24,41 +29,56 @@ export class AttendanceService {
   }
 
   // Marcar Entrada (Clock In)
-  async clockIn(userId: string) {
-    const employee = await prisma.employee.findUnique({ where: { userId } });
-    if (!employee) throw new Error('Empleado no encontrado');
+  async clockIn(userId: string, tenantId: string) {
+    const employee = await prisma.employee.findFirst({ 
+      where: { userId, tenantId } 
+    });
+    
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
 
     const today = new Date();
 
-    // Validar si ya existe registro hoy
+    // Validar duplicados
     const existing = await prisma.attendance.findFirst({
-      where: { employeeId: employee.id, date: today }
+      where: { 
+        employeeId: employee.id, 
+        tenantId: tenantId,
+        date: today 
+      }
     });
 
-    if (existing) throw new Error('Ya has marcado tu entrada hoy.');
+    if (existing) throw new AppError('Ya has marcado tu entrada hoy.', 400);
 
     return await prisma.attendance.create({
       data: {
         employeeId: employee.id,
+        tenantId: tenantId, // <--- OBLIGATORIO
         date: today,
-        checkIn: new Date() // Hora actual exacta
+        checkIn: new Date()
       }
     });
   }
 
   // Marcar Salida (Clock Out)
-  async clockOut(userId: string) {
-    const employee = await prisma.employee.findUnique({ where: { userId } });
-    if (!employee) throw new Error('Empleado no encontrado');
+  async clockOut(userId: string, tenantId: string) {
+    const employee = await prisma.employee.findFirst({ 
+      where: { userId, tenantId } 
+    });
+    
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
 
     const today = new Date();
 
     const record = await prisma.attendance.findFirst({
-      where: { employeeId: employee.id, date: today }
+      where: { 
+        employeeId: employee.id, 
+        tenantId: tenantId,
+        date: today 
+      }
     });
 
-    if (!record) throw new Error('No has marcado entrada hoy.');
-    if (record.checkOut) throw new Error('Ya has marcado tu salida hoy.');
+    if (!record) throw new AppError('No has marcado entrada hoy.', 400);
+    if (record.checkOut) throw new AppError('Ya has marcado tu salida hoy.', 400);
 
     return await prisma.attendance.update({
       where: { id: record.id },
@@ -66,20 +86,20 @@ export class AttendanceService {
     });
   }
 
-
-
   // NUEVO: Reporte Diario para Admin
-  async getDailyReport(date: Date) {
-    // 1. Definir rango de fecha (Inicio y Fin del día)
+  async getDailyReport(date: Date, tenantId: string) {
     const startOfDay = new Date(date);
     startOfDay.setHours(0, 0, 0, 0);
     
     const endOfDay = new Date(date);
     endOfDay.setHours(23, 59, 59, 999);
 
-    // 2. Obtener TODOS los empleados activos
+    // 2. Obtener Empleados (SOLO DE MI EMPRESA)
     const employees = await prisma.employee.findMany({
-      where: { status: 'ACTIVE' },
+      where: { 
+        status: 'ACTIVE',
+        tenantId: tenantId // <--- Filtro crítico
+      },
       select: {
         id: true,
         firstName: true,
@@ -90,9 +110,10 @@ export class AttendanceService {
       orderBy: { lastName: 'asc' }
     });
 
-    // 3. Obtener registros de asistencia de ese día
+    // 3. Obtener Asistencias (SOLO DE MI EMPRESA)
     const attendanceLogs = await prisma.attendance.findMany({
       where: {
+        tenantId: tenantId, // <--- Filtro crítico
         date: {
           gte: startOfDay,
           lte: endOfDay
@@ -100,17 +121,14 @@ export class AttendanceService {
       }
     });
 
-    // 4. Cruzar información (Merge)
+    // 4. Cruzar información
     return employees.map(emp => {
       const log = attendanceLogs.find(a => a.employeeId === emp.id);
       
-      // Lógica simple de estado (Se puede mejorar con horarios reales después)
       let status = 'AUSENTE';
       if (log) {
-        // Ejemplo: Si llegó después de las 9:15 AM es TARDE (Hardcoded por ahora)
         const checkInTime = log.checkIn.getHours() * 60 + log.checkIn.getMinutes();
-        const limitTime = 9 * 60 + 15; // 09:15 AM
-        
+        const limitTime = 9 * 60 + 15; // 9:15 AM
         status = checkInTime > limitTime ? 'TARDE' : 'PUNTUAL';
       }
 
@@ -127,39 +145,38 @@ export class AttendanceService {
     });
   }
 
-
-
-  // Obtener historial personal (Rango de fechas)
-  async getMyAttendanceHistory(userId: string, from: Date, to: Date) {
-    const employee = await prisma.employee.findUnique({ where: { userId } });
-    if (!employee) throw new Error('Empleado no encontrado');
+  // Obtener historial personal
+  async getMyAttendanceHistory(userId: string, from: Date, to: Date, tenantId: string) {
+    const employee = await prisma.employee.findFirst({ 
+      where: { userId, tenantId } 
+    });
+    
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
 
     const logs = await prisma.attendance.findMany({
       where: {
         employeeId: employee.id,
+        tenantId: tenantId, // <--- Seguridad
         date: {
           gte: from,
           lte: to
         }
       },
-      orderBy: { date: 'desc' } // Lo más reciente primero
+      orderBy: { date: 'desc' }
     });
 
-    // Enriquecer datos (Cálculo de horas, estado)
     return logs.map(log => {
       let status = 'PUNTUAL';
       let hoursWorked = 0;
 
-      // Lógica simple de estado (Ejemplo: Tarde si llega después de las 9:15)
       const limitTime = 9 * 60 + 15; 
       const checkInMinutes = log.checkIn.getHours() * 60 + log.checkIn.getMinutes();
       
       if (checkInMinutes > limitTime) status = 'TARDE';
 
-      // Cálculo de horas trabajadas
       if (log.checkOut) {
         const diffMs = log.checkOut.getTime() - log.checkIn.getTime();
-        hoursWorked = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100; // 2 decimales
+        hoursWorked = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100;
       }
 
       return {
@@ -172,7 +189,4 @@ export class AttendanceService {
       };
     });
   }
-
-
-
 }

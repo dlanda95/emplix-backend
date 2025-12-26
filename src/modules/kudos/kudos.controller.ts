@@ -1,29 +1,28 @@
 import { Request, Response, NextFunction } from 'express';
 import { KudosService } from './kudos.service';
-import { AuthRequest } from '../../shared/middlewares/auth.middleware'; // Asegúrate de importar tu interfaz
-
-import { PrismaClient } from '@prisma/client'; // <--- Importante
 
 const kudosService = new KudosService();
 
-const prisma = new PrismaClient();
-
-
-export const createKudo = async (req: AuthRequest, res: Response, next: NextFunction) => {
+export const createKudo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.user?.id; // ID del login (Token)
+    const userId = req.user?.id; 
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
     const { receiverId, categoryCode, message } = req.body;
 
     if (!userId) return res.status(401).json({ message: 'No autenticado' });
 
-    const newKudo = await kudosService.create(userId, receiverId, categoryCode, message);
+    // Pasamos tenantId para asegurar que el aplauso se guarde en la empresa correcta
+    const newKudo = await kudosService.create(userId, receiverId, categoryCode, message, tenantId);
     
     res.status(201).json(newKudo);
 
   } catch (error: any) {
-    // Error P2025: Prisma no encontró el registro para conectar (ej. Usuario sin Empleado)
-    if (error.code === 'P2025') {
-       return res.status(400).json({ message: 'Error: Tu usuario no está vinculado a un empleado activo o el destinatario no existe.' });
+    // Manejo de errores específico
+    if (error.message === 'SENDER_NOT_FOUND') {
+       return res.status(400).json({ message: 'No se encontró tu perfil de empleado activo en esta empresa.' });
+    }
+    if (error.message === 'RECEIVER_NOT_FOUND') {
+       return res.status(404).json({ message: 'El destinatario no existe o no pertenece a esta empresa.' });
     }
     next(error);
   }
@@ -31,20 +30,21 @@ export const createKudo = async (req: AuthRequest, res: Response, next: NextFunc
 
 export const getWall = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const rawKudos = await kudosService.getAll();
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
 
-    // Mapeo de datos para el Frontend (Formato limpio)
+    // Solo traemos el muro de ESTA empresa
+    const rawKudos = await kudosService.getAll(tenantId);
+
+    // Mapeo de datos para el Frontend
     const formatted = rawKudos.map(k => ({
       id: k.id,
       from: { 
         name: `${k.sender.firstName} ${k.sender.lastName}`, 
-        position: k.sender.position,
-        
+        position: k.sender.position?.name || 'Sin Cargo', // Protegemos si es null
       },
       to: { 
         name: `${k.receiver.firstName} ${k.receiver.lastName}`, 
-        position: k.receiver.position,
-        
+        position: k.receiver.position?.name || 'Sin Cargo',
       },
       categoryCode: k.categoryCode,
       message: k.message,
@@ -57,11 +57,12 @@ export const getWall = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-
-// NUEVO MÉTODO
 export const getReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const report = await kudosService.getAnalytics();
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
+    
+    // Reporte solo de ESTA empresa
+    const report = await kudosService.getAnalytics(tenantId);
     res.json(report);
   } catch (error) {
     next(error);

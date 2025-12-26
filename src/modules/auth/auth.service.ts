@@ -39,19 +39,33 @@ export class AuthService {
   }
 
   // --- VERIFICAR EMAIL ---
-  async checkEmail(email: string): Promise<boolean> {
+ // --- VERIFICAR EMAIL (Multi-Tenant) ---
+  async checkEmail(email: string, tenantId: string): Promise<boolean> {
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: {
+        // Buscamos combinación Email + Empresa
+        email_tenantId: { 
+          email, 
+          tenantId 
+        }
+      },
       select: { id: true }
     });
     return !!user;
   }
 
-  // --- LOGIN ---
-  async login(email: string, passwordPlain: string) {
-    // 1. Buscar usuario e incluir datos básicos del empleado para el frontend
+ // --- LOGIN (Multi-Tenant) ---
+  // AHORA RECIBE tenantId
+  async login(email: string, passwordPlain: string, tenantId: string) {
+    
+    // 1. Buscar usuario con la clave compuesta (Email + Tenant)
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { 
+        email_tenantId: {
+          email: email,
+          tenantId: tenantId
+        }
+      },
       include: {
         employee: {
           select: { firstName: true, lastName: true }
@@ -59,7 +73,7 @@ export class AuthService {
       }
     });
 
-    if (!user) throw new Error('Credenciales inválidas');
+    if (!user) throw new Error('Credenciales inválidas'); // Mensaje genérico por seguridad
     if (!user.isActive) throw new Error('Usuario inactivo');
     
     // Validar contraseña
@@ -68,45 +82,48 @@ export class AuthService {
     
     if (!isValid) throw new Error('Credenciales inválidas');
 
-    // 2. Generar Token
+    // 2. Generar Token (Ahora incluye el tenantId)
     const token = this.generateToken(user);
     
-    // 3. Preparar respuesta (aplanamos un poco el objeto para que el front lo lea fácil)
+    // 3. Preparar respuesta
     const { passwordHash, employee, ...userRest } = user;
     
     return { 
       user: {
         ...userRest,
-        firstName: employee?.firstName || 'Usuario', // Recuperamos nombre desde Employee
+        firstName: employee?.firstName || 'Usuario',
         lastName: employee?.lastName || 'Sistema'
       },
       token 
     };
   }
 
-  // --- REGISTRO (Crear Usuario + Empleado) ---
-  async register(data: any) {
+ // --- REGISTRO (Multi-Tenant) ---
+  // AHORA RECIBE tenantId
+  async register(data: any, tenantId: string) {
     const hash = await argon2.hash(data.password);
 
-    // Transacción: Creamos el User y su Employee vinculado al mismo tiempo
+    // Transacción: Creamos el User y su Employee vinculado
+    // INYECTAMOS tenantId EN AMBOS
     const newUser = await prisma.user.create({
       data: {
         email: data.email,
         passwordHash: hash,
-        role: SystemRole.USER, // Usamos el Enum correcto (antes era 'EMPLEADO')
-        
+        role: SystemRole.USER,
+        tenantId: tenantId, // <--- OBLIGATORIO
+
         // Creamos el perfil de empleado automáticamente
         employee: {
           create: {
             firstName: data.firstName,
             lastName: data.lastName,
-            hireDate: new Date(), // Fecha de ingreso por defecto hoy
-            // Campos opcionales se quedan en null por ahora
+            hireDate: new Date(),
+            tenantId: tenantId // <--- OBLIGATORIO TAMBIÉN EN EMPLEADO
           }
         }
       },
       include: {
-        employee: true // Para devolver los datos creados
+        employee: true
       }
     });
 
@@ -121,7 +138,12 @@ export class AuthService {
 
   private generateToken(user: User): string {
     return jwt.sign(
-      { id: user.id, role: user.role, email: user.email },
+      { 
+        id: user.id, 
+        role: user.role, 
+        email: user.email,
+        tenantId: user.tenantId // <--- Importante para seguridad en el futuro
+      },
       JWT_SECRET,
       { expiresIn: '8h' }
     );
@@ -129,44 +151,53 @@ export class AuthService {
 
 
 
-// --- NUEVO MÉTODO: LOGIN CON MICROSOFT ---
-  async loginWithMicrosoft(microsoftToken: string) {
+// --- LOGIN CON MICROSOFT (Multi-Tenant) ---
+  // AHORA RECIBE tenantId
+  async loginWithMicrosoft(microsoftToken: string, tenantId: string) {
     
-    // 1. Validar token con Microsoft (Si falla, lanza error)
+    // 1. Validar token con Microsoft
     const payload = await this.entraService.verifyToken(microsoftToken);
     
-    // Datos clave del token
-    const email = payload.preferred_username || payload.email; // Email del usuario
-    const oid = payload.oid; // ID único inmutable de Microsoft (Object ID)
-    const name = payload.name; // Nombre completo
+    const email = payload.preferred_username || payload.email;
+    const oid = payload.oid;
+    const name = payload.name;
 
     if (!email) throw new Error('El token de Microsoft no contiene email');
 
-    // 2. Buscar usuario en nuestra BD
-    let user = await prisma.user.findUnique({ where: { email } });
+    // 2. Buscar usuario EN ESTA EMPRESA ESPECÍFICA
+    let user = await prisma.user.findUnique({ 
+      where: { 
+        email_tenantId: {
+          email,
+          tenantId // <--- Filtro clave
+        }
+      } 
+    });
 
-    // 3. Si no existe, lo REGISTRAMOS automáticamente (Auto-Provisioning)
+    // 3. Si no existe en esta empresa, lo REGISTRAMOS aquí
     if (!user) {
       user = await prisma.user.create({
         data: {
           email,
           provider: 'MICROSOFT',
           providerId: oid,
-          role: 'USER', // <--- LEAST PRIVILEGE (Como pediste)
+          role: 'USER',
           isActive: true,
-          // Creamos ficha de empleado vacía para que pueda llenar sus datos luego
+          tenantId: tenantId, // <--- Vinculamos a la empresa actual
+
           employee: {
             create: {
               firstName: name.split(' ')[0] || 'Usuario',
               lastName: name.split(' ').slice(1).join(' ') || 'Nuevo',
               hireDate: new Date(),
-              personalEmail: email
+              personalEmail: email,
+              tenantId: tenantId // <--- Vinculamos empleado
             }
           }
         }
       });
     } else {
-      // Si ya existe pero era LOCAL, actualizamos para vincularlo (Opcional, seguridad)
+      // Si existe, actualizamos provider si hace falta
       if (user.provider === 'LOCAL') {
         await prisma.user.update({
           where: { id: user.id },
@@ -175,14 +206,11 @@ export class AuthService {
       }
     }
 
-    // 4. Generar NUESTRO token (Intercambio)
-    // Usamos tu lógica existente de JWT para que el resto del sistema funcione igual
+    // 4. Generar Token
     const token = this.generateToken(user); 
 
     return { 
       user: { id: user.id, email: user.email, role: user.role }, 
       token 
     };
-  }
-
-}
+  }}

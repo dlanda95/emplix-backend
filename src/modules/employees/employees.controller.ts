@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { EmployeesService } from './employees.service';
-import { PrismaClient } from '@prisma/client';
-import { AuthRequest } from '../../shared/middlewares/auth.middleware';
-import { EmployeeStatus } from '@prisma/client'; // Importamos el Enum
-const service = new EmployeesService();
-const prisma = new PrismaClient();
 
+const service = new EmployeesService();
+
+// --- DIRECTORIO (RRHH / Admin) ---
 export const getDirectory = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await service.getAllEmployees();
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
+    
+    // Pasamos tenantId para ver solo empleados de ESTA empresa
+    const result = await service.getAllEmployees(tenantId);
     res.json(result);
   } catch (error) { next(error); }
 };
@@ -16,51 +17,36 @@ export const getDirectory = async (req: Request, res: Response, next: NextFuncti
 export const updateAssignment = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
-    const result = await service.assignAdministrativeData(id, req.body);
+    const tenantId = req.tenant!.id; 
+
+    const result = await service.assignAdministrativeData(id, req.body, tenantId);
     res.json(result);
   } catch (error) { next(error); }
 };
 
-
-export const getMyTeam = async (req: AuthRequest, res: Response, next: NextFunction) => {
+// --- MI EQUIPO (Empleado / Manager) ---
+export const getMyTeam = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?.id;
+    const tenantId = req.tenant!.id; 
+
     if (!userId) throw new Error('Usuario no identificado');
     
-    const result = await service.getMyTeamContext(userId);
+    const result = await service.getMyTeamContext(userId, tenantId);
     res.json(result);
   } catch (error) { next(error); }
 };
 
-
-//to kudo
-
+// --- BUSCADOR (Para Kudos, etc) ---
 export const searchEmployees = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { q } = req.query;
+    const tenantId = req.tenant!.id; 
 
     if (!q || typeof q !== 'string') return res.json([]);
 
-    const results = await prisma.employee.findMany({
-      where: {
-        // 1. Filtro por nombre (lo que ya tenías)
-        OR: [
-          { firstName: { contains: q, mode: 'insensitive' } },
-          { lastName: { contains: q, mode: 'insensitive' } }
-        ],
-        // 2. FILTRO CLAVE: Solo empleados ACTIVOS
-        // Esto oculta a los cesados del buscador de aplausos
-        status: EmployeeStatus.ACTIVE 
-      },
-      take: 5,
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        position: true,
-        // photoUrl: true
-      }
-    });
+    // Delegamos la búsqueda al servicio pasando el tenantId
+    const results = await service.searchEmployees(q, tenantId);
 
     res.json(results);
   } catch (error) {

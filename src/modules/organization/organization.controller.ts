@@ -6,20 +6,24 @@ const service = new OrganizationService();
 // --- DEPARTAMENTOS ---
 export const getDepartments = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await service.getDepartments();
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
+    const result = await service.getDepartments(tenantId);
     res.json(result);
   } catch (error) { next(error); }
 };
 
 export const createDepartment = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await service.createDepartment(req.body);
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
+    const result = await service.createDepartment(req.body, tenantId);
     res.status(201).json(result);
   } catch (error) { next(error); }
 };
 
 export const updateDepartment = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    // Nota: Para update/delete por ID, técnicamente el ID ya es único, 
+    // pero podrías pasar tenantId si quieres validar propiedad estricta.
     const result = await service.updateDepartment(req.params.id, req.body);
     res.json(result);
   } catch (error) { next(error); }
@@ -35,19 +39,18 @@ export const deleteDepartment = async (req: Request, res: Response, next: NextFu
 // --- CARGOS ---
 export const getPositions = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // CORRECCIÓN:
-    // 1. Buscamos en params (para la ruta /departments/:departmentId/positions)
-    // 2. Si no está, buscamos en query (para la ruta /positions?departmentId=...)
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
     const deptId = req.params.departmentId || (req.query.departmentId as string);
     
-    const result = await service.getPositions(deptId);
+    const result = await service.getPositions(tenantId, deptId); // Pasamos ambos
     res.json(result);
   } catch (error) { next(error); }
 };
 
 export const createPosition = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await service.createPosition(req.body);
+    const tenantId = req.tenant!.id; // <--- CAPTURAR TENANT
+    const result = await service.createPosition(req.body, tenantId);
     res.status(201).json(result);
   } catch (error) { next(error); }
 };

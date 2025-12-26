@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 
 // Importar rutas de módulos
+import { tenantMiddleware } from './shared/middlewares/tenant.middleware';
 import authRoutes from './modules/auth/auth.routes';
 import organizationRoutes from './modules/organization/organization.routes';
 // ... imports
@@ -38,6 +39,12 @@ app.use('/api/attendance', attendanceRoutes);
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
+
+
+// Middleware de Tenant
+// Esto forzará a que TODAS las rutas debajo requieran una empresa válida
+app.use(tenantMiddleware);
+
 
 app.use('/api/employees', employeesRoutes);
 

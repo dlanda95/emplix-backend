@@ -1,51 +1,64 @@
 import { prisma } from '../../config/prisma';
-import { RequestType, RequestStatus } from '@prisma/client';
-import { differenceInMonths, differenceInDays } from 'date-fns'; // Necesitarás instalar date-fns o usar lógica nativa
+import { RequestStatus, RequestType } from '@prisma/client';
+import { AppError } from '../../shared/middlewares/error.middleware'; 
+
 export class RequestsService {
 
-  async createRequest(userId: string, payload: any) {
-    // Preparamos los datos
-    const { type, reason, startDate, endDate, data } = payload;
+  // --- CREAR SOLICITUD ---
+  // CORRECCIÓN: Ahora recibe (body, userId, tenantId) para coincidir con el controlador
+  async createRequest(payload: any, userId: string, tenantId: string) {
+    
+    // Convertir fechas string a Date si vienen
+    const startDate = payload.startDate ? new Date(payload.startDate) : null;
+    const endDate = payload.endDate ? new Date(payload.endDate) : null;
 
-    // Creamos el registro en la tabla 'requests'
     return await prisma.request.create({
       data: {
-        userId,
-        type: type as RequestType,
-        status: 'PENDING', // Siempre nace pendiente
-        reason,
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null,
-        data: data || {} // Guardamos el objeto de cambios aquí
+        type: payload.type,
+        startDate: startDate,
+        endDate: endDate,
+        reason: payload.reason,
+        data: payload.data || {}, // Payload JSON extra (ej: para Profile Update)
+        status: 'PENDING',
+        
+        userId: userId,
+        tenantId: tenantId // <--- OBLIGATORIO: Vinculado a la empresa
       }
     });
   }
 
-  // Método para que el empleado vea SU historial
-  async getMyRequests(userId: string) {
+  // --- MIS SOLICITUDES (Empleado) ---
+  async getMyRequests(userId: string, tenantId: string) {
     return await prisma.request.findMany({
-      where: { userId },
+      where: {
+        userId: userId,
+        tenantId: tenantId // <--- Filtro de seguridad
+      },
       orderBy: { createdAt: 'desc' }
     });
   }
 
+  // --- TODAS LAS SOLICITUDES (Admin) ---
+  // Renombrado a getAllRequests para soportar filtros (Pendientes, Aprobadas, etc.)
+  async getAllRequests(tenantId: string, filters: any = {}) {
+    
+    const whereClause: any = { tenantId }; // BASE: Solo ver solicitudes de MI empresa
 
+    // Aplicar filtros dinámicos
+    if (filters.status) whereClause.status = filters.status;
+    if (filters.type) whereClause.type = filters.type;
 
-
-
-  // --- MÉTODOS DE ADMINISTRADOR ---
-
-  // 1. Obtener todas las solicitudes pendientes (con datos del empleado)
-  async getPendingRequests() {
     return await prisma.request.findMany({
-      where: { status: 'PENDING' },
+      where: whereClause,
       include: {
         user: {
           select: {
+            email: true,
             employee: {
               select: {
                 firstName: true,
                 lastName: true,
+                documentId: true,
                 position: { select: { name: true } }
               }
             }
@@ -56,41 +69,43 @@ export class RequestsService {
     });
   }
 
-  // 2. Procesar Solicitud (Aprobar/Rechazar)
-  async processRequest(requestId: string, status: RequestStatus, adminComment?: string) {
+  // --- ACTUALIZAR ESTADO (Aprobar/Rechazar) ---
+  // Renombrado a updateRequestStatus para coincidir con el controlador
+  async updateRequestStatus(requestId: string, status: RequestStatus, reason: string | undefined, tenantId: string) {
     
-    // Iniciamos una transacción para asegurar integridad
     return await prisma.$transaction(async (tx) => {
       
-      // A. Buscar la solicitud
+      // A. Buscar la solicitud (y validar que pertenezca al Tenant)
       const request = await tx.request.findUnique({ where: { id: requestId } });
-      if (!request) throw new Error('Solicitud no encontrada');
-      if (request.status !== 'PENDING') throw new Error('Esta solicitud ya fue procesada');
+      
+      if (!request) throw new AppError('Solicitud no encontrada', 404);
+      
+      // SEGURIDAD CRÍTICA: Impedir aprobar solicitudes de otras empresas
+      if (request.tenantId !== tenantId) {
+        throw new AppError('No tienes permisos para gestionar esta solicitud', 403);
+      }
 
-      // B. Si es APROBADA y es de tipo PROFILE_UPDATE, aplicamos cambios
+      if (request.status !== 'PENDING') {
+        throw new AppError('Esta solicitud ya fue procesada anteriormente', 400);
+      }
+
+      // B. LÓGICA ESPECIAL: Si es PROFILE_UPDATE y se APRUEBA
       if (status === 'APPROVED' && request.type === 'PROFILE_UPDATE') {
-        const changes = request.data as any; // El JSON con los datos nuevos
+        const changes = request.data as any; 
         
         if (changes) {
-
-        // 1. Separamos 'birthDate' del resto de campos para tratarlo especial
-          // (Si tu front manda 'birthDate', úsalo aquí. Si manda 'dateOfBirth', cámbialo)
+          // Extraemos birthDate para convertirlo manualmente
           const { birthDate, ...restOfData } = changes;
-          
-          // 2. Preparamos el objeto limpio
-        const dataToUpdate: any = { ...restOfData };
+          const dataToUpdate: any = { ...restOfData };
         
-        // 3. CONVERSIÓN: String -> Date Object
-          // Esto soluciona el "Invalid value... Expected ISO-8601 DateTime"
           if (birthDate) {
             dataToUpdate.birthDate = new Date(birthDate); 
           }
 
+          // Actualizamos el empleado
           await tx.employee.update({
             where: { userId: request.userId },
-            data: dataToUpdate // <--- ESTO ES LO QUE FALTABA
-              // Opcional: Podrías guardar un log de quién aprobó si tuvieras tabla de auditoría
-            
+            data: dataToUpdate 
           });
         }
       }
@@ -100,23 +115,16 @@ export class RequestsService {
         where: { id: requestId },
         data: {
           status,
-          // Podríamos agregar un campo 'adminComment' al modelo Request si quisieras guardar el motivo del rechazo
+          // Si el admin envía un motivo (reason) lo guardamos, sino mantenemos el original
+          reason: reason || request.reason 
         }
       });
 
     });
   }
 
-
-
-
-
-
-
-// --- CÁLCULO DE VACACIONES (KÁRDEX) ---
-
-
-async getVacationBalance(userId: string) {
+  // --- CÁLCULO DE VACACIONES (Kárdex) ---
+  async getVacationBalance(userId: string) {
     // 1. Obtener datos del empleado
     const employee = await prisma.employee.findUnique({
       where: { userId },
@@ -125,14 +133,13 @@ async getVacationBalance(userId: string) {
 
     if (!employee) throw new Error('Empleado no encontrado');
 
-    // 2. Calcular días GANADOS (Devengados)
-    // Regla: 30 días por año = 2.5 días por mes completo trabajado
+    // 2. Calcular días GANADOS (30 días anuales = 2.5 por mes)
     const today = new Date();
     const monthsWorked = this.monthDiff(employee.hireDate, today);
     const daysEarned = monthsWorked * 2.5;
 
-    // 3. Calcular días USADOS (Gozados)
-    // Sumamos todas las solicitudes de VACACIONES que estén APROBADAS
+    // 3. Calcular días USADOS
+    // IMPORTANTE: Filtrar por Status APPROVED
     const approvedVacations = await prisma.request.findMany({
       where: {
         userId,
@@ -144,13 +151,12 @@ async getVacationBalance(userId: string) {
     let daysUsed = 0;
     approvedVacations.forEach(req => {
       if (req.startDate && req.endDate) {
-        // +1 porque si pides del 1 al 1, es 1 día.
+        // +1 para incluir el día de inicio
         const days = this.daysDiff(req.startDate, req.endDate) + 1; 
         daysUsed += days;
       }
     });
 
-    // 4. Saldo Disponible
     const balance = daysEarned - daysUsed;
 
     return {
@@ -158,17 +164,16 @@ async getVacationBalance(userId: string) {
       monthsWorked,
       daysEarned,
       daysUsed,
-      balance: parseFloat(balance.toFixed(2)) // Redondeo a 2 decimales
+      balance: parseFloat(balance.toFixed(2))
     };
   }
 
-  // --- Helpers de Fecha (Sin librerías externas para no complicarte) ---
+  // --- Helpers de Fecha ---
   private monthDiff(d1: Date, d2: Date): number {
     let months;
     months = (d2.getFullYear() - d1.getFullYear()) * 12;
     months -= d1.getMonth();
     months += d2.getMonth();
-    // Ajuste por días: si no ha cerrado el mes, no cuenta
     if (d2.getDate() < d1.getDate()) { 
         months--; 
     }
@@ -176,7 +181,7 @@ async getVacationBalance(userId: string) {
   }
 
   private daysDiff(start: Date, end: Date): number {
-    const oneDay = 24 * 60 * 60 * 1000; // horas*min*seg*ms
+    const oneDay = 24 * 60 * 60 * 1000; 
     return Math.round(Math.abs((start.getTime() - end.getTime()) / oneDay));
   }
 }
