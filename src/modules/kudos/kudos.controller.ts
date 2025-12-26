@@ -56,3 +56,14 @@ export const getWall = async (req: Request, res: Response, next: NextFunction) =
     next(error);
   }
 };
+
+
+// NUEVO MÉTODO
+export const getReport = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const report = await kudosService.getAnalytics();
+    res.json(report);
+  } catch (error) {
+    next(error);
+  }
+};

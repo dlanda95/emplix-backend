@@ -8,6 +8,7 @@ const router = Router();
 router.use(authMiddleware);
 
 router.get('/', kudosController.getWall);      // GET /api/kudos
+router.get('/analytics', kudosController.getReport); // <--- NUEVA RUTA (Reporte)
 router.post('/', kudosController.createKudo);  // POST /api/kudos
 
 export default router;
