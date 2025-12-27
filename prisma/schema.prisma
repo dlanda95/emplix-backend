@@ -13,11 +13,11 @@ enum SystemRole {
   COMPANY_ADMIN
   USER
 }
-// 1. Definimos los estados posibles
+
 enum EmployeeStatus {
-  ACTIVE      // Trabajando actualmente
-  TERMINATED  // Cesado
-  ON_LEAVE    // Licencia / Vacaciones (Opcional, pero útil)
+  ACTIVE
+  TERMINATED
+  ON_LEAVE
 }
 
 enum RequestStatus {
@@ -31,7 +31,7 @@ enum RequestType {
   PERMIT
   SICK_LEAVE
   HOME_OFFICE
-  PROFILE_UPDATE // <--- NUEVO TIPO PARA CAMBIOS DE DATOS
+  PROFILE_UPDATE
 }
 
 enum ContractType {
@@ -41,260 +41,209 @@ enum ContractType {
   CONTRACTOR
 }
 
-// Enum para saber el origen
 enum AuthProvider {
   LOCAL
   MICROSOFT
 }
 
-
-
-
 enum TenantType {
-  SHARED    // Clientes pequeños/estándar (viven en la DB común)
-  ISOLATED  // Clientes Enterprise (tienen su propia DB física)
+  SHARED
+  ISOLATED
 }
 
 enum TenantStatus {
   ACTIVE
-  SUSPENDED // Para falta de pago
+  SUSPENDED
 }
-
-model Tenant {
-  id          String       @id @default(uuid())
-  name        String
-  slug        String       @unique // El subdominio: "conexa", "techgans"
-  type        TenantType   @default(SHARED)
-  status      TenantStatus @default(ACTIVE)
-  
-  // Para clientes ISOLATED, aquí guardamos su cadena de conexión.
-  // Para clientes SHARED, esto puede ser nulo (usarán la default).
-  dbUrl       String?      
-
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-
-  // Relación inversa (Opcional, pero útil para integridad en DB compartida)
-  users       User[]
-  
-  @@map("tenants")
-}
-
-
 
 // --- MODELOS ---
 
+model Tenant {
+  id        String       @id @default(uuid())
+  name      String
+  slug      String       @unique
+  type      TenantType   @default(SHARED)
+  status    TenantStatus @default(ACTIVE)
+  dbUrl     String?      
+
+  users     User[]
+
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("tenants")
+}
+
 model User {
-  tenantId      String
-  tenant        Tenant      @relation(fields: [tenantId], references: [id])
-
-  id            String      @id @default(uuid())
-
- 
-  email         String
+  tenantId     String
+  tenant       Tenant       @relation(fields: [tenantId], references: [id])
+  id           String       @id @default(uuid())
+  email        String
+  passwordHash String?
+  provider     AuthProvider @default(LOCAL)
+  providerId   String?      
+  isActive     Boolean      @default(true)
+  role         SystemRole   @default(USER)
   
-  passwordHash  String?
+  employee     Employee?
+  requests     Request[]
 
-  provider      AuthProvider @default(LOCAL)
-  providerId    String?      // Guardaremos el OID (Object ID) de Azure aquí
-  
-  isActive      Boolean     @default(true)
-  role          SystemRole  @default(USER)
-  
-  employee      Employee?
-  requests      Request[]   // Un usuario hace solicitudes
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-
-
-
-@@unique([email, tenantId])
-@@map("users")
+  // Índice para búsquedas rápidas de login
+  @@unique([email, tenantId])
+  // Índice para listar usuarios de una empresa rápidamente
+  @@index([tenantId]) 
+  @@map("users")
 }
 
 model Employee {
+  tenantId       String
+  id             String         @id @default(uuid())
 
-  // Multi-tenancy
-  tenantId    String
-  id            String    @id @default(uuid())
-
-  
-  // --- NOMBRES ATÓMICOS (Estructura Solicitada) ---
-  firstName      String   // Primer Nombre
-  middleName     String?  // Segundo Nombre (Opcional)
-  lastName       String   // Apellido Paterno
-  secondLastName String?  // Apellido Materno (Opcional)
-  
-  // --- FECHA ---
-  // Mantenemos 'birthDate' como pediste, formato DateTime
+  firstName      String
+  middleName     String?
+  lastName       String
+  secondLastName String?
   birthDate      DateTime?
   
-  // Identificación
-  documentId    String?   @unique
-  gender        String?
+  documentId     String?
+  gender         String?
+  personalEmail  String?
+  phone          String?
+  address        String?
   
-  // Datos de Contacto
-  personalEmail String?
-  phone         String?
-  address       String?
-  
-  // Datos de Emergencia
   emergencyName  String?
   emergencyPhone String?
   emergencyRel   String?
+
+  hireDate       DateTime
+  contractType   ContractType   @default(FULL_TIME)
+  status         EmployeeStatus @default(ACTIVE)
+
+  userId         String         @unique
+  user           User           @relation(fields: [userId], references: [id])
+
+  departmentId   String?
+  department     Department?    @relation(fields: [departmentId], references: [id])
+
+  positionId     String?
+  position       Position?      @relation(fields: [positionId], references: [id])
+
+  supervisorId   String?
+  supervisor     Employee?      @relation("Hierarchy", fields: [supervisorId], references: [id])
+  subordinates   Employee[]     @relation("Hierarchy")
   
-  // Datos Laborales
-  hireDate      DateTime
-  contractType  ContractType @default(FULL_TIME)
-  status        EmployeeStatus @default(ACTIVE)
-  
-  // Relaciones
-  userId        String    @unique
-  user          User      @relation(fields: [userId], references: [id])
+  attendances    Attendance[]
+  sentKudos      Kudo[]         @relation("Sender")
+  receivedKudos  Kudo[]         @relation("Receiver")
 
-  departmentId  String?
-  department    Department? @relation(fields: [departmentId], references: [id])
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 
-  positionId    String?
-  position      Position?   @relation(fields: [positionId], references: [id])
-
-  supervisorId  String?
-  supervisor    Employee?   @relation("Hierarchy", fields: [supervisorId], references: [id])
-  subordinates  Employee[]  @relation("Hierarchy")
-  attendances   Attendance[]
-
-  // Relaciones para Kudos
-  sentKudos     Kudo[]  @relation("Sender")
-  receivedKudos Kudo[]  @relation("Receiver")
-
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-
-// Document ID único por empresa
   @@unique([documentId, tenantId])
+  // OPTIMIZACIÓN: Índice para filtrar empleados por tenant + estado (Dashboard)
+  @@index([tenantId, status]) 
+  // OPTIMIZACIÓN: Índice para buscar por supervisor dentro de la empresa
+  @@index([tenantId, supervisorId])
   @@map("employees")
 }
 
 model Request {
-    // Multi-tenancy
-  tenantId    String
+  tenantId  String
+  id        String        @id @default(uuid())
+  type      RequestType
+  status    RequestStatus @default(PENDING)
+  startDate DateTime?
+  endDate   DateTime?
+  reason    String?
+  data      Json?         
 
-  id          String        @id @default(uuid())
- 
+  userId    String
+  user      User          @relation(fields: [userId], references: [id])
 
-  type        RequestType
-  status      RequestStatus @default(PENDING)
-  
-  // Fechas (para vacaciones/permisos)
-  startDate   DateTime?
-  endDate     DateTime?
-  reason      String?
-  
-  // Payload de Datos (Para PROFILE_UPDATE)
-  // Aquí guardaremos el objeto JSON con los cambios solicitados:
-  // { "phone": "999...", "address": "Nueva Calle 123" }
-  data        Json?         
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
-
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
+  // OPTIMIZACIÓN: Filtro rápido de "Solicitudes Pendientes por Empresa"
+  @@index([tenantId, status]) 
+  // OPTIMIZACIÓN: Historial de usuario
+  @@index([tenantId, userId])
   @@map("requests")
 }
 
-// Catálogos
 model Department {
-
-  // Multi-tenancy
   tenantId    String
   id          String     @id @default(uuid())
-
- 
-
   name        String     
   code        String?  
   description String?
-  employees   Employee[]
   
-  // NUEVA RELACIÓN: Un departamento tiene muchos cargos
+  employees   Employee[]
   positions   Position[] 
-
-  // Un departamento puede tener un "Líder" asignado
   leaderId    String?
 
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
-// El nombre del departamento es único SOLO dentro de esa empresa
   @@unique([name, tenantId])
   @@unique([code, tenantId])
-
+  @@index([tenantId]) // Índice simple para listar
   @@map("departments")
 }
 
 model Position {
-
-  // Multi-tenancy
   tenantId    String
   id          String     @id @default(uuid())
-
-  name        String     // Ojo: Si quieres "Analista" en varias áreas, quita el @unique
+  name        String     
   description String?
   employees   Employee[]
   
-  // NUEVA RELACIÓN: Un cargo pertenece a un departamento
   departmentId String? 
   department   Department? @relation(fields: [departmentId], references: [id])
 
-  createdAt   DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([name, tenantId])
+  @@index([tenantId]) // Índice simple para listar
   @@map("positions")
 }
 
-
 model Attendance {
-  // Multi-tenancy
-  tenantId    String
-  id          String    @id @default(uuid())
-
+  tenantId   String
+  id         String   @id @default(uuid())
+  date       DateTime @db.Date 
+  checkIn    DateTime
+  checkOut   DateTime?
   
-  // Fecha sin hora para agrupar reportes
-  date        DateTime  @db.Date 
-  
-  checkIn     DateTime  // Hora exacta de entrada
-  checkOut    DateTime? // Hora exacta de salida (puede ser nulo si sigue trabajando)
-  
-  // Relación con Empleado
-  employeeId  String
-  employee    Employee  @relation(fields: [employeeId], references: [id])
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id])
 
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  // Restricción: Un empleado solo puede tener una ficha de asistencia por día
   @@unique([employeeId, date])
+  // OPTIMIZACIÓN CRÍTICA: Reportes de asistencia por rango de fechas en la empresa
+  @@index([tenantId, date]) 
   @@map("attendances")
 }
 
-
-// NUEVO MODELO
 model Kudo {
-  // Multi-tenancy
-  tenantId    String
-  id            String   @id @default(uuid())
-  message       String
-  categoryCode  String   // 'TEAMWORK', 'LEADERSHIP', etc.
-  createdAt     DateTime @default(now())
+  tenantId     String
+  id           String   @id @default(uuid())
+  message      String
+  categoryCode String
+  createdAt    DateTime @default(now())
   
-  // Relación: Quién envió
-  senderId      String
-  sender        Employee @relation("Sender", fields: [senderId], references: [id])
+  senderId     String
+  sender       Employee @relation("Sender", fields: [senderId], references: [id])
 
-  // Relación: Quién recibió
-  receiverId    String
-  receiver      Employee @relation("Receiver", fields: [receiverId], references: [id])
+  receiverId   String
+  receiver     Employee @relation("Receiver", fields: [receiverId], references: [id])
+
+  // OPTIMIZACIÓN: Ranking de Kudos de la empresa
+  @@index([tenantId, createdAt])
+  @@map("kudos")
 }

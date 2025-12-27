@@ -1,21 +1,20 @@
 import { Tenant } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 
 declare global {
   namespace Express {
-    
-    // 1. Definimos la interfaz DENTRO del namespace Express
-    // y le ponemos 'export' para que sea accesible desde fuera.
-    export interface UserPayload {
+    // Definimos aquí qué trae el token EXACTAMENTE
+    interface UserPayload {
       id: string;
-      email: string;
+      email: string;    // <--- Esto faltaba
       role: string;
-      tenantId: string;
+      tenantId: string; // <--- Esto es vital para el Multi-Tenant
     }
 
-    // 2. Ahora req.user usa esa interfaz interna
     interface Request {
-      tenant?: Tenant; 
-      user?: UserPayload; 
+      user?: UserPayload; // Usamos la interfaz de arriba
+      tenant?: Tenant;
+      db?: PrismaClient;
     }
   }
 }

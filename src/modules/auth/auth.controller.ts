@@ -92,15 +92,19 @@ export const register = async (req: Request, res: Response) => {
 // --- NUEVO: Controlador GET /me ---
 export const getMe = async (req: Request, res: Response) => {
   try {
-    // El ID viene del middleware (Token)
     const userId = req.user?.id; 
     
-    if (!userId) return res.status(401).json({ message: 'No autorizado' });
+    // OBTENEMOS EL TENANT ID DEL REQUEST (Ya validado por middleware)
+    const tenantId = req.tenant?.id; 
 
-    const profile = await authService.getMyProfile(userId);
+    if (!userId || !tenantId) return res.status(401).json({ message: 'No autorizado' });
+
+    // PASAMOS AMBOS PARÁMETROS
+    const profile = await authService.getMyProfile(userId, tenantId);
     res.json(profile);
 
   } catch (error: any) {
     console.error(error);
     res.status(500).json({ message: 'Error al obtener perfil' });
-  }}
+  }
+}

@@ -5,55 +5,62 @@ import morgan from 'morgan';
 
 // Importar rutas de módulos
 import { tenantMiddleware } from './shared/middlewares/tenant.middleware';
-import authRoutes from './modules/auth/auth.routes';
-import organizationRoutes from './modules/organization/organization.routes';
-// ... imports
-import requestsRoutes from './modules/requests/requests.routes';
-
 import { globalErrorHandler } from './shared/middlewares/error.middleware';
 
+import authRoutes from './modules/auth/auth.routes';
+import organizationRoutes from './modules/organization/organization.routes';
+import requestsRoutes from './modules/requests/requests.routes';
 import employeesRoutes from './modules/employees/employees.routes';
-
 import attendanceRoutes from './modules/attendance/attendance.routes';
-
 import kudosRoutes from './modules/kudos/kudos.routes';
-
-
-
 
 const app: Application = express();
 
-// 1. Middlewares Globales
-app.use(express.json()); // Leer JSON en el body
-app.use(cors());         // Permitir peticiones desde el Frontend (Angular)
-app.use(helmet());       // Seguridad de cabeceras HTTP
-app.use(morgan('dev'));  // Logs de peticiones en consola
+// 1. Configurar Morgan para ver el Tenant en la consola
+// Creamos un token personalizado llamado 'tenant'
+morgan.token('tenant', (req: any) => {
+  // Intentamos leer el slug del header o del objeto req.tenant si ya se procesó
+  return req.headers['x-tenant-slug'] || '???';
+});
 
-// 2. Rutas por Dominio
-app.use('/api/auth', authRoutes);
-app.use('/api/organization', organizationRoutes); // <--- REGISTRAR NUEVA RUTA
-app.use('/api/requests', requestsRoutes); // <--- NUEVA RUTA
-app.use('/api/attendance', attendanceRoutes);
+// Usamos un formato personalizado: METODO RUTA [TENANT] STATUS TIEMPO
+app.use(morgan(':method :url [:tenant] :status :response-time ms'));
 
-// 3. Ruta de prueba de salud
+// ==========================================
+// 1. MIDDLEWARES GLOBALES (Se ejecutan siempre)
+// ==========================================
+app.use(express.json()); 
+app.use(cors());         
+app.use(helmet());       
+app.use(morgan('dev'));  
+
+// ==========================================
+// 2. RUTAS PÚBLICAS (Sin Tenant)
+// ==========================================
+// El Health Check debe ir ANTES del tenantMiddleware para que AWS/Azure no den error 400
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
 
-
-// Middleware de Tenant
-// Esto forzará a que TODAS las rutas debajo requieran una empresa válida
+// ==========================================
+// 3. MIDDLEWARE DE TENANT (El Guardián)
+// ==========================================
+// A partir de esta línea, TODAS las peticiones deben tener x-tenant-slug
 app.use(tenantMiddleware);
 
-
+// ==========================================
+// 4. RUTAS PROTEGIDAS POR TENANT
+// ==========================================
+app.use('/api/auth', authRoutes);
+app.use('/api/organization', organizationRoutes);
+app.use('/api/requests', requestsRoutes);
+app.use('/api/attendance', attendanceRoutes);
 app.use('/api/employees', employeesRoutes);
-
 app.use('/api/kudos', kudosRoutes);
 
-
-// Manejo de Errores (SIEMPRE AL FINAL)
+// ==========================================
+// 5. MANEJO DE ERRORES (Siempre al final)
+// ==========================================
 app.use(globalErrorHandler);
-
-
 
 export default app;

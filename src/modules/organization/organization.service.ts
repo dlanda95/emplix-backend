@@ -8,7 +8,7 @@ export class OrganizationService {
   // ==========================================
 
 // AHORA RECIBE tenantId
-  async createDepartment(data: { name: string; description?: string; code?: string }, tenantId: string) {
+  async createDepartment(data: { name: string; description?: string; code?: string |null }, tenantId: string) {
     
     // 1. Verificar duplicados por Nombre + Tenant
     const existingName = await prisma.department.findUnique({
