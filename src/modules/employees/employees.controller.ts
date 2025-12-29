@@ -124,3 +124,18 @@ export const getDocumentUrl = async (req: Request, res: Response, next: NextFunc
 };
 
 
+// En employees.controller.ts
+
+export const getMe = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const tenantId = req.tenant!.id;
+    const userId = req.user!.id; 
+    // Llama al servicio que ya creamos
+    const result = await service.getMyProfile(userId, tenantId);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+

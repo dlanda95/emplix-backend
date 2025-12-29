@@ -4,7 +4,7 @@ import { AppError } from '../../shared/middlewares/error.middleware';
 import * as argon2 from 'argon2';
 import { StorageService } from '../../shared/services/storage.service';
 
-// --- HELPERS ---
+// --- GLOBAL HELPERS ---
 
 /**
  * Genera la URL pública para ver la imagen en el navegador.
@@ -35,30 +35,29 @@ export class EmployeesService {
   private storageService = new StorageService();
 
   // ==========================================
-  // 1. CREAR EMPLEADO (Transacción Atómica)
+  // 1. CREAR EMPLEADO
   // ==========================================
   async createEmployee(data: CreateEmployeeDTO, tenantId: string) {
-    // A. Validaciones de Unicidad
+    // A. Validaciones
     const existingEmail = await prisma.user.findUnique({
       where: { email_tenantId: { email: data.email, tenantId } }
     });
-    if (existingEmail) throw new AppError('El correo ya está registrado en esta empresa', 409);
+    if (existingEmail) throw new AppError('El correo ya está registrado', 409);
 
     const existingDoc = await prisma.employee.findUnique({
       where: { documentId_tenantId: { documentId: data.documentId, tenantId } }
     });
-    if (existingDoc) throw new AppError('El documento de identidad ya existe en esta empresa', 409);
+    if (existingDoc) throw new AppError('El documento de identidad ya existe', 409);
 
-    // B. Validar Referencias
     if (data.departmentId) await this.validateBelongsToTenant('department', data.departmentId, tenantId);
     if (data.positionId) await this.validateBelongsToTenant('position', data.positionId, tenantId);
     if (data.supervisorId) await this.validateBelongsToTenant('employee', data.supervisorId, tenantId);
 
-    // C. Generar Contraseña Temporal
+    // B. Contraseña Temporal
     const tempPassword = `${data.firstName.charAt(0)}${data.lastName}123!`.trim();
     const passwordHash = await argon2.hash(tempPassword);
 
-    // D. Transacción
+    // C. Transacción
     return await prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {
@@ -91,41 +90,33 @@ export class EmployeesService {
   }
 
   // ==========================================
-  // 2. OBTENER UN EMPLEADO (Con Foto)
+  // 2. LECTURA DE DATOS (Con Avatares)
   // ==========================================
+
   async getEmployeeById(id: string, tenantId: string) {
     const employee = await prisma.employee.findUnique({
-      where: { id, tenantId }, // Importante: Filtrar por tenantId por seguridad
+      where: { id, tenantId },
       include: {
         department: true,
         position: true,
         supervisor: { select: { id: true, firstName: true, lastName: true } },
         user: { select: { email: true, role: true, isActive: true } },
-        // Incluimos solo el Avatar más reciente
+        // Traemos el avatar para procesarlo
         documents: {
           where: { type: DocumentType.AVATAR },
           take: 1,
           orderBy: { createdAt: 'desc' },
-          select: { path: true } // Solo necesitamos el path
+          select: { path: true }
         }
       }
     });
 
     if (!employee) throw new AppError('Empleado no encontrado', 404);
 
-    // Transformación: Agregamos 'photoUrl' y limpiamos el array 'documents'
-    const avatarPath = employee.documents[0]?.path;
-    const { documents, ...employeeData } = employee; // Sacamos documents del objeto final
-
-    return {
-      ...employeeData,
-      photoUrl: avatarPath ? getPublicUrl(avatarPath) : null
-    };
+    // Usamos el helper privado para limpiar la respuesta
+    return this.transformWithAvatar(employee);
   }
 
-  // ==========================================
-  // 3. DIRECTORIO COMPLETO (Con Fotos)
-  // ==========================================
   async getAllEmployees(tenantId: string) {
     const employees = await prisma.employee.findMany({
       where: { tenantId, status: 'ACTIVE' },
@@ -134,7 +125,6 @@ export class EmployeesService {
         position: { select: { id: true, name: true } },
         supervisor: { select: { id: true, firstName: true, lastName: true } },
         user: { select: { email: true, role: true, isActive: true } },
-        // Traemos también el avatar para la lista
         documents: {
           where: { type: DocumentType.AVATAR },
           take: 1,
@@ -145,31 +135,93 @@ export class EmployeesService {
       orderBy: { lastName: 'asc' }
     });
 
-    // Mapeamos para agregar photoUrl a cada empleado de la lista
-    return employees.map(emp => {
-      const avatarPath = emp.documents[0]?.path;
-      const { documents, ...rest } = emp;
-      return {
-        ...rest,
-        photoUrl: avatarPath ? getPublicUrl(avatarPath) : null
-      };
+    return employees.map(emp => this.transformWithAvatar(emp));
+  }
+
+  async searchEmployees(query: string, tenantId: string) {
+    const employees = await prisma.employee.findMany({
+      where: {
+        tenantId: tenantId,
+        status: EmployeeStatus.ACTIVE,
+        OR: [
+          { firstName: { contains: query, mode: 'insensitive' } },
+          { lastName: { contains: query, mode: 'insensitive' } }
+        ]
+      },
+      take: 10,
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        position: { select: { name: true } },
+        department: { select: { name: true } },
+        // Incluimos documento para mostrar miniatura en el buscador
+        documents: {
+          where: { type: DocumentType.AVATAR },
+          take: 1,
+          orderBy: { createdAt: 'desc' },
+          select: { path: true }
+        }
+      }
     });
+
+    return employees.map(emp => this.transformWithAvatar(emp));
+  }
+
+  async getMyTeamContext(userId: string, tenantId: string) {
+    // 1. MI PERFIL
+    const me = await prisma.employee.findFirst({
+      where: { userId, tenantId },
+      include: {
+        supervisor: { include: { position: true, user: { select: { email: true } } } },
+        position: true,
+        documents: { where: { type: DocumentType.AVATAR }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } }
+      }
+    });
+
+    if (!me) throw new AppError('Perfil no encontrado', 404);
+
+    const commonInclude = {
+      position: true,
+      user: { select: { email: true } },
+      documents: { where: { type: DocumentType.AVATAR }, take: 1, orderBy: { createdAt: 'desc' as const }, select: { path: true } }
+    };
+
+    // 2. COMPAÑEROS (Peers)
+    let peers: any[] = [];
+    if (me.supervisorId) {
+      const rawPeers = await prisma.employee.findMany({
+        where: { supervisorId: me.supervisorId, id: { not: me.id }, tenantId, status: 'ACTIVE' },
+        include: commonInclude
+      });
+      peers = rawPeers.map(p => this.transformWithAvatar(p));
+    }
+
+    // 3. SUBORDINADOS
+    const rawSubordinates = await prisma.employee.findMany({
+      where: { supervisorId: me.id, tenantId, status: 'ACTIVE' },
+      include: commonInclude
+    });
+    const subordinates = rawSubordinates.map(s => this.transformWithAvatar(s));
+
+    return { 
+      me: this.transformWithAvatar(me), 
+      supervisor: me.supervisor, // El supervisor ya viene anidado en 'me', pero se puede pasar aparte
+      peers, 
+      subordinates 
+    };
   }
 
   // ==========================================
-  // 4. ASIGNACIÓN (Update Admin Data)
+  // 3. GESTIÓN ADMINISTRATIVA
   // ==========================================
   async assignAdministrativeData(employeeId: string, data: any, tenantId: string) {
     const { departmentId, positionId, supervisorId, contractType } = data;
 
     const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
-    if (!employee || employee.tenantId !== tenantId) {
-      throw new AppError('Empleado no encontrado en esta organización', 404);
-    }
+    if (!employee || employee.tenantId !== tenantId) throw new AppError('Empleado no encontrado', 404);
 
-    if (supervisorId && supervisorId === employeeId) {
-      throw new AppError('Un colaborador no puede ser su propio supervisor', 400);
-    }
+    if (supervisorId && supervisorId === employeeId) throw new AppError('Auto-supervisión no permitida', 400);
 
     if (departmentId) await this.validateBelongsToTenant('department', departmentId, tenantId);
     if (positionId) await this.validateBelongsToTenant('position', positionId, tenantId);
@@ -177,34 +229,37 @@ export class EmployeesService {
 
     return await prisma.employee.update({
       where: { id: employeeId },
-      data: {
-        departmentId: departmentId || null,
-        positionId: positionId || null,
-        supervisorId: supervisorId || null,
-        contractType: contractType
-      },
+      data: { departmentId, positionId, supervisorId, contractType },
       include: { department: true, position: true, supervisor: true }
     });
   }
 
   // ==========================================
-  // 5. SUBIR FOTO DE PERFIL (Avatar)
+  // 4. STORAGE: AVATARES (Público - Lógica Única)
   // ==========================================
   async uploadAvatar(employeeId: string, file: Express.Multer.File, tenantId: string, userId: string) {
-    // 1. Validar existencia
+    // A. Validar
     const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
-    if (!employee || employee.tenantId !== tenantId) {
-      throw new AppError('Empleado no encontrado o no pertenece a esta organización', 404);
+    if (!employee || employee.tenantId !== tenantId) throw new AppError('Empleado no encontrado', 404);
+
+    // B. LIMPIEZA: Buscar avatar anterior
+    const oldAvatar = await prisma.document.findFirst({
+      where: { employeeId, type: DocumentType.AVATAR }
+    });
+
+    // C. Si existe, BORRAR de Azure y BD
+    if (oldAvatar) {
+      await this.storageService.deleteFile('public-assets', oldAvatar.path);
+      await prisma.document.delete({ where: { id: oldAvatar.id } });
     }
 
-    // 2. Subir a Azure (Contenedor PÚBLICO)
+    // D. SUBIDA NUEVA
     const uploadResult = await this.storageService.uploadFile(
-      file,
+      file, 
       'public-assets', 
       `tenants/${tenantId}/${employeeId}/avatar`
     );
 
-    // 3. Registrar en BD
     const newDoc = await prisma.document.create({
       data: {
         tenantId,
@@ -219,7 +274,6 @@ export class EmployeesService {
       }
     });
 
-    // 4. Retornar el documento con la URL ya procesada para que el front la use al instante
     return {
       ...newDoc,
       photoUrl: getPublicUrl(newDoc.path)
@@ -227,59 +281,75 @@ export class EmployeesService {
   }
 
   // ==========================================
-  // 6. MI EQUIPO & BUSCADOR
+  // 5. STORAGE: DOCUMENTOS PRIVADOS (Contratos)
   // ==========================================
-  async getMyTeamContext(userId: string, tenantId: string) {
-    const me = await prisma.employee.findFirst({
-      where: { userId, tenantId },
-      include: {
-        supervisor: { include: { position: true, user: { select: { email: true } } } },
-        position: true
-      }
-    });
+  async uploadDocument(
+    employeeId: string, 
+    file: Express.Multer.File, 
+    type: DocumentType, 
+    tenantId: string, 
+    userId: string
+  ) {
+    const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
+    if (!employee || employee.tenantId !== tenantId) throw new AppError('Empleado no encontrado', 404);
 
-    if (!me) throw new AppError('Perfil de empleado no encontrado', 404);
+    const uploadResult = await this.storageService.uploadFile(
+      file,
+      'private-docs', 
+      `tenants/${tenantId}/${employeeId}/docs`
+    );
 
-    // Se podrían agregar photos a peers y subordinates usando la misma lógica del map
-    let peers: any[] = [];
-    if (me.supervisorId) {
-      peers = await prisma.employee.findMany({
-        where: { supervisorId: me.supervisorId, id: { not: me.id }, tenantId, status: 'ACTIVE' },
-        include: { position: true, user: { select: { email: true } } }
-      });
-    }
-
-    const subordinates = await prisma.employee.findMany({
-      where: { supervisorId: me.id, tenantId, status: 'ACTIVE' },
-      include: { position: true, user: { select: { email: true } } }
-    });
-
-    return { me, supervisor: me.supervisor, peers, subordinates };
-  }
-
-  async searchEmployees(query: string, tenantId: string) {
-    return await prisma.employee.findMany({
-      where: {
+    return await prisma.document.create({
+      data: {
         tenantId,
-        status: EmployeeStatus.ACTIVE,
-        OR: [
-          { firstName: { contains: query, mode: 'insensitive' } },
-          { lastName: { contains: query, mode: 'insensitive' } }
-        ]
-      },
-      take: 10,
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        position: { select: { name: true } },
-        department: { select: { name: true } }
+        employeeId,
+        name: uploadResult.originalName,
+        mimeType: uploadResult.mimeType,
+        size: uploadResult.size,
+        path: uploadResult.path,
+        type: type,
+        isPublic: false,
+        uploadedBy: userId
       }
     });
   }
 
-  // --- PRIVATE HELPERS ---
+  async getDocumentLink(documentId: string, tenantId: string) {
+    const doc = await prisma.document.findUnique({ where: { id: documentId } });
+
+    if (!doc || doc.tenantId !== tenantId) throw new AppError('Documento no encontrado', 404);
+
+    if (doc.isPublic) {
+      return getPublicUrl(doc.path);
+    } else {
+      // SAS Token válido por 60 min
+      return this.storageService.getSignedUrl('private-docs', doc.path, 60);
+    }
+  }
+
+  // ==========================================
+  // PRIVATE HELPERS
+  // ==========================================
   
+  /**
+   * Transforma un objeto empleado crudo (con documentos anidados)
+   * a un objeto limpio con 'photoUrl' y sin el array 'documents'.
+   */
+  private transformWithAvatar(employee: any) {
+    if (!employee) return null;
+    
+    // Intentamos sacar el primer documento (asumimos que la query ya filtró por AVATAR)
+    const avatarDoc = employee.documents && employee.documents.length > 0 ? employee.documents[0] : null;
+    
+    // Eliminamos 'documents' del objeto final para no ensuciar el JSON
+    const { documents, ...rest } = employee;
+
+    return {
+      ...rest,
+      photoUrl: avatarDoc ? getPublicUrl(avatarDoc.path) : null
+    };
+  }
+
   private async validateBelongsToTenant(model: 'department' | 'position' | 'employee', id: string, tenantId: string) {
     let record;
     if (model === 'department') record = await prisma.department.findUnique({ where: { id } });
@@ -289,77 +359,43 @@ export class EmployeesService {
     if (!record) throw new AppError(`${model} no encontrado`, 404);
     
     // @ts-ignore
-    if (record.tenantId !== tenantId) {
-      throw new AppError(`El ${model} seleccionado no pertenece a esta empresa`, 403);
-    }
+    if (record.tenantId !== tenantId) throw new AppError(`El registro no pertenece a esta empresa`, 403);
   }
 
 
 
-
-
-  async uploadDocument(
-    employeeId: string, 
-    file: Express.Multer.File, 
-    type: DocumentType, // CONTRACT, ID_CARD, MEDICAL, etc.
-    tenantId: string, 
-    userId: string
-  ) {
-    // 1. Validar empleado
-    const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
-    if (!employee || employee.tenantId !== tenantId) {
-      throw new AppError('Empleado no encontrado', 404);
-    }
-
-    // 2. Subir a Azure (Contenedor PRIVADO)
-    // Ruta: tenants/{tenantId}/{employeeId}/docs/{uuid}.pdf
-    const uploadResult = await this.storageService.uploadFile(
-      file,
-      'private-docs', // <--- CAJA FUERTE 🔒
-      `tenants/${tenantId}/${employeeId}/docs`
-    );
-
-    // 3. Registrar en BD
-    const newDoc = await prisma.document.create({
-      data: {
-        tenantId,
-        employeeId,
-        name: uploadResult.originalName,
-        mimeType: uploadResult.mimeType,
-        size: uploadResult.size,
-        path: uploadResult.path,
-        type: type,
-        isPublic: false, // <--- PRIVADO
-        uploadedBy: userId
+// ==========================================
+  // X. OBTENER MI PERFIL (Endpoint /me)
+  // ==========================================
+  async getMyProfile(userId: string, tenantId: string) {
+    // Buscamos al empleado conectado al usuario actual
+    const employee = await prisma.employee.findFirst({
+      where: { 
+        userId: userId, 
+        tenantId: tenantId 
+      },
+      include: {
+        department: true,
+        position: true,
+        supervisor: { select: { id: true, firstName: true, lastName: true } },
+        user: { select: { email: true, role: true, isActive: true } },
+        // Incluimos el avatar (¡Misma lógica que usaste antes!)
+        documents: {
+          where: { type: DocumentType.AVATAR },
+          take: 1,
+          orderBy: { createdAt: 'desc' as const },
+          select: { path: true }
+        }
       }
     });
 
-    return newDoc;
+    if (!employee) throw new AppError('Perfil de empleado no encontrado', 404);
+
+    // Reutilizamos tu helper existente para formatear la URL
+    return this.transformWithAvatar(employee);
   }
 
-  // ==========================================
-  // 8. OBTENER URL DE DOCUMENTO (Generar Link Temporal)
-  // ==========================================
-  async getDocumentLink(documentId: string, tenantId: string) {
-    // 1. Buscar el documento en la BD
-    const doc = await prisma.document.findUnique({
-      where: { id: documentId }
-    });
 
-    if (!doc || doc.tenantId !== tenantId) {
-      throw new AppError('Documento no encontrado', 404);
-    }
-
-    // 2. Generar URL
-    if (doc.isPublic) {
-      // Si es público (Avatar), usamos la URL simple
-      return getPublicUrl(doc.path);
-    } else {
-      // Si es privado (Contrato), generamos URL firmada (SAS)
-      // Válida por 60 minutos
-      return this.storageService.getSignedUrl('private-docs', doc.path, 60);
-    }
-  }
-
+  
 
 }
