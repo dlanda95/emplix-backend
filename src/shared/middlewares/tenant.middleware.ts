@@ -1,54 +1,59 @@
 import { Request, Response, NextFunction } from 'express';
-import prisma from '../../config/prisma';
+import { prisma } from '../../config/prisma'; 
+import { TenantStatus } from '@prisma/client'; // <--- IMPORTANTE: Usamos el Enum real
 
 export const tenantMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let slug: string | undefined;
 
-    // ESTRATEGIA DE DETECCIÓN
-    
-    // 1. Intentar leer del Header (Ideal para Postman / Desarrollo Local)
+    // 1. ESTRATEGIA DE DETECCIÓN (Tu lógica está perfecta)
     const headerSlug = req.headers['x-tenant-slug'] as string;
     if (headerSlug) {
       slug = headerSlug;
-    } 
-    // 2. Si no hay header, intentar leer del Subdominio (Producción)
-    else {
-      // Host llega como: "conexa.emplix.com"
+    } else {
       const host = req.get('host') || '';
       const parts = host.split('.');
-      
-      // Si tenemos subdominio (ej: parts[0] es 'conexa')
       if (parts.length > 2) {
         slug = parts[0];
       }
     }
 
-    // Si no detectamos ninguna empresa, rechazamos la petición
-    // (Opcional: podrías dejar pasar si es una ruta pública, pero por seguridad cerremos todo)
     if (!slug) {
       return res.status(400).json({ 
         message: 'No se ha especificado la empresa (Tenant) en la cabecera o subdominio.' 
       });
     }
 
-    // 3. Buscar la empresa en la Base de Datos
+    // 2. Buscar la empresa
     const tenant = await prisma.tenant.findUnique({
       where: { slug: slug }
     });
 
     if (!tenant) {
-      return res.status(404).json({ message: `La empresa '${slug}' no existe o está desactivada.` });
+      return res.status(404).json({ message: `La empresa '${slug}' no existe.` });
     }
 
-    if (tenant.status !== 'ACTIVE') {
-      return res.status(403).json({ message: 'El servicio para esta empresa está suspendido.' });
+    // 3. DEFENSA CONTRA MOROSOS / SUSPENDIDOS 🛡️
+    // Usamos el Enum para ser estrictos y evitar errores de tipeo.
+    if (tenant.status === TenantStatus.SUSPENDED) {
+      console.warn(`⛔ Alerta: Intento de acceso a Tenant SUSPENDIDO: ${slug}`);
+      
+      // Retornamos 402 (Payment Required)
+      // Esto ayuda al Front a saber exactamente qué pantalla mostrar (ej: "Contacte a Cobranzas")
+      return res.status(402).json({ 
+        message: 'El servicio para esta organización se encuentra suspendido. Contacte al administrador.',
+        code: 'TENANT_SUSPENDED' 
+      });
     }
 
-    // 4. ¡ÉXITO! Guardamos el tenant en la petición
+    // Validación general para cualquier otro estado que no sea ACTIVE (ej: ARCHIVED)
+    if (tenant.status !== TenantStatus.ACTIVE) {
+      return res.status(403).json({ message: 'Esta organización no está activa actualmente.' });
+    }
+
+    // 4. ¡ÉXITO!
     req.tenant = tenant;
-    
-    next(); // Pasar al siguiente controlador
+    next(); 
 
   } catch (error) {
     console.error('Error en Tenant Middleware:', error);

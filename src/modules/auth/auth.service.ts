@@ -205,6 +205,7 @@ export class AuthService {
       { 
         id: user.id, 
         role: user.role, 
+        email: user.email,
         // tenantId es CRÍTICO para que el auth.middleware haga la validación cruzada
         tenantId: user.tenantId 
       },

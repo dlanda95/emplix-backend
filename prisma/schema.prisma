@@ -56,6 +56,18 @@ enum TenantStatus {
   SUSPENDED
 }
 
+// 1. Definimos los tipos de documentos
+enum DocumentType {
+  AVATAR          // Público (Foto de perfil)
+  CONTRACT        // Privado (Solo RRHH y Empleado)
+  ID_CARD         // Privado (DNI, Pasaporte)
+  CERTIFICATION   // Semi-Público (Diplomas)
+  MEDICAL         // Estrictamente Privado (Bajas médicas)
+  OTHER
+}
+
+
+
 // --- MODELOS ---
 
 model Tenant {
@@ -67,6 +79,7 @@ model Tenant {
   dbUrl     String?      
 
   users     User[]
+  documents Document[]
 
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
@@ -138,6 +151,9 @@ model Employee {
   attendances    Attendance[]
   sentKudos      Kudo[]         @relation("Sender")
   receivedKudos  Kudo[]         @relation("Receiver")
+
+// Relación inversa
+  documents Document[]
 
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -246,4 +262,47 @@ model Kudo {
   // OPTIMIZACIÓN: Ranking de Kudos de la empresa
   @@index([tenantId, createdAt])
   @@map("kudos")
+
+
+
+
+
+  
+}
+
+
+
+// 2. Nueva Tabla: Documentos
+model Document {
+  id          String   @id @default(uuid())
+  tenantId    String   // Multi-tenant: fundamental
+  
+  // Metadatos del Archivo
+  name        String   // Nombre original: "contrato_firmado.pdf"
+  originalName String? // Nombre que subió el usuario
+  mimeType    String   // "application/pdf", "image/png"
+  size        Int      // Peso en bytes (útil para estadísticas)
+  
+  // Ubicación en Azure
+  // Guardaremos la ruta relativa: "tenants/techgans/employees/juan/contract.pdf"
+  path        String   
+  
+  // Clasificación y Seguridad
+  type        DocumentType @default(OTHER)
+  isPublic    Boolean      @default(false) // <--- CLAVE DE SEGURIDAD
+
+  // Relaciones
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  // Auditoría (¿Quién lo subió?)
+  uploadedBy  String   // ID del User (RRHH)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relación con Tenant para integridad referencial (opcional pero recomendada)
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+
+  @@index([tenantId, employeeId])
+  @@index([type])
 }
