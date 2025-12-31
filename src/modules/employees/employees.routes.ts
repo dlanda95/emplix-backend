@@ -4,35 +4,24 @@ import { upload } from '../../config/multer.config';
 import * as controller from './employees.controller';
 
 const router = Router();
-
 router.use(authMiddleware);
 
-// --- RUTA NUEVA (PONER PRIMERO) ---
-// Esta es la línea que te falta para que funcione el F5
-router.get('/me', controller.getMe); 
-// -----------------------------------
+// --- RUTAS ESTÁTICAS (Primero) ---
+router.get('/me', controller.getMe);
+router.get('/search', controller.searchEmployees);
+router.get('/my-team', controller.getMyTeam);
+router.get('/', controller.getDirectory);
 
-// Rutas Generales
-router.post('/', controller.create); 
-router.get('/', controller.getDirectory); 
-router.get('/search', controller.searchEmployees); 
-
-// Rutas Personales
-router.get('/my-team', controller.getMyTeam); 
-
-// Rutas Específicas por ID
-// NOTA: Si necesitas ver el perfil de OTROS, deberías tener un GET /:id aquí también.
-// router.get('/:id', controller.getEmployeeById); <--- (Descomenta si la necesitas)
-
+// --- RUTAS DE CREACIÓN/ACTUALIZACIÓN ---
+router.post('/', controller.create);
 router.patch('/:id/assign', controller.updateAssignment);
 
-// RUTA PARA SUBIR FOTO
+// --- RUTAS DE ARCHIVOS (Con Multer) ---
 router.post('/:id/avatar', upload.single('avatar'), controller.uploadAvatar);
-
-// Subir Contrato/Doc (POST)
 router.post('/:id/documents', upload.single('file'), controller.uploadDocument);
-
-// Link de descarga
 router.get('/documents/:documentId/url', controller.getDocumentUrl);
+
+// --- RUTAS DINÁMICAS (Si en futuro pones getById, va AL FINAL) ---
+// router.get('/:id', controller.getEmployeeById); 
 
 export default router;
