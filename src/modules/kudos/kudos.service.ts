@@ -1,34 +1,40 @@
-import { EmployeeStatus } from '@prisma/client';
+import { EmployeeStatus , DocumentType} from '@prisma/client';
 import { prisma } from '../../config/prisma'; // Import global
 import { getScore } from './kudos.config'; 
 import { AppError } from '../../shared/middlewares/error.middleware'; // Recomendado
 
 export class KudosService {
 
-  // Obtener el muro (Filtrado por Empresa)
-  async getAll(tenantId: string) {
+// Obtener el muro (Filtrado por Empresa)
+async getAll(tenantId: string, userId: string) {
     return await prisma.kudo.findMany({
       where: {
-        // Asumiendo que agregaste tenantId a la tabla Kudo, si no, 
-        // filtramos por el sender.tenantId (relacional)
-        // Opción A (Si Kudo tiene tenantId - Recomendado):
-        // tenantId: tenantId
-        
-        // Opción B (Si Kudo NO tiene tenantId, filtramos por relación):
-        sender: { tenantId: tenantId }
+        tenantId: tenantId,
+        // 🔒 FILTRO DE SEGURIDAD: Solo donde yo soy Emisor O Receptor
+        OR: [
+          { sender: { userId: userId } },   // Lo que envié (buscando por userId del empleado)
+          { receiver: { userId: userId } }  // Lo que recibí
+        ]
       },
       orderBy: { createdAt: 'desc' },
       include: {
         sender: {
-          select: { firstName: true, lastName: true, position: { select: { name: true } } }
+         select: { 
+            id: true, userId: true, firstName: true, lastName: true, // Agregamos userId para comparar
+            documents: { where: { type: DocumentType.AVATAR }, select: { path: true }, take: 1 },
+            position: { select: { name: true } } 
+          }
         },
         receiver: {
-          select: { firstName: true, lastName: true, position: { select: { name: true } } }
+          select: { 
+            id: true, userId: true, firstName: true, lastName: true, // Agregamos userId para comparar
+            documents: { where: { type: DocumentType.AVATAR }, select: { path: true }, take: 1 },
+            position: { select: { name: true } } 
+          }
         }
       }
     });
   }
-
   // Crear Kudo
   async create(userId: string, receiverId: string, categoryCode: string, message: string, tenantId: string) {
     
