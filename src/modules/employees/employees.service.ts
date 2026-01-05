@@ -3,10 +3,8 @@ import { EmployeeStatus, SystemRole, DocumentType } from '@prisma/client';
 import { AppError } from '../../shared/middlewares/error.middleware';
 import * as argon2 from 'argon2';
 import { StorageService } from '../../shared/services/storage.service';
-// 👇 IMPORTAMOS LOS DTOs
 import { CreateEmployeeDTO, AssignAdminDataDTO } from './employees.interface';
 
-// --- GLOBAL HELPERS ---
 const getPublicUrl = (path: string) => {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
   if (!accountName) return null;
@@ -17,10 +15,10 @@ export class EmployeesService {
   private storageService = new StorageService();
 
   // ==========================================
-  // 1. CREAR EMPLEADO
+  // 1. CREAR EMPLEADO (Con Kit Laboral Inicial)
   // ==========================================
   async createEmployee(data: CreateEmployeeDTO, tenantId: string) {
-    // A. Validaciones
+    // A. Validaciones previas
     const existingEmail = await prisma.user.findUnique({
       where: { email_tenantId: { email: data.email, tenantId } }
     });
@@ -35,11 +33,20 @@ export class EmployeesService {
     if (data.positionId) await this.validateBelongsToTenant('position', data.positionId, tenantId);
     if (data.supervisorId) await this.validateBelongsToTenant('employee', data.supervisorId, tenantId);
 
-    // B. Contraseña Temporal
+    // B. Obtener Defaults para Datos Laborales (Robustez)
+    // Buscamos el primer contrato y turno disponibles en la empresa para no fallar
+    const defaultContract = await prisma.contractType.findFirst({ where: { tenantId } });
+    const defaultShift = await prisma.workShift.findFirst({ where: { tenantId } });
+
+    if (!defaultContract || !defaultShift) {
+      throw new AppError('La empresa no tiene Tipos de Contrato o Turnos configurados. Ejecuta el Seed o créalos.', 500);
+    }
+
+    // C. Contraseña Temporal
     const tempPassword = `${data.firstName.charAt(0)}${data.lastName}123!`.trim();
     const passwordHash = await argon2.hash(tempPassword);
 
-    // C. Transacción
+    // D. Transacción de Creación
     return await prisma.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {
@@ -63,7 +70,18 @@ export class EmployeesService {
           status: EmployeeStatus.ACTIVE,
           departmentId: data.departmentId,
           positionId: data.positionId,
-          supervisorId: data.supervisorId
+          supervisorId: data.supervisorId,
+          
+          // 🔥 NUEVO: Crear Ficha Laboral Automática
+          laborData: {
+            create: {
+              contractTypeId: defaultContract.id,
+              workShiftId: defaultShift.id,
+              hierarchyLevel: 'OPERATIVO', // Default
+              startDate: new Date(data.hireDate),
+              salary: 0 // Se define luego
+            }
+          }
         }
       });
 
@@ -72,7 +90,7 @@ export class EmployeesService {
   }
 
   // ==========================================
-  // 2. LECTURA DE DATOS (Con Avatares)
+  // 2. LECTURA DE DATOS
   // ==========================================
 
   async getEmployeeById(id: string, tenantId: string) {
@@ -88,6 +106,10 @@ export class EmployeesService {
           take: 1,
           orderBy: { createdAt: 'desc' },
           select: { path: true }
+        },
+        // 🔥 Incluimos Datos Laborales
+        laborData: {
+          include: { contractType: true, workShift: true }
         }
       }
     });
@@ -104,12 +126,17 @@ export class EmployeesService {
         position: { select: { id: true, name: true } },
         supervisor: { select: { id: true, firstName: true, lastName: true } },
         user: { select: { email: true, role: true, isActive: true } },
+
+        // 👇 ¡ESTO ES LO QUE FALTABA!
+        laborData: true,
+        
         documents: {
           where: { type: DocumentType.AVATAR },
           take: 1,
           orderBy: { createdAt: 'desc' },
           select: { path: true }
-        }
+        },
+        // Opcional: incluir laborData si se necesita en la lista
       },
       orderBy: { lastName: 'asc' }
     });
@@ -147,7 +174,7 @@ export class EmployeesService {
   }
 
   // ==========================================
-  // 3. CONTEXTO PERSONAL (Mi Perfil y Equipo)
+  // 3. CONTEXTO PERSONAL
   // ==========================================
 
   async getMyProfile(userId: string, tenantId: string) {
@@ -158,6 +185,7 @@ export class EmployeesService {
         position: true,
         supervisor: { select: { id: true, firstName: true, lastName: true } },
         user: { select: { email: true, role: true, isActive: true } },
+        laborData: { include: { contractType: true, workShift: true } }, // 🔥 Info vital para el empleado
         documents: {
           where: { type: DocumentType.AVATAR },
           take: 1,
@@ -213,25 +241,80 @@ export class EmployeesService {
   }
 
   // ==========================================
-  // 4. GESTIÓN ADMINISTRATIVA
+  // 4. GESTIÓN ADMINISTRATIVA (CORREGIDO)
   // ==========================================
-  // Usamos el DTO aquí
   async assignAdministrativeData(employeeId: string, data: AssignAdminDataDTO, tenantId: string) {
-    const { departmentId, positionId, supervisorId, contractType } = data;
+    // 1. Desestructuramos TODOS los campos (incluyendo los nuevos)
+    const { 
+      departmentId, 
+      positionId, 
+      supervisorId, 
+      contractType, // Viene como string (UUID)
+      workShiftId,
+      salary,
+      startDate
+    } = data;
 
+    // 2. Verificamos que el empleado exista
     const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
     if (!employee || employee.tenantId !== tenantId) throw new AppError('Empleado no encontrado', 404);
 
     if (supervisorId && supervisorId === employeeId) throw new AppError('Auto-supervisión no permitida', 400);
 
+    // 3. Validamos las FKs de estructura si vienen
     if (departmentId) await this.validateBelongsToTenant('department', departmentId, tenantId);
     if (positionId) await this.validateBelongsToTenant('position', positionId, tenantId);
     if (supervisorId) await this.validateBelongsToTenant('employee', supervisorId, tenantId);
 
-    return await prisma.employee.update({
-      where: { id: employeeId },
-      data: { departmentId, positionId, supervisorId, contractType },
-      include: { department: true, position: true, supervisor: true }
+    // 4. 🔥 TRANSACCIÓN DE 2 PASOS: Estructura + Laboral
+    return await prisma.$transaction(async (tx) => {
+      
+      // PASO A: Actualizar Tabla Employee (Jefe, Área, Cargo)
+      // Solo si viene algún dato de estructura, ejecutamos el update
+      let updatedEmployee = employee;
+      if (departmentId !== undefined || positionId !== undefined || supervisorId !== undefined) {
+         updatedEmployee = await tx.employee.update({
+          where: { id: employeeId },
+          data: { 
+            departmentId, 
+            positionId, 
+            supervisorId 
+            // ⚠️ OJO: NO actualizamos contractType aquí, eso va en la otra tabla
+          },
+          include: { department: true, position: true, supervisor: true }
+        });
+      }
+
+      // PASO B: Actualizar Tabla EmployeeLaborData (Sueldo, Turno, Contrato)
+      // Usamos upsert: Si no existe ficha, la crea. Si existe, la actualiza.
+      if (contractType || workShiftId || salary !== undefined) {
+        
+        // Valores por defecto para creación si faltan datos
+        const defaultDate = startDate ? new Date(startDate) : new Date();
+
+        await tx.employeeLaborData.upsert({
+          where: { employeeId }, // La clave única es el empleado
+          create: {
+            employeeId,
+            // Si es CREATE, estos campos son obligatorios. 
+            // Asumimos que el front los manda o usamos defaults seguros.
+            contractTypeId: contractType!, 
+            workShiftId: workShiftId!,
+            salary: salary || 0,
+            hierarchyLevel: 'OPERATIVO',
+            startDate: defaultDate
+          },
+          update: {
+            // Si es UPDATE, solo actualizamos lo que llegó
+            ...(contractType && { contractTypeId: contractType }),
+            ...(workShiftId && { workShiftId: workShiftId }),
+            ...(salary !== undefined && { salary: salary }),
+            ...(startDate && { startDate: new Date(startDate) })
+          }
+        });
+      }
+
+      return updatedEmployee;
     });
   }
 
@@ -301,7 +384,7 @@ export class EmployeesService {
         mimeType: uploadResult.mimeType,
         size: uploadResult.size,
         path: uploadResult.path,
-        type: type, // 'CONTRACT', etc.
+        type: type, 
         isPublic: false,
         uploadedBy: userId
       }

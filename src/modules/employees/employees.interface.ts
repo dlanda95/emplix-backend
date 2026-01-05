@@ -19,7 +19,11 @@ export interface AssignAdminDataDTO {
   departmentId?: string;
   positionId?: string;
   supervisorId?: string;
-  contractType?: ContractType;
+
+ contractType?: string; // Ahora es un UUID (string), no el Enum
+  workShiftId?: string;
+  salary?: number;
+  startDate?: string | Date; // Vigencia de estas condiciones
 }
 
 // Interfaz de Respuesta (Lo que devuelve el API)

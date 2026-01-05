@@ -1,3 +1,7 @@
+// --------------------------------------------------------
+// 1. CONFIGURACIÓN E INSTANCIAS
+// --------------------------------------------------------
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,38 +11,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// --- ENUMS ---
+// --------------------------------------------------------
+// 2. ENUMS DEL SISTEMA (Globales)
+// --------------------------------------------------------
+
 enum SystemRole {
   GLOBAL_ADMIN
   COMPANY_ADMIN
   USER
-}
-
-enum EmployeeStatus {
-  ACTIVE
-  TERMINATED
-  ON_LEAVE
-}
-
-enum RequestStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
-enum RequestType {
-  VACATION
-  PERMIT
-  SICK_LEAVE
-  HOME_OFFICE
-  PROFILE_UPDATE
-}
-
-enum ContractType {
-  FULL_TIME
-  PART_TIME
-  INTERNSHIP
-  CONTRACTOR
 }
 
 enum AuthProvider {
@@ -56,19 +36,62 @@ enum TenantStatus {
   SUSPENDED
 }
 
-// 1. Definimos los tipos de documentos
+// NOTA: Eliminamos ContractType Enum porque ahora es una Tabla Dinámica
+
+enum EmployeeStatus {
+  ACTIVE
+  TERMINATED
+  ON_LEAVE
+}
+
+// Para solicitudes (Vacaciones, Permisos)
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RequestType {
+  VACATION
+  PERMIT
+  SICK_LEAVE
+  HOME_OFFICE
+  PROFILE_UPDATE
+}
+
 enum DocumentType {
-  AVATAR          // Público (Foto de perfil)
-  CONTRACT        // Privado (Solo RRHH y Empleado)
-  ID_CARD         // Privado (DNI, Pasaporte)
-  CERTIFICATION   // Semi-Público (Diplomas)
-  MEDICAL         // Estrictamente Privado (Bajas médicas)
+  AVATAR
+  CONTRACT
+  ID_CARD
+  CERTIFICATION
+  MEDICAL
   OTHER
 }
 
+// 🔥 NUEVOS ENUMS: Para lógica de Asistencia Robusta
+enum AttendanceSource {
+  BIOMETRIC      // Huellero físico
+  MOBILE_APP     // App (Geolocalización)
+  WEB_PORTAL     // Marcación web
+  SYSTEM_AUTO    // Generado por Cron Job (No fiscalizados)
+  MANUAL_HR      // Corrección humana
+}
 
+enum AttendanceStatus {
+  PENDING
+  PRESENT_ON_TIME
+  LATE
+  ABSENT_JUSTIFIED
+  ABSENT_UNJUSTIFIED
+  VACATION
+  MEDICAL_LEAVE
+  HOLIDAY
+  DAY_OFF
+}
 
-// --- MODELOS ---
+// --------------------------------------------------------
+// 3. MODELOS PRINCIPALES (SISTEMA)
+// --------------------------------------------------------
 
 model Tenant {
   id        String       @id @default(uuid())
@@ -77,10 +100,11 @@ model Tenant {
   type      TenantType   @default(SHARED)
   status    TenantStatus @default(ACTIVE)
   dbUrl     String?      
-
+  
   users     User[]
+  employees Employee[] // Relación directa para conteos rápidos
   documents Document[]
-
+  
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 
@@ -88,40 +112,137 @@ model Tenant {
 }
 
 model User {
+  id           String       @id @default(uuid())
   tenantId     String
   tenant       Tenant       @relation(fields: [tenantId], references: [id])
-  id           String       @id @default(uuid())
+  
   email        String
   passwordHash String?
   provider     AuthProvider @default(LOCAL)
   providerId   String?      
   isActive     Boolean      @default(true)
   role         SystemRole   @default(USER)
-  
+   
   employee     Employee?
   requests     Request[]
-
+  
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
-  // Índice para búsquedas rápidas de login
-  @@unique([email, tenantId])
-  // Índice para listar usuarios de una empresa rápidamente
+  @@unique([email, tenantId]) 
   @@index([tenantId]) 
   @@map("users")
 }
 
-model Employee {
-  tenantId       String
-  id             String         @id @default(uuid())
+// --------------------------------------------------------
+// 4. MÓDULO ORGANIZACIONAL (Estructura)
+// --------------------------------------------------------
 
+model Department {
+  id          String     @id @default(uuid())
+  tenantId    String     
+  
+  name        String      
+  code        String?   
+  description String?
+   
+  employees   Employee[]
+  positions   Position[] 
+  
+  // Opcional: Líder del área
+  leaderId    String?
+
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@unique([name, tenantId])
+  @@unique([code, tenantId])
+  @@index([tenantId])
+  @@map("departments")
+}
+
+model Position {
+  id           String      @id @default(uuid())
+  tenantId     String      
+  
+  name         String      
+  description  String?
+  
+  departmentId String? 
+  department   Department? @relation(fields: [departmentId], references: [id])
+  
+  employees    Employee[] 
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([name, tenantId])
+  @@index([tenantId])
+  @@map("positions")
+}
+
+// --------------------------------------------------------
+// 5. MÓDULO CONFIGURACIÓN LABORAL (CATÁLOGOS)
+// --------------------------------------------------------
+
+// Catálogo de Tipos de Contrato (Indeterminado, Plazo Fijo, Locación)
+model ContractType {
+  id          String   @id @default(uuid())
+  tenantId    String   
+  
+  name        String   // "Indeterminado", "Plazo Fijo", "Locación"
+  code        String?  // Código interno (ej: SUNAT)
+  
+  hasBenefits Boolean  @default(true) // ¿Tiene CTS/Grati? (Locación = false)
+  isLaboral   Boolean  @default(true) // ¿Va a planilla?
+  
+  employees   EmployeeLaborData[]
+
+  @@unique([name, tenantId])
+  @@map("contract_types")
+}
+
+// Configuración de Horarios (El Lego más importante para asistencia)
+model WorkShift {
+  id          String   @id @default(uuid())
+  tenantId    String   
+  
+  name        String   // "Administrativo", "Gerencia", "Planta Noche"
+  
+  // --- Fiscalización ---
+  isFiscalized Boolean @default(true) // TRUE = Marca asistencia, FALSE = Automático
+  
+  // --- Reglas (Solo si isFiscalized = true) ---
+  startTime   String?  // "09:00"
+  endTime     String?  // "18:00"
+  breakTime   Int      @default(60) // Minutos de refrigerio
+  tolerance   Int      @default(5)  // Minutos de tolerancia
+  
+  // --- Extras ---
+  allowsOvertime Boolean @default(false)
+  
+  employees   EmployeeLaborData[]
+
+  @@map("work_shifts")
+}
+
+// --------------------------------------------------------
+// 6. MÓDULO EMPLEADO (Perfil + Laboral)
+// --------------------------------------------------------
+
+model Employee {
+  id             String   @id @default(uuid())
+  tenantId       String
+  tenant         Tenant   @relation(fields: [tenantId], references: [id])
+
+  // Datos Personales
   firstName      String
   middleName     String?
   lastName       String
   secondLastName String?
   birthDate      DateTime?
   
-  documentId     String?
+  documentId     String?  // DNI/CE
   gender         String?
   personalEmail  String?
   phone          String?
@@ -130,45 +251,117 @@ model Employee {
   emergencyName  String?
   emergencyPhone String?
   emergencyRel   String?
-
-  hireDate       DateTime
-  contractType   ContractType   @default(FULL_TIME)
-  status         EmployeeStatus @default(ACTIVE)
-
-  userId         String         @unique
-  user           User           @relation(fields: [userId], references: [id])
-
-  departmentId   String?
-  department     Department?    @relation(fields: [departmentId], references: [id])
-
-  positionId     String?
-  position       Position?      @relation(fields: [positionId], references: [id])
-
-  supervisorId   String?
-  supervisor     Employee?      @relation("Hierarchy", fields: [supervisorId], references: [id])
-  subordinates   Employee[]     @relation("Hierarchy")
   
+  // Datos Sistema (Básicos)
+  status         EmployeeStatus @default(ACTIVE)
+  hireDate       DateTime
+  
+  // Relaciones Estructurales
+  userId         String?   @unique
+  user           User?     @relation(fields: [userId], references: [id])
+  
+  departmentId   String?
+  department     Department? @relation(fields: [departmentId], references: [id])
+  
+  positionId     String?
+  position       Position?   @relation(fields: [positionId], references: [id])
+  
+  // Jerarquía
+  supervisorId   String?
+  supervisor     Employee?   @relation("Hierarchy", fields: [supervisorId], references: [id])
+  subordinates   Employee[]  @relation("Hierarchy")
+  
+  // 🔥 RELACIÓN CLAVE: Datos Laborales (Separado del perfil)
+  laborData      EmployeeLaborData?
+
+  // Operaciones
   attendances    Attendance[]
-  sentKudos      Kudo[]         @relation("Sender")
-  receivedKudos  Kudo[]         @relation("Receiver")
+  documents      Document[]
+  requests       Request[]   // Vacaciones, etc.
+  
+  // Kudos (Reconocimientos)
+  sentKudos      Kudo[]      @relation("Sender")
+  receivedKudos  Kudo[]      @relation("Receiver")
 
-// Relación inversa
-  documents Document[]
-
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 
   @@unique([documentId, tenantId])
-  // OPTIMIZACIÓN: Índice para filtrar empleados por tenant + estado (Dashboard)
   @@index([tenantId, status]) 
-  // OPTIMIZACIÓN: Índice para buscar por supervisor dentro de la empresa
   @@index([tenantId, supervisorId])
   @@map("employees")
 }
 
+// Datos Laborales (Separado para historiales futuros y orden)
+model EmployeeLaborData {
+  id             String   @id @default(uuid())
+  // tenantId    String // Opcional aquí
+  
+  employeeId     String   @unique
+  employee       Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  // Vínculos (Lego)
+  contractTypeId String
+  contractType   ContractType @relation(fields: [contractTypeId], references: [id])
+  
+  workShiftId    String
+  workShift      WorkShift    @relation(fields: [workShiftId], references: [id])
+  
+  // Jerarquía salarial
+  hierarchyLevel String // "OPERATIVO", "JEFE", etc.
+  
+  startDate      DateTime
+  endDate        DateTime? // Null = Activo
+  salary         Decimal  @default(0.0)
+  currency       String   @default("PEN")
+  
+  @@map("employee_labor_data")
+}
+
+// --------------------------------------------------------
+// 7. MÓDULO ASISTENCIA (Operacional)
+// --------------------------------------------------------
+
+model Attendance {
+  id          String   @id @default(uuid())
+  tenantId    String   
+  
+  date        DateTime @db.Date 
+  
+  checkIn     DateTime?
+  checkOut    DateTime?
+  
+  // 🔥 Lógica Avanzada
+  source      AttendanceSource @default(BIOMETRIC) 
+  status      AttendanceStatus @default(PENDING)
+  
+  // Metadatos Calculados
+  hoursWorked Decimal? @default(0)
+  
+  // Auditoría (Si fue manual)
+  isManual    Boolean  @default(false)
+  editedBy    String?
+  editReason  String?
+  
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([employeeId, date])
+  @@index([tenantId, date]) 
+  @@map("attendances")
+}
+
+// --------------------------------------------------------
+// 8. OTROS MÓDULOS (Requests, Kudos, Docs)
+// --------------------------------------------------------
+
 model Request {
-  tenantId  String
   id        String        @id @default(uuid())
+  tenantId  String
+  
   type      RequestType
   status    RequestStatus @default(PENDING)
   startDate DateTime?
@@ -176,82 +369,27 @@ model Request {
   reason    String?
   data      Json?         
 
+  // Quién solicita (Usuario o Empleado - vinculamos al empleado para reportes)
+  employeeId String?      // Opcional por migración, pero idealmente obligatorio
+  employee   Employee?    @relation(fields: [employeeId], references: [id])
+  
+  // Usuario que creó el registro (login)
   userId    String
   user      User          @relation(fields: [userId], references: [id])
 
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 
-  // OPTIMIZACIÓN: Filtro rápido de "Solicitudes Pendientes por Empresa"
   @@index([tenantId, status]) 
-  // OPTIMIZACIÓN: Historial de usuario
-  @@index([tenantId, userId])
   @@map("requests")
 }
 
-model Department {
-  tenantId    String
-  id          String     @id @default(uuid())
-  name        String     
-  code        String?  
-  description String?
-  
-  employees   Employee[]
-  positions   Position[] 
-  leaderId    String?
-
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  @@unique([name, tenantId])
-  @@unique([code, tenantId])
-  @@index([tenantId]) // Índice simple para listar
-  @@map("departments")
-}
-
-model Position {
-  tenantId    String
-  id          String     @id @default(uuid())
-  name        String     
-  description String?
-  employees   Employee[]
-  
-  departmentId String? 
-  department   Department? @relation(fields: [departmentId], references: [id])
-
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-
-  @@unique([name, tenantId])
-  @@index([tenantId]) // Índice simple para listar
-  @@map("positions")
-}
-
-model Attendance {
-  tenantId   String
-  id         String   @id @default(uuid())
-  date       DateTime @db.Date 
-  checkIn    DateTime
-  checkOut   DateTime?
-  
-  employeeId String
-  employee   Employee @relation(fields: [employeeId], references: [id])
-
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([employeeId, date])
-  // OPTIMIZACIÓN CRÍTICA: Reportes de asistencia por rango de fechas en la empresa
-  @@index([tenantId, date]) 
-  @@map("attendances")
-}
-
 model Kudo {
-  tenantId     String
   id           String   @id @default(uuid())
+  tenantId     String   
+  
   message      String
   categoryCode String
-  createdAt    DateTime @default(now())
   
   senderId     String
   sender       Employee @relation("Sender", fields: [senderId], references: [id])
@@ -259,50 +397,36 @@ model Kudo {
   receiverId   String
   receiver     Employee @relation("Receiver", fields: [receiverId], references: [id])
 
-  // OPTIMIZACIÓN: Ranking de Kudos de la empresa
+  createdAt    DateTime @default(now())
+
   @@index([tenantId, createdAt])
   @@map("kudos")
-
-
-
-
-
-  
 }
 
-
-
-// 2. Nueva Tabla: Documentos
 model Document {
-  id          String   @id @default(uuid())
-  tenantId    String   // Multi-tenant: fundamental
+  id           String       @id @default(uuid())
+  tenantId     String       
   
-  // Metadatos del Archivo
-  name        String   // Nombre original: "contrato_firmado.pdf"
-  originalName String? // Nombre que subió el usuario
-  mimeType    String   // "application/pdf", "image/png"
-  size        Int      // Peso en bytes (útil para estadísticas)
+  name         String   
+  originalName String?
+  mimeType     String   
+  size         Int      
+  path         String   
   
-  // Ubicación en Azure
-  // Guardaremos la ruta relativa: "tenants/techgans/employees/juan/contract.pdf"
-  path        String   
-  
-  // Clasificación y Seguridad
-  type        DocumentType @default(OTHER)
-  isPublic    Boolean      @default(false) // <--- CLAVE DE SEGURIDAD
+  type         DocumentType @default(OTHER)
+  isPublic     Boolean      @default(false)
 
-  // Relaciones
-  employeeId  String
-  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId   String
+  employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   
-  // Auditoría (¿Quién lo subió?)
-  uploadedBy  String   // ID del User (RRHH)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // Relación con Tenant para integridad referencial (opcional pero recomendada)
-  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  // Relación opcional con Tenant para consistencia
+  tenant       Tenant       @relation(fields: [tenantId], references: [id])
+  
+  uploadedBy   String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   @@index([tenantId, employeeId])
   @@index([type])
+  @@map("documents")
 }

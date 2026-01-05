@@ -1,26 +1,33 @@
 import { prisma } from '../../config/prisma';
-import { AppError } from '../../shared/middlewares/error.middleware'; // Recomendado usar AppError
+import { AppError } from '../../shared/middlewares/error.middleware';
 
 export class AttendanceService {
 
   // Obtener estado de hoy
   async getTodayStatus(userId: string, tenantId: string) {
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // 🔥 CLAVE: Normalizar a medianoche para coincidir con @db.Date
     
-    // Buscar el empleado VALIDANDO EMPRESA
     const employee = await prisma.employee.findFirst({ 
       where: { userId, tenantId } 
     });
     
     if (!employee) throw new AppError('Empleado no encontrado', 404);
 
-    const record = await prisma.attendance.findFirst({
+    // Usamos findUnique porque definimos @@unique([employeeId, date])
+    const record = await prisma.attendance.findUnique({
       where: {
-        employeeId: employee.id,
-        tenantId: tenantId, // <--- Filtro seguridad
-        date: today 
+        employeeId_date: {
+          employeeId: employee.id,
+          date: today
+        }
       }
     });
+
+    // Validación extra de seguridad
+    if (record && record.tenantId !== tenantId) {
+       throw new AppError('Acceso denegado', 403);
+    }
 
     return {
       status: record ? (record.checkOut ? 'COMPLETED' : 'WORKING') : 'NOT_STARTED',
@@ -36,14 +43,16 @@ export class AttendanceService {
     
     if (!employee) throw new AppError('Empleado no encontrado', 404);
 
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0); // 🔥 Normalizar fecha
 
-    // Validar duplicados
-    const existing = await prisma.attendance.findFirst({
+    const existing = await prisma.attendance.findUnique({
       where: { 
-        employeeId: employee.id, 
-        tenantId: tenantId,
-        date: today 
+        employeeId_date: {
+            employeeId: employee.id, 
+            date: today
+        }
       }
     });
 
@@ -52,9 +61,10 @@ export class AttendanceService {
     return await prisma.attendance.create({
       data: {
         employeeId: employee.id,
-        tenantId: tenantId, // <--- OBLIGATORIO
+        tenantId: tenantId,
         date: today,
-        checkIn: new Date()
+        checkIn: now,
+        status: 'PRESENT_ON_TIME' // Estado provisional
       }
     });
   }
@@ -67,13 +77,16 @@ export class AttendanceService {
     
     if (!employee) throw new AppError('Empleado no encontrado', 404);
 
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
 
-    const record = await prisma.attendance.findFirst({
+    const record = await prisma.attendance.findUnique({
       where: { 
-        employeeId: employee.id, 
-        tenantId: tenantId,
-        date: today 
+        employeeId_date: {
+            employeeId: employee.id, 
+            date: today
+        }
       }
     });
 
@@ -82,23 +95,20 @@ export class AttendanceService {
 
     return await prisma.attendance.update({
       where: { id: record.id },
-      data: { checkOut: new Date() }
+      data: { checkOut: now }
     });
   }
 
   // NUEVO: Reporte Diario para Admin
   async getDailyReport(date: Date, tenantId: string) {
-    const startOfDay = new Date(date);
-    startOfDay.setHours(0, 0, 0, 0);
-    
-    const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
+    const reportDate = new Date(date);
+    reportDate.setHours(0, 0, 0, 0);
 
-    // 2. Obtener Empleados (SOLO DE MI EMPRESA)
+    // 2. Obtener Empleados
     const employees = await prisma.employee.findMany({
       where: { 
         status: 'ACTIVE',
-        tenantId: tenantId // <--- Filtro crítico
+        tenantId: tenantId 
       },
       select: {
         id: true,
@@ -110,14 +120,11 @@ export class AttendanceService {
       orderBy: { lastName: 'asc' }
     });
 
-    // 3. Obtener Asistencias (SOLO DE MI EMPRESA)
+    // 3. Obtener Asistencias
     const attendanceLogs = await prisma.attendance.findMany({
       where: {
-        tenantId: tenantId, // <--- Filtro crítico
-        date: {
-          gte: startOfDay,
-          lte: endOfDay
-        }
+        tenantId: tenantId,
+        date: reportDate
       }
     });
 
@@ -126,7 +133,9 @@ export class AttendanceService {
       const log = attendanceLogs.find(a => a.employeeId === emp.id);
       
       let status = 'AUSENTE';
-      if (log) {
+      
+      // 🔥 FIX: Verificar que checkIn exista antes de usarlo
+      if (log && log.checkIn) {
         const checkInTime = log.checkIn.getHours() * 60 + log.checkIn.getMinutes();
         const limitTime = 9 * 60 + 15; // 9:15 AM
         status = checkInTime > limitTime ? 'TARDE' : 'PUNTUAL';
@@ -156,7 +165,7 @@ export class AttendanceService {
     const logs = await prisma.attendance.findMany({
       where: {
         employeeId: employee.id,
-        tenantId: tenantId, // <--- Seguridad
+        tenantId: tenantId,
         date: {
           gte: from,
           lte: to
@@ -169,14 +178,20 @@ export class AttendanceService {
       let status = 'PUNTUAL';
       let hoursWorked = 0;
 
-      const limitTime = 9 * 60 + 15; 
-      const checkInMinutes = log.checkIn.getHours() * 60 + log.checkIn.getMinutes();
-      
-      if (checkInMinutes > limitTime) status = 'TARDE';
+      // 🔥 FIX: Verificar que checkIn exista
+      if (log.checkIn) {
+        const limitTime = 9 * 60 + 15; 
+        const checkInMinutes = log.checkIn.getHours() * 60 + log.checkIn.getMinutes();
+        
+        if (checkInMinutes > limitTime) status = 'TARDE';
 
-      if (log.checkOut) {
-        const diffMs = log.checkOut.getTime() - log.checkIn.getTime();
-        hoursWorked = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100;
+        // Solo calculamos horas si hay checkOut Y checkIn
+        if (log.checkOut) {
+            const diffMs = log.checkOut.getTime() - log.checkIn.getTime();
+            hoursWorked = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100;
+        }
+      } else {
+        status = 'SIN_MARCA'; // Manejar registros sin entrada (ej. ausencias)
       }
 
       return {

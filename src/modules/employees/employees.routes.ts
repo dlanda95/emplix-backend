@@ -21,6 +21,9 @@ router.post('/:id/avatar', upload.single('avatar'), controller.uploadAvatar);
 router.post('/:id/documents', upload.single('file'), controller.uploadDocument);
 router.get('/documents/:documentId/url', controller.getDocumentUrl);
 
+// 👇 CORRECCIÓN AQUÍ: Cambiamos 'assign' por 'administrative'
+router.patch('/:id/administrative', controller.updateAssignment);
+
 // --- RUTAS DINÁMICAS (Si en futuro pones getById, va AL FINAL) ---
 // router.get('/:id', controller.getEmployeeById); 
 

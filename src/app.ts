@@ -14,6 +14,7 @@ import requestsRoutes from './modules/requests/requests.routes';
 import employeesRoutes from './modules/employees/employees.routes';
 import attendanceRoutes from './modules/attendance/attendance.routes';
 import kudosRoutes from './modules/kudos/kudos.routes';
+import { laborRoutes } from './modules/organization/labor.routes'; // 👈 IMPORTAR
 
 const app: Application = express();
 
@@ -71,6 +72,9 @@ app.use('/api/requests', requestsRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/employees', employeesRoutes);
 app.use('/api/kudos', kudosRoutes);
+
+//--
+app.use('/api/labor', laborRoutes); // 👈 AGREGAR
 
 // ==========================================
 // 6. MANEJO DE ERRORES (Siempre al final)
