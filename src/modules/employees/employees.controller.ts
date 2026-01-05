@@ -145,3 +145,19 @@ export const getDocumentUrl = async (req: Request, res: Response, next: NextFunc
     res.json({ url });
   } catch (error) { next(error); }
 };
+
+// GET /:id - Obtener detalle completo de un empleado (Admin)
+export const getEmployeeById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const tenantId = req.tenant!.id; 
+    
+    // Llamamos al servicio que ya tiene la lógica (y trae laborData)
+    const result = await service.getEmployeeById(id, tenantId);
+    
+    res.json(result);
+  } catch (error) { next(error); }
+};
+
+
+
