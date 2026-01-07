@@ -14,7 +14,7 @@ import requestsRoutes from './modules/requests/requests.routes';
 import employeesRoutes from './modules/employees/employees.routes';
 import attendanceRoutes from './modules/attendance/attendance.routes';
 import kudosRoutes from './modules/kudos/kudos.routes';
-import { laborRoutes } from './modules/organization/labor.routes'; // 👈 IMPORTAR
+import { laborRoutes } from './modules/labor/labor.routes'; // 👈 IMPORTAR
 
 const app: Application = express();
 
