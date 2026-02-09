@@ -5,6 +5,17 @@ import { AuthService } from './auth.service';
 const authService = new AuthService();
 
 
+// ✅ NUEVO: Endpoint ligero para validar existencia de empresa (Paso 1 del Login)
+export const verifyTenant = async (req: Request, res: Response) => {
+  // Si llegamos aquí, el TenantMiddleware ya validó que el tenant existe y está activo.
+  // Devolvemos info básica pública (Nombre y Logo si tuvieras) para mostrar en el UI.
+  res.json({
+    exists: true,
+    name: req.tenant?.name, // Para que el Login diga "Bienvenido a TechGans"
+    slug: req.tenant?.slug
+  });
+};
+
 // --- Endpoint de Verificación de Email ---
 export const checkEmailExists = async (req: Request, res: Response) => {
   try {
