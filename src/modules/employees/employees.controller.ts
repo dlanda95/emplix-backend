@@ -1,163 +1,123 @@
 import { Request, Response, NextFunction } from 'express';
 import { EmployeesService } from './employees.service';
-import { CreateEmployeeDTO, AssignAdminDataDTO } from './employees.interface'; // 👈 Importamos tus DTOs
+import { ok, created, badRequest, noContent } from '../../shared/utils/response';
+import { CreateEmployeeDto, AssignAdminDataDto } from './employees.dto';
 
 const service = new EmployeesService();
 
-// ==========================================
-// 1. CONTEXTO PERSONAL (Rutas "Me")
-// ==========================================
+// ─── Documentos propios ───────────────────────────────────────────────────────
 
-// GET /me - Perfil del usuario logueado
-export const getMe = async (req: Request, res: Response, next: NextFunction) => {
+export const getMyDocuments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const tenantId = req.tenant!.id;
-    const userId = req.user!.id; 
-    
-    const result = await service.getMyProfile(userId, tenantId);
-    res.json(result);
+    const docs = await service.getEmployeeDocuments(req.user!.id, req.tenant!.id);
+    ok(res, docs);
   } catch (error) { next(error); }
 };
 
-// GET /my-team - Contexto de equipo (Jefe, pares, subordinados)
-export const getMyTeam = async (req: Request, res: Response, next: NextFunction) => {
+export const uploadMyDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const userId = req.user?.id;
-    const tenantId = req.tenant!.id; 
-    
-    // Validación básica de seguridad (aunque el middleware auth ya lo cubre)
-    if (!userId) throw new Error('Usuario no identificado');
-    
-    const result = await service.getMyTeamContext(userId, tenantId);
-    res.json(result);
+    if (!req.file)      { badRequest(res, 'Falta el archivo');            return; }
+    if (!req.body.type) { badRequest(res, 'Falta el tipo de documento');  return; }
+
+    const result = await service.uploadMyDocument(
+      req.user!.id, req.file, req.body.type, req.tenant!.id
+    );
+    created(res, result);
   } catch (error) { next(error); }
 };
 
-// ==========================================
-// 2. DIRECTORIO Y BÚSQUEDA (Rutas Generales)
-// ==========================================
-
-// GET / - Listado completo (Directory)
-export const getDirectory = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const tenantId = req.tenant!.id; 
-    const result = await service.getAllEmployees(tenantId);
-    res.json(result);
+    await service.deleteEmployeeDocument(req.params.documentId, req.user!.id, req.tenant!.id);
+    noContent(res);
   } catch (error) { next(error); }
 };
 
-// GET /search?q=... - Buscador
-export const searchEmployees = async (req: Request, res: Response, next: NextFunction) => {
+// ─── Historial laboral ────────────────────────────────────────────────────────
+
+export const getMyHistory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const history = await service.getEmploymentHistory(req.user!.id, req.tenant!.id);
+    ok(res, history);
+  } catch (error) { next(error); }
+};
+
+export const getMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const result = await service.getMyProfile(req.user!.id, req.tenant!.id);
+    ok(res, result);
+  } catch (error) { next(error); }
+};
+
+export const getMyTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const result = await service.getMyTeamContext(req.user!.id, req.tenant!.id);
+    ok(res, result);
+  } catch (error) { next(error); }
+};
+
+export const getDirectory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const result = await service.getAllEmployees(req.tenant!.id);
+    ok(res, result);
+  } catch (error) { next(error); }
+};
+
+export const searchEmployees = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { q } = req.query;
-    const tenantId = req.tenant!.id; 
+    if (!q || typeof q !== 'string') { ok(res, []); return; }
 
-    // Validación rápida de entrada
-    if (!q || typeof q !== 'string') return res.json([]);
-    
-    const results = await service.searchEmployees(q, tenantId);
-    res.json(results);
+    const results = await service.searchEmployees(q, req.tenant!.id);
+    ok(res, results);
   } catch (error) { next(error); }
 };
 
-// ==========================================
-// 3. GESTIÓN DE EMPLEADOS (CRUD)
-// ==========================================
-
-// POST / - Crear Empleado (Onboarding)
-export const create = async (req: Request, res: Response, next: NextFunction) => {
+export const getEmployeeById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const tenantId = req.tenant!.id;
-    // Tipado estricto con DTO
-    const data: CreateEmployeeDTO = req.body; 
-    
-    const result = await service.createEmployee(data, tenantId);
-    
-    // Status 201 Created
-    res.status(201).json(result);
+    const result = await service.getEmployeeById(req.params.id, req.tenant!.id);
+    ok(res, result);
   } catch (error) { next(error); }
 };
 
-// PATCH /:id/assign - Actualizar datos administrativos
-export const updateAssignment = async (req: Request, res: Response, next: NextFunction) => {
+export const create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { id } = req.params;
-    const tenantId = req.tenant!.id; 
-    // Tipado estricto con DTO
-    const data: AssignAdminDataDTO = req.body;
-
-    const result = await service.assignAdministrativeData(id, data, tenantId);
-    res.json(result);
+    const data: CreateEmployeeDto = req.body;
+    const result = await service.createEmployee(data, req.tenant!.id);
+    created(res, result);
   } catch (error) { next(error); }
 };
 
-// ==========================================
-// 4. ARCHIVOS Y DOCUMENTOS
-// ==========================================
-
-// POST /:id/avatar - Subir foto de perfil
-export const uploadAvatar = async (req: Request, res: Response, next: NextFunction) => {
+export const updateAssignment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { id } = req.params;
-    const tenantId = req.tenant!.id;
-    const userId = req.user!.id;
-    const file = req.file;
-
-    // Validación HTTP básica
-    if (!file) return res.status(400).json({ message: 'No se ha enviado ningún archivo de imagen' });
-
-    const result = await service.uploadAvatar(id, file, tenantId, userId);
-    
-    // Estandarizamos la respuesta
-    res.status(201).json({
-      message: 'Foto de perfil actualizada correctamente',
-      document: result
-    });
+    const data: AssignAdminDataDto = req.body;
+    const result = await service.assignAdministrativeData(req.params.id, data, req.tenant!.id);
+    ok(res, result);
   } catch (error) { next(error); }
 };
 
-// POST /:id/documents - Subir documento genérico (Contrato, etc.)
-export const uploadDocument = async (req: Request, res: Response, next: NextFunction) => {
+export const uploadAvatar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { id } = req.params;
-    const tenantId = req.tenant!.id;
-    const userId = req.user!.id;
-    const file = req.file;
-    const { type } = req.body; 
+    if (!req.file) { badRequest(res, 'No se ha enviado ningún archivo de imagen'); return; }
 
-    if (!file) return res.status(400).json({ message: 'Falta el archivo' });
-    if (!type) return res.status(400).json({ message: 'Falta el tipo de documento' });
-
-    const result = await service.uploadDocument(id, file, type, tenantId, userId);
-    
-    res.status(201).json({ message: 'Documento subido', document: result });
+    const result = await service.uploadAvatar(req.params.id, req.file, req.tenant!.id, req.user!.id);
+    created(res, { message: 'Foto de perfil actualizada correctamente', document: result });
   } catch (error) { next(error); }
 };
 
-// GET /documents/:documentId/url - Obtener link de descarga (SAS Token)
-export const getDocumentUrl = async (req: Request, res: Response, next: NextFunction) => {
+export const uploadDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { documentId } = req.params; 
-    const tenantId = req.tenant!.id;
+    if (!req.file)      { badRequest(res, 'Falta el archivo'); return; }
+    if (!req.body.type) { badRequest(res, 'Falta el tipo de documento'); return; }
 
-    const url = await service.getDocumentLink(documentId, tenantId);
-    
-    res.json({ url });
+    const result = await service.uploadDocument(req.params.id, req.file, req.body.type, req.tenant!.id, req.user!.id);
+    created(res, { message: 'Documento subido', document: result });
   } catch (error) { next(error); }
 };
 
-// GET /:id - Obtener detalle completo de un empleado (Admin)
-export const getEmployeeById = async (req: Request, res: Response, next: NextFunction) => {
+export const getDocumentUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const { id } = req.params;
-    const tenantId = req.tenant!.id; 
-    
-    // Llamamos al servicio que ya tiene la lógica (y trae laborData)
-    const result = await service.getEmployeeById(id, tenantId);
-    
-    res.json(result);
+    const url = await service.getDocumentLink(req.params.documentId, req.tenant!.id);
+    ok(res, { url });
   } catch (error) { next(error); }
 };
-
-
-

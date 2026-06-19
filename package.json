@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node src/server.ts",
+    "dev:seed": "ts-node prisma/dev-seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "prisma": {

@@ -1,4 +1,3 @@
-
 import { Request, Response, NextFunction } from 'express';
 import { ZodSchema, ZodError } from 'zod';
 
@@ -9,20 +8,15 @@ export const validate = (schema: ZodSchema) =>
       return next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const zodError = error as ZodError;
-
         return res.status(400).json({
-          status: 'error',
+          code: 'VALIDATION_ERROR',
           message: 'Datos de entrada inválidos',
-          errors: zodError.issues.map((issue) => ({
-            field: issue.path.join('.'), // más útil para objetos anidados
+          errors: error.issues.map(issue => ({
+            field:   issue.path.join('.'),
             message: issue.message,
-            code: issue.code,            // opcional: tipo de error zod
           })),
         });
       }
-
-      return res.status(500).json({ message: 'Error de validación interno' });
+      return res.status(500).json({ code: 'INTERNAL_ERROR', message: 'Error de validación interno' });
     }
   };
-``

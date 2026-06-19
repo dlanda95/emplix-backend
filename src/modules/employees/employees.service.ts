@@ -3,7 +3,7 @@ import { EmployeeStatus, SystemRole, DocumentType } from '@prisma/client';
 import { AppError } from '../../shared/middlewares/error.middleware';
 import * as argon2 from 'argon2';
 import { StorageService } from '../../shared/services/storage.service';
-import { CreateEmployeeDTO, AssignAdminDataDTO } from './employees.interface';
+import { CreateEmployeeDto, AssignAdminDataDto, TimelineEventDto } from './employees.dto';
 
 const getPublicUrl = (path: string) => {
   const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
@@ -17,7 +17,7 @@ export class EmployeesService {
   // ==========================================
   // 1. CREAR EMPLEADO (Con Kit Laboral Inicial)
   // ==========================================
-  async createEmployee(data: CreateEmployeeDTO, tenantId: string) {
+  async createEmployee(data: CreateEmployeeDto, tenantId: string) {
     // A. Validaciones previas
     const existingEmail = await prisma.user.findUnique({
       where: { email_tenantId: { email: data.email, tenantId } }
@@ -243,7 +243,7 @@ export class EmployeesService {
   // ==========================================
   // 4. GESTIÓN ADMINISTRATIVA (CORREGIDO)
   // ==========================================
-  async assignAdministrativeData(employeeId: string, data: AssignAdminDataDTO, tenantId: string) {
+  async assignAdministrativeData(employeeId: string, data: AssignAdminDataDto, tenantId: string) {
     // 1. Desestructuramos TODOS los campos (incluyendo los nuevos)
     const { 
       departmentId, 
@@ -391,6 +391,57 @@ export class EmployeesService {
     });
   }
 
+  // ─── Documentos self-service ─────────────────────────────────────────────────
+
+  async getEmployeeDocuments(userId: string, tenantId: string) {
+    const employee = await prisma.employee.findFirst({ where: { userId, tenantId } });
+    if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
+
+    return prisma.document.findMany({
+      where: { employeeId: employee.id, tenantId, type: { not: DocumentType.AVATAR } },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async uploadMyDocument(userId: string, file: Express.Multer.File, type: DocumentType, tenantId: string) {
+    const employee = await prisma.employee.findFirst({ where: { userId, tenantId } });
+    if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
+
+    const uploadResult = await this.storageService.uploadFile(
+      file,
+      'private-docs',
+      `tenants/${tenantId}/${employee.id}/docs/${type.toLowerCase()}`
+    );
+
+    return prisma.document.create({
+      data: {
+        tenantId,
+        employeeId:   employee.id,
+        name:         file.originalname,
+        originalName: file.originalname,
+        mimeType:     file.mimetype,
+        size:         file.size,
+        path:         uploadResult.path,
+        type,
+        isPublic:     false,
+        uploadedBy:   userId,
+      },
+    });
+  }
+
+  async deleteEmployeeDocument(documentId: string, userId: string, tenantId: string): Promise<void> {
+    const doc = await prisma.document.findUnique({ where: { id: documentId } });
+    if (!doc || doc.tenantId !== tenantId) throw new AppError('Documento no encontrado', 404);
+
+    const employee = await prisma.employee.findFirst({ where: { userId, tenantId } });
+    if (!employee || doc.employeeId !== employee.id) {
+      throw new AppError('No tienes permiso para eliminar este documento', 403, 'FORBIDDEN');
+    }
+
+    await this.storageService.deleteFile('private-docs', doc.path);
+    await prisma.document.delete({ where: { id: documentId } });
+  }
+
   async getDocumentLink(documentId: string, tenantId: string) {
     const doc = await prisma.document.findUnique({ where: { id: documentId } });
     if (!doc || doc.tenantId !== tenantId) throw new AppError('Documento no encontrado', 404);
@@ -403,6 +454,95 @@ export class EmployeesService {
   }
 
   // ==========================================
+  // HISTORIAL LABORAL
+  // ==========================================
+  async getEmploymentHistory(userId: string, tenantId: string): Promise<TimelineEventDto[]> {
+    const employee = await prisma.employee.findFirst({
+      where: { userId, tenantId },
+      include: {
+        department:  { select: { name: true } },
+        position:    { select: { name: true } },
+        supervisor:  { select: { firstName: true, lastName: true } },
+        laborData: {
+          include: {
+            contractType: { select: { name: true } },
+            workShift:    { select: { name: true } },
+          },
+        },
+      },
+    });
+
+    if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
+
+    const events: TimelineEventDto[] = [];
+
+    // ── Evento 1: Incorporación ──────────────────────────────────────────
+    events.push({
+      id:        `hire-${employee.id}`,
+      type:      'contratacion',
+      date:      employee.hireDate.toISOString(),
+      title:     'Incorporación a la empresa',
+      icon:      'how_to_reg',
+      isCurrent: false,
+      details:   [
+        ...(employee.position?.name   ? [{ label: 'Puesto inicial', value: employee.position.name   }] : []),
+        ...(employee.department?.name ? [{ label: 'Área inicial',   value: employee.department.name }] : []),
+      ],
+    });
+
+    // ── Evento 2: Condiciones laborales (si difieren de la fecha de ingreso) ──
+    const labor = employee.laborData;
+    if (labor) {
+      const laborStart = labor.startDate;
+      const diffDays = Math.abs(laborStart.getTime() - employee.hireDate.getTime()) / 86_400_000;
+
+      if (diffDays > 1) {
+        events.push({
+          id:        `labor-${employee.id}`,
+          type:      'cambio-contrato',
+          date:      laborStart.toISOString(),
+          title:     'Actualización de condiciones laborales',
+          icon:      'description',
+          isCurrent: false,
+          details:   [
+            ...(labor.contractType?.name ? [{ label: 'Contrato', value: labor.contractType.name }] : []),
+            ...(labor.workShift?.name    ? [{ label: 'Turno',    value: labor.workShift.name    }] : []),
+            ...(labor.hierarchyLevel     ? [{ label: 'Nivel',    value: labor.hierarchyLevel    }] : []),
+            ...(Number(labor.salary) > 0 ? [{ label: 'Salario',  value: `$${Number(labor.salary).toLocaleString('es-PE')}` }] : []),
+          ],
+        });
+      }
+    }
+
+    // ── Evento 3: Estado actual (siempre el último) ───────────────────────
+    const currentDetails: TimelineEventDto['details'] = [
+      ...(employee.position?.name   ? [{ label: 'Puesto',      value: employee.position.name   }] : []),
+      ...(employee.department?.name ? [{ label: 'Área',        value: employee.department.name }] : []),
+      ...(employee.supervisor ? [{
+        label: 'Supervisor',
+        value: `${employee.supervisor.firstName} ${employee.supervisor.lastName}`,
+      }] : []),
+      ...(labor?.contractType?.name ? [{ label: 'Contrato', value: labor.contractType.name }] : []),
+      ...(labor?.workShift?.name    ? [{ label: 'Turno',    value: labor.workShift.name    }] : []),
+      ...(labor?.hierarchyLevel     ? [{ label: 'Nivel',    value: labor.hierarchyLevel    }] : []),
+    ];
+
+    if (currentDetails.length > 0) {
+      events.push({
+        id:        `current-${employee.id}`,
+        type:      'estado-actual',
+        date:      new Date().toISOString(),
+        title:     'Estado actual',
+        icon:      'verified_user',
+        isCurrent: true,
+        details:   currentDetails,
+      });
+    }
+
+    return events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
+
+  // ==========================================
   // PRIVATE HELPERS
   // ==========================================
   private transformWithAvatar(employee: any) {
@@ -412,14 +552,15 @@ export class EmployeesService {
     return { ...rest, photoUrl: avatarDoc ? getPublicUrl(avatarDoc.path) : null };
   }
 
-  private async validateBelongsToTenant(model: 'department' | 'position' | 'employee', id: string, tenantId: string) {
-    let record;
-    if (model === 'department') record = await prisma.department.findUnique({ where: { id } });
-    if (model === 'position') record = await prisma.position.findUnique({ where: { id } });
-    if (model === 'employee') record = await prisma.employee.findUnique({ where: { id } });
+  private async validateBelongsToTenant(model: 'department' | 'position' | 'employee', id: string, tenantId: string): Promise<void> {
+    type WithTenant = { tenantId: string };
+    let record: WithTenant | null = null;
 
-    if (!record) throw new AppError(`${model} no encontrado`, 404);
-    // @ts-ignore
-    if (record.tenantId !== tenantId) throw new AppError(`El registro no pertenece a esta empresa`, 403);
+    if (model === 'department') record = await prisma.department.findUnique({ where: { id } }) as WithTenant | null;
+    if (model === 'position')   record = await prisma.position.findUnique({ where: { id } })   as WithTenant | null;
+    if (model === 'employee')   record = await prisma.employee.findUnique({ where: { id } })   as WithTenant | null;
+
+    if (!record)                          throw new AppError(`${model} no encontrado`, 404);
+    if (record.tenantId !== tenantId)     throw new AppError('El registro no pertenece a esta empresa', 403);
   }
 }
