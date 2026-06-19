@@ -76,7 +76,7 @@ export const microsoftLogin = async (req: Request, res: Response, next: NextFunc
 // --- REGISTER ---
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName,middleName, lastName,secondLastName } = req.body;
     if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({ message: 'Todos los campos son obligatorios' });
     }

@@ -114,7 +114,10 @@ export class AuthService {
         employee: {
           create: {
             firstName: data.firstName,
+            middleName: data.middleName,
+            
             lastName: data.lastName,
+            secondLastName: data.secondLastName,
             hireDate: new Date(),
             tenantId: tenantId, // <--- Vinculación Obligatoria
             // Aquí podrías agregar valores por defecto si faltan
