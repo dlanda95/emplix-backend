@@ -1,60 +1,55 @@
 import { Request, Response, NextFunction } from 'express';
-import { prisma } from '../../config/prisma'; 
-import { TenantStatus } from '@prisma/client'; // <--- IMPORTANTE: Usamos el Enum real
+import { platformPrisma } from '../../config/platform-prisma';
+import { tenantPrismaManager } from '../../config/tenant-prisma-manager';
 
 export const tenantMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let slug: string | undefined;
-
-    // 1. ESTRATEGIA DE DETECCIÓN (Tu lógica está perfecta)
     const headerSlug = req.headers['x-tenant-slug'] as string;
-    if (headerSlug) {
-      slug = headerSlug;
-    } else {
-      const host = req.get('host') || '';
-      const parts = host.split('.');
-      if (parts.length > 2) {
-        slug = parts[0];
-      }
-    }
+    const host = req.get('host') || '';
+    const subdomainSlug = host.split('.').length > 2 ? host.split('.')[0] : undefined;
+    const slug = headerSlug || subdomainSlug;
 
     if (!slug) {
-      return res.status(400).json({ 
-        message: 'No se ha especificado la empresa (Tenant) en la cabecera o subdominio.' 
+      return res.status(400).json({
+        message: 'No se ha especificado la empresa en la cabecera x-tenant-slug.',
+        code: 'TENANT_REQUIRED',
       });
     }
 
-    // 2. Buscar la empresa
-    const tenant = await prisma.tenant.findUnique({
-      where: { slug: slug }
+    const tenant = await platformPrisma.tenant.findUnique({
+      where: { slug },
+      include: { authConfigs: { where: { enabled: true } } },
     });
 
     if (!tenant) {
-      return res.status(404).json({ message: `La empresa '${slug}' no existe.` });
+      return res.status(404).json({ message: `La empresa '${slug}' no existe.`, code: 'TENANT_NOT_FOUND' });
     }
 
-    // 3. DEFENSA CONTRA MOROSOS / SUSPENDIDOS 🛡️
-    // Usamos el Enum para ser estrictos y evitar errores de tipeo.
-    if (tenant.status === TenantStatus.SUSPENDED) {
-      console.warn(`⛔ Alerta: Intento de acceso a Tenant SUSPENDIDO: ${slug}`);
-      
-      // Retornamos 402 (Payment Required)
-      // Esto ayuda al Front a saber exactamente qué pantalla mostrar (ej: "Contacte a Cobranzas")
-      return res.status(402).json({ 
-        message: 'El servicio para esta organización se encuentra suspendido. Contacte al administrador.',
-        code: 'TENANT_SUSPENDED' 
+    if (tenant.status === 'SUSPENDED') {
+      return res.status(402).json({
+        message: 'El servicio para esta organización está suspendido. Contacta al administrador.',
+        code: 'TENANT_SUSPENDED',
       });
     }
 
-    // Validación general para cualquier otro estado que no sea ACTIVE (ej: ARCHIVED)
-    if (tenant.status !== TenantStatus.ACTIVE) {
-      return res.status(403).json({ message: 'Esta organización no está activa actualmente.' });
+    if (tenant.status !== 'ACTIVE') {
+      return res.status(403).json({ message: 'Esta organización no está activa.', code: 'TENANT_INACTIVE' });
     }
 
-    // 4. ¡ÉXITO!
-    req.tenant = tenant;
-    next(); 
+    req.tenant = {
+      id: tenant.id,
+      slug: tenant.slug,
+      name: tenant.name,
+      schemaName: tenant.schemaName,
+      authMethods: tenant.authConfigs.map(c => ({
+        method: c.method as 'EMAIL' | 'MICROSOFT' | 'GOOGLE',
+        azureTenantId: c.azureTenantId ?? undefined,
+      })),
+    };
 
+    req.tenantPrisma = tenantPrismaManager.getClient(tenant.schemaName);
+
+    next();
   } catch (error) {
     console.error('Error en Tenant Middleware:', error);
     res.status(500).json({ message: 'Error interno validando la empresa.' });

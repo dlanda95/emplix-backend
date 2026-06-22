@@ -1,316 +1,212 @@
-import { prisma } from '../../config/prisma';
-import { EmployeeStatus, SystemRole, DocumentType } from '@prisma/client';
+import { PrismaClient } from '../../generated/tenant-client';
 import { AppError } from '../../shared/middlewares/error.middleware';
 import * as argon2 from 'argon2';
 import { StorageService } from '../../shared/services/storage.service';
 import { CreateEmployeeDto, AssignAdminDataDto, TimelineEventDto } from './employees.dto';
 
 const getPublicUrl = (path: string) => {
-  const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-  if (!accountName) return null;
-  return `https://${accountName}.blob.core.windows.net/public-assets/${path}`;
+  const account = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+  return account ? `https://${account}.blob.core.windows.net/public-assets/${path}` : null;
 };
 
 export class EmployeesService {
   private storageService = new StorageService();
 
-  // ==========================================
-  // 1. CREAR EMPLEADO (Con Kit Laboral Inicial)
-  // ==========================================
-  async createEmployee(data: CreateEmployeeDto, tenantId: string) {
-    // A. Validaciones previas
-    const existingEmail = await prisma.user.findUnique({
-      where: { email_tenantId: { email: data.email, tenantId } }
-    });
+  // ── Crear Empleado ──────────────────────────────────────────────────────────
+  async createEmployee(data: CreateEmployeeDto, tenantSlug: string, db: PrismaClient) {
+    const existingEmail = await db.user.findUnique({ where: { email: data.email } });
     if (existingEmail) throw new AppError('El correo ya está registrado', 409);
 
-    const existingDoc = await prisma.employee.findUnique({
-      where: { documentId_tenantId: { documentId: data.documentId, tenantId } }
-    });
-    if (existingDoc) throw new AppError('El documento de identidad ya existe', 409);
-
-    if (data.departmentId) await this.validateBelongsToTenant('department', data.departmentId, tenantId);
-    if (data.positionId) await this.validateBelongsToTenant('position', data.positionId, tenantId);
-    if (data.supervisorId) await this.validateBelongsToTenant('employee', data.supervisorId, tenantId);
-
-    // B. Obtener Defaults para Datos Laborales (Robustez)
-    // Buscamos el primer contrato y turno disponibles en la empresa para no fallar
-    const defaultContract = await prisma.contractType.findFirst({ where: { tenantId } });
-    const defaultShift = await prisma.workShift.findFirst({ where: { tenantId } });
-
-    if (!defaultContract || !defaultShift) {
-      throw new AppError('La empresa no tiene Tipos de Contrato o Turnos configurados. Ejecuta el Seed o créalos.', 500);
+    if (data.documentId) {
+      const existingDoc = await db.employee.findUnique({ where: { documentId: data.documentId } });
+      if (existingDoc) throw new AppError('El documento de identidad ya existe', 409);
     }
 
-    // C. Contraseña Temporal
-    const tempPassword = `${data.firstName.charAt(0)}${data.lastName}123!`.trim();
-    const passwordHash = await argon2.hash(tempPassword);
+    if (data.departmentId) await this.validateExists('department', data.departmentId, db);
+    if (data.positionId)   await this.validateExists('position',   data.positionId,   db);
+    if (data.supervisorId) await this.validateExists('employee',   data.supervisorId,  db);
 
-    // D. Transacción de Creación
-    return await prisma.$transaction(async (tx) => {
+    const defaultContract = await db.contractType.findFirst();
+    const defaultShift    = await db.workShift.findFirst();
+    if (!defaultContract || !defaultShift) {
+      throw new AppError('Configura al menos un Tipo de Contrato y un Turno antes de crear empleados.', 500);
+    }
+
+    const tempPassword  = `${data.firstName.charAt(0)}${data.lastName}123!`.trim();
+    const passwordHash  = await argon2.hash(tempPassword);
+
+    return db.$transaction(async (tx) => {
       const newUser = await tx.user.create({
         data: {
           email: data.email,
           passwordHash,
-          role: data.role || SystemRole.USER,
-          tenantId,
-          isActive: true
-        }
+          role: data.role ?? 'EMPLOYEE',
+          isActive: true,
+        },
       });
 
       const newEmployee = await tx.employee.create({
         data: {
-          userId: newUser.id,
-          tenantId,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          documentId: data.documentId,
-          hireDate: new Date(data.hireDate),
-          birthDate: data.birthDate ? new Date(data.birthDate) : null,
-          status: EmployeeStatus.ACTIVE,
+          userId:      newUser.id,
+          firstName:   data.firstName,
+          lastName:    data.lastName,
+          documentId:  data.documentId,
+          hireDate:    new Date(data.hireDate),
+          birthDate:   data.birthDate ? new Date(data.birthDate) : null,
+          status:      'ACTIVE',
           departmentId: data.departmentId,
-          positionId: data.positionId,
+          positionId:   data.positionId,
           supervisorId: data.supervisorId,
-          
-          // 🔥 NUEVO: Crear Ficha Laboral Automática
           laborData: {
             create: {
               contractTypeId: defaultContract.id,
-              workShiftId: defaultShift.id,
-              hierarchyLevel: 'OPERATIVO', // Default
-              startDate: new Date(data.hireDate),
-              salary: 0 // Se define luego
-            }
-          }
-        }
+              workShiftId:    defaultShift.id,
+              hierarchyLevel: 'OPERATIVO',
+              startDate:      new Date(data.hireDate),
+              salary:         0,
+            },
+          },
+        },
       });
 
       return { user: newUser, employee: newEmployee, tempPassword };
     });
   }
 
-  // ==========================================
-  // 2. LECTURA DE DATOS
-  // ==========================================
-
-  async getEmployeeById(id: string, tenantId: string) {
-    const employee = await prisma.employee.findUnique({
-      where: { id, tenantId },
+  // ── Lectura ─────────────────────────────────────────────────────────────────
+  async getEmployeeById(id: string, db: PrismaClient) {
+    const employee = await db.employee.findUnique({
+      where: { id },
       include: {
         department: true,
-        position: true,
+        position:   true,
         supervisor: { select: { id: true, firstName: true, lastName: true } },
-        user: { select: { email: true, role: true, isActive: true } },
-        documents: {
-          where: { type: DocumentType.AVATAR },
-          take: 1,
-          orderBy: { createdAt: 'desc' },
-          select: { path: true }
-        },
-        // 🔥 Incluimos Datos Laborales
-        laborData: {
-          include: { contractType: true, workShift: true }
-        }
-      }
+        user:       { select: { email: true, role: true, isActive: true } },
+        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
+        laborData:  { include: { contractType: true, workShift: true } },
+      },
     });
-
     if (!employee) throw new AppError('Empleado no encontrado', 404);
     return this.transformWithAvatar(employee);
   }
 
-  async getAllEmployees(tenantId: string) {
-    const employees = await prisma.employee.findMany({
-      where: { tenantId, status: 'ACTIVE' },
+  async getAllEmployees(db: PrismaClient) {
+    const employees = await db.employee.findMany({
+      where: { status: 'ACTIVE' },
       include: {
         department: { select: { id: true, name: true, code: true } },
-        position: { select: { id: true, name: true } },
+        position:   { select: { id: true, name: true } },
         supervisor: { select: { id: true, firstName: true, lastName: true } },
-        user: { select: { email: true, role: true, isActive: true } },
-
-        // 👇 ¡ESTO ES LO QUE FALTABA!
-        laborData: true,
-        
-        documents: {
-          where: { type: DocumentType.AVATAR },
-          take: 1,
-          orderBy: { createdAt: 'desc' },
-          select: { path: true }
-        },
-        // Opcional: incluir laborData si se necesita en la lista
+        user:       { select: { email: true, role: true, isActive: true } },
+        laborData:  true,
+        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
       },
-      orderBy: { lastName: 'asc' }
+      orderBy: { lastName: 'asc' },
     });
-
-    return employees.map(emp => this.transformWithAvatar(emp));
+    return employees.map(e => this.transformWithAvatar(e));
   }
 
-  async searchEmployees(query: string, tenantId: string) {
-    const employees = await prisma.employee.findMany({
+  async searchEmployees(query: string, db: PrismaClient) {
+    const employees = await db.employee.findMany({
       where: {
-        tenantId: tenantId,
-        status: EmployeeStatus.ACTIVE,
+        status: 'ACTIVE',
         OR: [
           { firstName: { contains: query, mode: 'insensitive' } },
-          { lastName: { contains: query, mode: 'insensitive' } }
-        ]
+          { lastName:  { contains: query, mode: 'insensitive' } },
+        ],
       },
       take: 10,
       select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        position: { select: { name: true } },
+        id: true, firstName: true, lastName: true,
+        position:  { select: { name: true } },
         department: { select: { name: true } },
-        documents: {
-          where: { type: DocumentType.AVATAR },
-          take: 1,
-          orderBy: { createdAt: 'desc' },
-          select: { path: true }
-        }
-      }
+        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
+      },
     });
-
-    return employees.map(emp => this.transformWithAvatar(emp));
+    return employees.map(e => this.transformWithAvatar(e));
   }
 
-  // ==========================================
-  // 3. CONTEXTO PERSONAL
-  // ==========================================
-
-  async getMyProfile(userId: string, tenantId: string) {
-    const employee = await prisma.employee.findFirst({
-      where: { userId, tenantId },
+  // ── Perfil propio ───────────────────────────────────────────────────────────
+  async getMyProfile(userId: string, db: PrismaClient) {
+    const employee = await db.employee.findUnique({
+      where: { userId },
       include: {
         department: true,
-        position: true,
+        position:   true,
         supervisor: { select: { id: true, firstName: true, lastName: true } },
-        user: { select: { email: true, role: true, isActive: true } },
-        laborData: { include: { contractType: true, workShift: true } }, // 🔥 Info vital para el empleado
-        documents: {
-          where: { type: DocumentType.AVATAR },
-          take: 1,
-          orderBy: { createdAt: 'desc' as const },
-          select: { path: true }
-        }
-      }
+        user:       { select: { email: true, role: true, isActive: true } },
+        laborData:  { include: { contractType: true, workShift: true } },
+        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' as const }, select: { path: true } },
+      },
     });
-
-    if (!employee) throw new AppError('Perfil de empleado no encontrado', 404);
+    if (!employee) throw new AppError('Perfil no encontrado', 404);
     return this.transformWithAvatar(employee);
   }
 
-  async getMyTeamContext(userId: string, tenantId: string) {
-    const me = await prisma.employee.findFirst({
-      where: { userId, tenantId },
+  async getMyTeamContext(userId: string, db: PrismaClient) {
+    const me = await db.employee.findUnique({
+      where: { userId },
       include: {
         supervisor: { include: { position: true, user: { select: { email: true } } } },
-        position: true,
-        documents: { where: { type: DocumentType.AVATAR }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } }
-      }
+        position:   true,
+        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
+      },
     });
-
     if (!me) throw new AppError('Perfil no encontrado', 404);
 
     const commonInclude = {
-      position: true,
-      user: { select: { email: true } },
-      documents: { where: { type: DocumentType.AVATAR }, take: 1, orderBy: { createdAt: 'desc' as const }, select: { path: true } }
+      position:  true,
+      user:      { select: { email: true } },
+      documents: { where: { type: 'AVATAR' as const }, take: 1, orderBy: { createdAt: 'desc' as const }, select: { path: true } },
     };
 
-    let peers: any[] = [];
-    if (me.supervisorId) {
-      const rawPeers = await prisma.employee.findMany({
-        where: { supervisorId: me.supervisorId, id: { not: me.id }, tenantId, status: 'ACTIVE' },
-        include: commonInclude
-      });
-      peers = rawPeers.map(p => this.transformWithAvatar(p));
-    }
+    const peers = me.supervisorId
+      ? (await db.employee.findMany({ where: { supervisorId: me.supervisorId, id: { not: me.id }, status: 'ACTIVE' }, include: commonInclude })).map(p => this.transformWithAvatar(p))
+      : [];
 
-    const rawSubordinates = await prisma.employee.findMany({
-      where: { supervisorId: me.id, tenantId, status: 'ACTIVE' },
-      include: commonInclude
-    });
-    const subordinates = rawSubordinates.map(s => this.transformWithAvatar(s));
+    const subordinates = (await db.employee.findMany({ where: { supervisorId: me.id, status: 'ACTIVE' }, include: commonInclude })).map(s => this.transformWithAvatar(s));
 
-    return { 
-      me: this.transformWithAvatar(me), 
-      supervisor: me.supervisor, 
-      peers, 
-      subordinates 
-    };
+    return { me: this.transformWithAvatar(me), supervisor: me.supervisor, peers, subordinates };
   }
 
-  // ==========================================
-  // 4. GESTIÓN ADMINISTRATIVA (CORREGIDO)
-  // ==========================================
-  async assignAdministrativeData(employeeId: string, data: AssignAdminDataDto, tenantId: string) {
-    // 1. Desestructuramos TODOS los campos (incluyendo los nuevos)
-    const { 
-      departmentId, 
-      positionId, 
-      supervisorId, 
-      contractType, // Viene como string (UUID)
-      workShiftId,
-      salary,
-      startDate
-    } = data;
+  // ── Gestión administrativa ──────────────────────────────────────────────────
+  async assignAdministrativeData(employeeId: string, data: AssignAdminDataDto, db: PrismaClient) {
+    const employee = await db.employee.findUnique({ where: { id: employeeId } });
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
 
-    // 2. Verificamos que el empleado exista
-    const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
-    if (!employee || employee.tenantId !== tenantId) throw new AppError('Empleado no encontrado', 404);
+    if (data.supervisorId && data.supervisorId === employeeId) throw new AppError('Auto-supervisión no permitida', 400);
+    if (data.departmentId) await this.validateExists('department', data.departmentId, db);
+    if (data.positionId)   await this.validateExists('position',   data.positionId,   db);
+    if (data.supervisorId) await this.validateExists('employee',   data.supervisorId,  db);
 
-    if (supervisorId && supervisorId === employeeId) throw new AppError('Auto-supervisión no permitida', 400);
-
-    // 3. Validamos las FKs de estructura si vienen
-    if (departmentId) await this.validateBelongsToTenant('department', departmentId, tenantId);
-    if (positionId) await this.validateBelongsToTenant('position', positionId, tenantId);
-    if (supervisorId) await this.validateBelongsToTenant('employee', supervisorId, tenantId);
-
-    // 4. 🔥 TRANSACCIÓN DE 2 PASOS: Estructura + Laboral
-    return await prisma.$transaction(async (tx) => {
-      
-      // PASO A: Actualizar Tabla Employee (Jefe, Área, Cargo)
-      // Solo si viene algún dato de estructura, ejecutamos el update
+    return db.$transaction(async (tx) => {
       let updatedEmployee = employee;
-      if (departmentId !== undefined || positionId !== undefined || supervisorId !== undefined) {
-         updatedEmployee = await tx.employee.update({
+      if (data.departmentId !== undefined || data.positionId !== undefined || data.supervisorId !== undefined) {
+        updatedEmployee = await tx.employee.update({
           where: { id: employeeId },
-          data: { 
-            departmentId, 
-            positionId, 
-            supervisorId 
-            // ⚠️ OJO: NO actualizamos contractType aquí, eso va en la otra tabla
-          },
-          include: { department: true, position: true, supervisor: true }
+          data:  { departmentId: data.departmentId, positionId: data.positionId, supervisorId: data.supervisorId },
+          include: { department: true, position: true, supervisor: true },
         });
       }
 
-      // PASO B: Actualizar Tabla EmployeeLaborData (Sueldo, Turno, Contrato)
-      // Usamos upsert: Si no existe ficha, la crea. Si existe, la actualiza.
-      if (contractType || workShiftId || salary !== undefined) {
-        
-        // Valores por defecto para creación si faltan datos
-        const defaultDate = startDate ? new Date(startDate) : new Date();
-
+      if (data.contractType || data.workShiftId || data.salary !== undefined) {
+        const defaultDate = data.startDate ? new Date(data.startDate) : new Date();
         await tx.employeeLaborData.upsert({
-          where: { employeeId }, // La clave única es el empleado
+          where:  { employeeId },
           create: {
             employeeId,
-            // Si es CREATE, estos campos son obligatorios. 
-            // Asumimos que el front los manda o usamos defaults seguros.
-            contractTypeId: contractType!, 
-            workShiftId: workShiftId!,
-            salary: salary || 0,
+            contractTypeId: data.contractType!,
+            workShiftId:    data.workShiftId!,
+            salary:         data.salary ?? 0,
             hierarchyLevel: 'OPERATIVO',
-            startDate: defaultDate
+            startDate:      defaultDate,
           },
           update: {
-            // Si es UPDATE, solo actualizamos lo que llegó
-            ...(contractType && { contractTypeId: contractType }),
-            ...(workShiftId && { workShiftId: workShiftId }),
-            ...(salary !== undefined && { salary: salary }),
-            ...(startDate && { startDate: new Date(startDate) })
-          }
+            ...(data.contractType  && { contractTypeId: data.contractType }),
+            ...(data.workShiftId   && { workShiftId: data.workShiftId }),
+            ...(data.salary !== undefined && { salary: data.salary }),
+            ...(data.startDate     && { startDate: new Date(data.startDate) }),
+          },
         });
       }
 
@@ -318,110 +214,75 @@ export class EmployeesService {
     });
   }
 
-  // ==========================================
-  // 5. STORAGE & ARCHIVOS
-  // ==========================================
-  async uploadAvatar(employeeId: string, file: Express.Multer.File, tenantId: string, userId: string) {
-    const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
-    if (!employee || employee.tenantId !== tenantId) throw new AppError('Empleado no encontrado', 404);
+  // ── Storage ─────────────────────────────────────────────────────────────────
+  async uploadAvatar(employeeId: string, file: Express.Multer.File, tenantSlug: string, userId: string, db: PrismaClient) {
+    const employee = await db.employee.findUnique({ where: { id: employeeId } });
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
 
-    const oldAvatar = await prisma.document.findFirst({
-      where: { employeeId, type: DocumentType.AVATAR }
-    });
-
+    const oldAvatar = await db.document.findFirst({ where: { employeeId, type: 'AVATAR' } });
     if (oldAvatar) {
       await this.storageService.deleteFile('public-assets', oldAvatar.path);
-      await prisma.document.delete({ where: { id: oldAvatar.id } });
+      await db.document.delete({ where: { id: oldAvatar.id } });
     }
 
-    const uploadResult = await this.storageService.uploadFile(
-      file, 
-      'public-assets', 
-      `tenants/${tenantId}/${employeeId}/avatar`
-    );
+    const upload = await this.storageService.uploadFile(file, 'public-assets', `tenants/${tenantSlug}/${employeeId}/avatar`);
 
-    const newDoc = await prisma.document.create({
+    const doc = await db.document.create({
       data: {
-        tenantId,
         employeeId,
-        name: uploadResult.originalName,
-        mimeType: uploadResult.mimeType,
-        size: uploadResult.size,
-        path: uploadResult.path,
-        type: DocumentType.AVATAR,
-        isPublic: true,
-        uploadedBy: userId
-      }
+        name:         upload.originalName,
+        mimeType:     upload.mimeType,
+        size:         upload.size,
+        path:         upload.path,
+        type:         'AVATAR',
+        isPublic:     true,
+        uploadedBy:   userId,
+      },
     });
 
-    return {
-      ...newDoc,
-      photoUrl: getPublicUrl(newDoc.path)
-    };
+    return { ...doc, photoUrl: getPublicUrl(doc.path) };
   }
 
-  async uploadDocument(
-    employeeId: string, 
-    file: Express.Multer.File, 
-    type: DocumentType, 
-    tenantId: string, 
-    userId: string
-  ) {
-    const employee = await prisma.employee.findUnique({ where: { id: employeeId } });
-    if (!employee || employee.tenantId !== tenantId) throw new AppError('Empleado no encontrado', 404);
+  async uploadDocument(employeeId: string, file: Express.Multer.File, type: any, tenantSlug: string, userId: string, db: PrismaClient) {
+    const employee = await db.employee.findUnique({ where: { id: employeeId } });
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
 
-    const uploadResult = await this.storageService.uploadFile(
-      file,
-      'private-docs', 
-      `tenants/${tenantId}/${employeeId}/docs`
-    );
+    const upload = await this.storageService.uploadFile(file, 'private-docs', `tenants/${tenantSlug}/${employeeId}/docs`);
 
-    return await prisma.document.create({
+    return db.document.create({
       data: {
-        tenantId,
         employeeId,
-        name: uploadResult.originalName,
-        mimeType: uploadResult.mimeType,
-        size: uploadResult.size,
-        path: uploadResult.path,
-        type: type, 
-        isPublic: false,
-        uploadedBy: userId
-      }
+        name:       upload.originalName,
+        mimeType:   upload.mimeType,
+        size:       upload.size,
+        path:       upload.path,
+        type,
+        isPublic:   false,
+        uploadedBy: userId,
+      },
     });
   }
 
-  // ─── Documentos self-service ─────────────────────────────────────────────────
+  async getEmployeeDocuments(userId: string, db: PrismaClient) {
+    const employee = await db.employee.findUnique({ where: { userId } });
+    if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
+    return db.document.findMany({ where: { employeeId: employee.id, type: { not: 'AVATAR' } }, orderBy: { createdAt: 'desc' } });
+  }
 
-  async getEmployeeDocuments(userId: string, tenantId: string) {
-    const employee = await prisma.employee.findFirst({ where: { userId, tenantId } });
+  async uploadMyDocument(userId: string, file: Express.Multer.File, type: any, tenantSlug: string, db: PrismaClient) {
+    const employee = await db.employee.findUnique({ where: { userId } });
     if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
 
-    return prisma.document.findMany({
-      where: { employeeId: employee.id, tenantId, type: { not: DocumentType.AVATAR } },
-      orderBy: { createdAt: 'desc' },
-    });
-  }
+    const upload = await this.storageService.uploadFile(file, 'private-docs', `tenants/${tenantSlug}/${employee.id}/docs/${String(type).toLowerCase()}`);
 
-  async uploadMyDocument(userId: string, file: Express.Multer.File, type: DocumentType, tenantId: string) {
-    const employee = await prisma.employee.findFirst({ where: { userId, tenantId } });
-    if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
-
-    const uploadResult = await this.storageService.uploadFile(
-      file,
-      'private-docs',
-      `tenants/${tenantId}/${employee.id}/docs/${type.toLowerCase()}`
-    );
-
-    return prisma.document.create({
+    return db.document.create({
       data: {
-        tenantId,
         employeeId:   employee.id,
         name:         file.originalname,
         originalName: file.originalname,
         mimeType:     file.mimetype,
         size:         file.size,
-        path:         uploadResult.path,
+        path:         upload.path,
         type,
         isPublic:     false,
         uploadedBy:   userId,
@@ -429,82 +290,55 @@ export class EmployeesService {
     });
   }
 
-  async deleteEmployeeDocument(documentId: string, userId: string, tenantId: string): Promise<void> {
-    const doc = await prisma.document.findUnique({ where: { id: documentId } });
-    if (!doc || doc.tenantId !== tenantId) throw new AppError('Documento no encontrado', 404);
+  async deleteEmployeeDocument(documentId: string, userId: string, db: PrismaClient): Promise<void> {
+    const doc = await db.document.findUnique({ where: { id: documentId } });
+    if (!doc) throw new AppError('Documento no encontrado', 404);
 
-    const employee = await prisma.employee.findFirst({ where: { userId, tenantId } });
-    if (!employee || doc.employeeId !== employee.id) {
-      throw new AppError('No tienes permiso para eliminar este documento', 403, 'FORBIDDEN');
-    }
+    const employee = await db.employee.findUnique({ where: { userId } });
+    if (!employee || doc.employeeId !== employee.id) throw new AppError('No tienes permiso para eliminar este documento', 403, 'FORBIDDEN');
 
     await this.storageService.deleteFile('private-docs', doc.path);
-    await prisma.document.delete({ where: { id: documentId } });
+    await db.document.delete({ where: { id: documentId } });
   }
 
-  async getDocumentLink(documentId: string, tenantId: string) {
-    const doc = await prisma.document.findUnique({ where: { id: documentId } });
-    if (!doc || doc.tenantId !== tenantId) throw new AppError('Documento no encontrado', 404);
-
-    if (doc.isPublic) {
-      return getPublicUrl(doc.path);
-    } else {
-      return this.storageService.getSignedUrl('private-docs', doc.path, 60);
-    }
+  async getDocumentLink(documentId: string, db: PrismaClient) {
+    const doc = await db.document.findUnique({ where: { id: documentId } });
+    if (!doc) throw new AppError('Documento no encontrado', 404);
+    return doc.isPublic ? getPublicUrl(doc.path) : this.storageService.getSignedUrl('private-docs', doc.path, 60);
   }
 
-  // ==========================================
-  // HISTORIAL LABORAL
-  // ==========================================
-  async getEmploymentHistory(userId: string, tenantId: string): Promise<TimelineEventDto[]> {
-    const employee = await prisma.employee.findFirst({
-      where: { userId, tenantId },
+  // ── Historial laboral ───────────────────────────────────────────────────────
+  async getEmploymentHistory(userId: string, db: PrismaClient): Promise<TimelineEventDto[]> {
+    const employee = await db.employee.findUnique({
+      where: { userId },
       include: {
         department:  { select: { name: true } },
         position:    { select: { name: true } },
         supervisor:  { select: { firstName: true, lastName: true } },
-        laborData: {
-          include: {
-            contractType: { select: { name: true } },
-            workShift:    { select: { name: true } },
-          },
-        },
+        laborData: { include: { contractType: { select: { name: true } }, workShift: { select: { name: true } } } },
       },
     });
-
     if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
 
     const events: TimelineEventDto[] = [];
 
-    // ── Evento 1: Incorporación ──────────────────────────────────────────
     events.push({
-      id:        `hire-${employee.id}`,
-      type:      'contratacion',
-      date:      employee.hireDate.toISOString(),
-      title:     'Incorporación a la empresa',
-      icon:      'how_to_reg',
-      isCurrent: false,
-      details:   [
+      id: `hire-${employee.id}`, type: 'contratacion', date: employee.hireDate.toISOString(),
+      title: 'Incorporación a la empresa', icon: 'how_to_reg', isCurrent: false,
+      details: [
         ...(employee.position?.name   ? [{ label: 'Puesto inicial', value: employee.position.name   }] : []),
         ...(employee.department?.name ? [{ label: 'Área inicial',   value: employee.department.name }] : []),
       ],
     });
 
-    // ── Evento 2: Condiciones laborales (si difieren de la fecha de ingreso) ──
     const labor = employee.laborData;
     if (labor) {
-      const laborStart = labor.startDate;
-      const diffDays = Math.abs(laborStart.getTime() - employee.hireDate.getTime()) / 86_400_000;
-
+      const diffDays = Math.abs(labor.startDate.getTime() - employee.hireDate.getTime()) / 86_400_000;
       if (diffDays > 1) {
         events.push({
-          id:        `labor-${employee.id}`,
-          type:      'cambio-contrato',
-          date:      laborStart.toISOString(),
-          title:     'Actualización de condiciones laborales',
-          icon:      'description',
-          isCurrent: false,
-          details:   [
+          id: `labor-${employee.id}`, type: 'cambio-contrato', date: labor.startDate.toISOString(),
+          title: 'Actualización de condiciones laborales', icon: 'description', isCurrent: false,
+          details: [
             ...(labor.contractType?.name ? [{ label: 'Contrato', value: labor.contractType.name }] : []),
             ...(labor.workShift?.name    ? [{ label: 'Turno',    value: labor.workShift.name    }] : []),
             ...(labor.hierarchyLevel     ? [{ label: 'Nivel',    value: labor.hierarchyLevel    }] : []),
@@ -514,53 +348,38 @@ export class EmployeesService {
       }
     }
 
-    // ── Evento 3: Estado actual (siempre el último) ───────────────────────
     const currentDetails: TimelineEventDto['details'] = [
-      ...(employee.position?.name   ? [{ label: 'Puesto',      value: employee.position.name   }] : []),
-      ...(employee.department?.name ? [{ label: 'Área',        value: employee.department.name }] : []),
-      ...(employee.supervisor ? [{
-        label: 'Supervisor',
-        value: `${employee.supervisor.firstName} ${employee.supervisor.lastName}`,
-      }] : []),
+      ...(employee.position?.name   ? [{ label: 'Puesto',    value: employee.position.name   }] : []),
+      ...(employee.department?.name ? [{ label: 'Área',      value: employee.department.name }] : []),
+      ...(employee.supervisor ? [{ label: 'Supervisor', value: `${employee.supervisor.firstName} ${employee.supervisor.lastName}` }] : []),
       ...(labor?.contractType?.name ? [{ label: 'Contrato', value: labor.contractType.name }] : []),
       ...(labor?.workShift?.name    ? [{ label: 'Turno',    value: labor.workShift.name    }] : []),
-      ...(labor?.hierarchyLevel     ? [{ label: 'Nivel',    value: labor.hierarchyLevel    }] : []),
     ];
 
     if (currentDetails.length > 0) {
       events.push({
-        id:        `current-${employee.id}`,
-        type:      'estado-actual',
-        date:      new Date().toISOString(),
-        title:     'Estado actual',
-        icon:      'verified_user',
-        isCurrent: true,
-        details:   currentDetails,
+        id: `current-${employee.id}`, type: 'estado-actual', date: new Date().toISOString(),
+        title: 'Estado actual', icon: 'verified_user', isCurrent: true,
+        details: currentDetails,
       });
     }
 
     return events.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
-  // ==========================================
-  // PRIVATE HELPERS
-  // ==========================================
+  // ── Helpers ─────────────────────────────────────────────────────────────────
   private transformWithAvatar(employee: any) {
     if (!employee) return null;
-    const avatarDoc = employee.documents && employee.documents.length > 0 ? employee.documents[0] : null;
+    const avatarDoc = employee.documents?.[0];
     const { documents, ...rest } = employee;
     return { ...rest, photoUrl: avatarDoc ? getPublicUrl(avatarDoc.path) : null };
   }
 
-  private async validateBelongsToTenant(model: 'department' | 'position' | 'employee', id: string, tenantId: string): Promise<void> {
-    type WithTenant = { tenantId: string };
-    let record: WithTenant | null = null;
-
-    if (model === 'department') record = await prisma.department.findUnique({ where: { id } }) as WithTenant | null;
-    if (model === 'position')   record = await prisma.position.findUnique({ where: { id } })   as WithTenant | null;
-    if (model === 'employee')   record = await prisma.employee.findUnique({ where: { id } })   as WithTenant | null;
-
-    if (!record)                          throw new AppError(`${model} no encontrado`, 404);
-    if (record.tenantId !== tenantId)     throw new AppError('El registro no pertenece a esta empresa', 403);
+  private async validateExists(model: 'department' | 'position' | 'employee', id: string, db: PrismaClient): Promise<void> {
+    let record: any = null;
+    if (model === 'department') record = await db.department.findUnique({ where: { id } });
+    if (model === 'position')   record = await db.position.findUnique({ where: { id } });
+    if (model === 'employee')   record = await db.employee.findUnique({ where: { id } });
+    if (!record) throw new AppError(`${model} no encontrado`, 404);
   }
 }

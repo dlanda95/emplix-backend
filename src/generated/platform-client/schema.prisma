@@ -1,0 +1,71 @@
+// ── Platform Schema ────────────────────────────────────────────────────────────
+// Tablas de la plataforma multi-tenant (Tenants + Auth Config).
+// Viven en el schema "public" de PostgreSQL.
+// Después de cambiar este archivo: prisma migrate dev
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/platform-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ─────────────────────────────────────────────────────────────────────
+
+enum Plan {
+  STARTER
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+enum TenantStatus {
+  ACTIVE
+  SUSPENDED
+  CANCELLED
+}
+
+enum AuthMethod {
+  EMAIL
+  MICROSOFT
+  GOOGLE
+}
+
+// ── Tenant ────────────────────────────────────────────────────────────────────
+
+model Tenant {
+  id           String       @id @default(uuid())
+  slug         String       @unique
+  name         String
+  schemaName   String       @unique // Nombre del schema PostgreSQL: "tenant_acme_corp"
+  plan         Plan         @default(STARTER)
+  status       TenantStatus @default(ACTIVE)
+  logoUrl      String?
+  primaryColor String?
+  settings     Json         @default("{}")
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  authConfigs TenantAuthConfig[]
+
+  @@map("tenants")
+}
+
+// ── Auth Config ───────────────────────────────────────────────────────────────
+
+model TenantAuthConfig {
+  id            String     @id @default(uuid())
+  tenantId      String
+  method        AuthMethod
+  enabled       Boolean    @default(true)
+  azureTenantId String? // Solo MICROSOFT: tenant ID del Azure AD del cliente
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, method])
+  @@map("tenant_auth_configs")
+}

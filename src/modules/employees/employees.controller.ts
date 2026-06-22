@@ -5,119 +5,87 @@ import { CreateEmployeeDto, AssignAdminDataDto } from './employees.dto';
 
 const service = new EmployeesService();
 
-// ─── Documentos propios ───────────────────────────────────────────────────────
-
 export const getMyDocuments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const docs = await service.getEmployeeDocuments(req.user!.id, req.tenant!.id);
-    ok(res, docs);
-  } catch (error) { next(error); }
+  try { ok(res, await service.getEmployeeDocuments(req.user!.id, req.tenantPrisma!)); }
+  catch (error) { next(error); }
 };
 
 export const uploadMyDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    if (!req.file)      { badRequest(res, 'Falta el archivo');            return; }
-    if (!req.body.type) { badRequest(res, 'Falta el tipo de documento');  return; }
-
-    const result = await service.uploadMyDocument(
-      req.user!.id, req.file, req.body.type, req.tenant!.id
-    );
-    created(res, result);
+    if (!req.file)      { badRequest(res, 'Falta el archivo');           return; }
+    if (!req.body.type) { badRequest(res, 'Falta el tipo de documento'); return; }
+    created(res, await service.uploadMyDocument(req.user!.id, req.file, req.body.type, req.tenant!.slug, req.tenantPrisma!));
   } catch (error) { next(error); }
 };
 
 export const deleteDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    await service.deleteEmployeeDocument(req.params.documentId, req.user!.id, req.tenant!.id);
+    await service.deleteEmployeeDocument(req.params.documentId, req.user!.id, req.tenantPrisma!);
     noContent(res);
   } catch (error) { next(error); }
 };
 
-// ─── Historial laboral ────────────────────────────────────────────────────────
-
 export const getMyHistory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const history = await service.getEmploymentHistory(req.user!.id, req.tenant!.id);
-    ok(res, history);
-  } catch (error) { next(error); }
+  try { ok(res, await service.getEmploymentHistory(req.user!.id, req.tenantPrisma!)); }
+  catch (error) { next(error); }
 };
 
 export const getMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const result = await service.getMyProfile(req.user!.id, req.tenant!.id);
-    ok(res, result);
-  } catch (error) { next(error); }
+  try { ok(res, await service.getMyProfile(req.user!.id, req.tenantPrisma!)); }
+  catch (error) { next(error); }
 };
 
 export const getMyTeam = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const result = await service.getMyTeamContext(req.user!.id, req.tenant!.id);
-    ok(res, result);
-  } catch (error) { next(error); }
+  try { ok(res, await service.getMyTeamContext(req.user!.id, req.tenantPrisma!)); }
+  catch (error) { next(error); }
 };
 
 export const getDirectory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const result = await service.getAllEmployees(req.tenant!.id);
-    ok(res, result);
-  } catch (error) { next(error); }
+  try { ok(res, await service.getAllEmployees(req.tenantPrisma!)); }
+  catch (error) { next(error); }
 };
 
 export const searchEmployees = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { q } = req.query;
     if (!q || typeof q !== 'string') { ok(res, []); return; }
-
-    const results = await service.searchEmployees(q, req.tenant!.id);
-    ok(res, results);
+    ok(res, await service.searchEmployees(q, req.tenantPrisma!));
   } catch (error) { next(error); }
 };
 
 export const getEmployeeById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const result = await service.getEmployeeById(req.params.id, req.tenant!.id);
-    ok(res, result);
-  } catch (error) { next(error); }
+  try { ok(res, await service.getEmployeeById(req.params.id, req.tenantPrisma!)); }
+  catch (error) { next(error); }
 };
 
 export const create = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const data: CreateEmployeeDto = req.body;
-    const result = await service.createEmployee(data, req.tenant!.id);
-    created(res, result);
+    created(res, await service.createEmployee(req.body as CreateEmployeeDto, req.tenant!.slug, req.tenantPrisma!));
   } catch (error) { next(error); }
 };
 
 export const updateAssignment = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    const data: AssignAdminDataDto = req.body;
-    const result = await service.assignAdministrativeData(req.params.id, data, req.tenant!.id);
-    ok(res, result);
+    ok(res, await service.assignAdministrativeData(req.params.id, req.body as AssignAdminDataDto, req.tenantPrisma!));
   } catch (error) { next(error); }
 };
 
 export const uploadAvatar = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     if (!req.file) { badRequest(res, 'No se ha enviado ningún archivo de imagen'); return; }
-
-    const result = await service.uploadAvatar(req.params.id, req.file, req.tenant!.id, req.user!.id);
-    created(res, { message: 'Foto de perfil actualizada correctamente', document: result });
+    created(res, await service.uploadAvatar(req.params.id, req.file, req.tenant!.slug, req.user!.id, req.tenantPrisma!));
   } catch (error) { next(error); }
 };
 
 export const uploadDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
-    if (!req.file)      { badRequest(res, 'Falta el archivo'); return; }
+    if (!req.file)      { badRequest(res, 'Falta el archivo');           return; }
     if (!req.body.type) { badRequest(res, 'Falta el tipo de documento'); return; }
-
-    const result = await service.uploadDocument(req.params.id, req.file, req.body.type, req.tenant!.id, req.user!.id);
-    created(res, { message: 'Documento subido', document: result });
+    created(res, await service.uploadDocument(req.params.id, req.file, req.body.type, req.tenant!.slug, req.user!.id, req.tenantPrisma!));
   } catch (error) { next(error); }
 };
 
 export const getDocumentUrl = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const url = await service.getDocumentLink(req.params.documentId, req.tenant!.id);
-    ok(res, { url });
-  } catch (error) { next(error); }
+  try { ok(res, { url: await service.getDocumentLink(req.params.documentId, req.tenantPrisma!) }); }
+  catch (error) { next(error); }
 };

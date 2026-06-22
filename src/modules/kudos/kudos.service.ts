@@ -1,121 +1,81 @@
-import { EmployeeStatus , DocumentType} from '@prisma/client';
-import { prisma } from '../../config/prisma'; // Import global
-import { getScore } from './kudos.config'; 
-import { AppError } from '../../shared/middlewares/error.middleware'; // Recomendado
+import { PrismaClient } from '../../generated/tenant-client';
+import { getScore } from './kudos.config';
+import { AppError } from '../../shared/middlewares/error.middleware';
+
+const getPublicUrl = (path: string | undefined) => {
+  if (!path) return null;
+  const account = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+  return account ? `https://${account}.blob.core.windows.net/public-assets/${path}` : null;
+};
 
 export class KudosService {
 
-// Obtener el muro (Filtrado por Empresa)
-async getAll(tenantId: string, userId: string) {
-    return await prisma.kudo.findMany({
+  async getAll(userId: string, db: PrismaClient) {
+    return db.kudo.findMany({
       where: {
-        tenantId: tenantId,
-        // 🔒 FILTRO DE SEGURIDAD: Solo donde yo soy Emisor O Receptor
         OR: [
-          { sender: { userId: userId } },   // Lo que envié (buscando por userId del empleado)
-          { receiver: { userId: userId } }  // Lo que recibí
-        ]
+          { sender: { userId } },
+          { receiver: { userId } },
+        ],
       },
       orderBy: { createdAt: 'desc' },
       include: {
         sender: {
-         select: { 
-            id: true, userId: true, firstName: true, lastName: true, // Agregamos userId para comparar
-            documents: { where: { type: DocumentType.AVATAR }, select: { path: true }, take: 1 },
-            position: { select: { name: true } } 
-          }
+          select: {
+            id: true, userId: true, firstName: true, lastName: true,
+            documents: { where: { type: 'AVATAR' }, select: { path: true }, take: 1 },
+            position: { select: { name: true } },
+          },
         },
         receiver: {
-          select: { 
-            id: true, userId: true, firstName: true, lastName: true, // Agregamos userId para comparar
-            documents: { where: { type: DocumentType.AVATAR }, select: { path: true }, take: 1 },
-            position: { select: { name: true } } 
-          }
-        }
-      }
-    });
-  }
-  // Crear Kudo
-  async create(userId: string, receiverId: string, categoryCode: string, message: string, tenantId: string) {
-    
-    // 1. Identificar al EMISOR (Sender) dentro de esta empresa
-    const sender = await prisma.employee.findFirst({
-      where: { userId, tenantId, status: EmployeeStatus.ACTIVE }
-    });
-
-    if (!sender) throw new Error('SENDER_NOT_FOUND');
-
-    // 2. Validar al RECEPTOR (Receiver) dentro de esta empresa
-    const receiver = await prisma.employee.findUnique({
-      where: { id: receiverId }
-    });
-
-    if (!receiver || receiver.tenantId !== tenantId) {
-      throw new Error('RECEIVER_NOT_FOUND');
-    }
-
-    if (sender.id === receiver.id) {
-      throw new AppError('No puedes enviarte aplausos a ti mismo', 400);
-    }
-
-    // 3. Crear el Kudo
-    return await prisma.kudo.create({
-      data: {
-        categoryCode,
-        message,
-        // Conexiones directas usando IDs validados
-        senderId: sender.id,
-        receiverId: receiver.id,
-        
-        // OJO: Si agregaste el campo tenantId al modelo Kudo (recomendado), descomenta esto:
-        tenantId: tenantId 
-      }
+          select: {
+            id: true, userId: true, firstName: true, lastName: true,
+            documents: { where: { type: 'AVATAR' }, select: { path: true }, take: 1 },
+            position: { select: { name: true } },
+          },
+        },
+      },
     });
   }
 
-  // Analítica (Ranking)
-  async getAnalytics(tenantId: string) {
-    
-    // 1. Traemos empleados ACTIVOS de ESTA empresa
-    const employees = await prisma.employee.findMany({
-      where: { 
-        status: EmployeeStatus.ACTIVE,
-        tenantId: tenantId // <--- Filtro crítico
-      }, 
+  async create(userId: string, receiverId: string, categoryCode: string, message: string, db: PrismaClient) {
+    const sender = await db.employee.findUnique({ where: { userId }, select: { id: true, status: true } });
+    if (!sender || sender.status !== 'ACTIVE') throw new Error('SENDER_NOT_FOUND');
+
+    const receiver = await db.employee.findUnique({ where: { id: receiverId } });
+    if (!receiver) throw new Error('RECEIVER_NOT_FOUND');
+    if (sender.id === receiver.id) throw new AppError('No puedes enviarte aplausos a ti mismo', 400);
+
+    return db.kudo.create({ data: { categoryCode, message, senderId: sender.id, receiverId } });
+  }
+
+  async getAnalytics(db: PrismaClient) {
+    const employees = await db.employee.findMany({
+      where: { status: 'ACTIVE' },
       select: {
-        id: true,
-        firstName: true,
-        lastName: true,
+        id: true, firstName: true, lastName: true,
         position: { select: { name: true } },
-       
-        receivedKudos: {
-          select: { categoryCode: true }
-        }
-      }
+        receivedKudos: { select: { categoryCode: true } },
+      },
     });
 
-    // 2. Procesamos la data en memoria
-    const report = employees.map(emp => {
-      
-      let totalScore = 0;
-      const breakdown: Record<string, number> = {};
-
-      emp.receivedKudos.forEach(kudo => {
-        breakdown[kudo.categoryCode] = (breakdown[kudo.categoryCode] || 0) + 1;
-        totalScore += getScore(kudo.categoryCode);
-      });
-
-      return {
-        employeeId: emp.id,
-        name: `${emp.firstName} ${emp.lastName}`,
-        position: emp.position?.name || 'Sin cargo',
-        totalKudos: emp.receivedKudos.length,
-        totalScore: totalScore,
-        breakdown: breakdown
-      };
-    });
-
-    // 3. Ordenamos: Mayor puntaje primero
-    return report.sort((a, b) => b.totalScore - a.totalScore);
+    return employees
+      .map(emp => {
+        let totalScore = 0;
+        const breakdown: Record<string, number> = {};
+        emp.receivedKudos.forEach(k => {
+          breakdown[k.categoryCode] = (breakdown[k.categoryCode] || 0) + 1;
+          totalScore += getScore(k.categoryCode);
+        });
+        return {
+          employeeId: emp.id,
+          name: `${emp.firstName} ${emp.lastName}`,
+          position: emp.position?.name ?? 'Sin cargo',
+          totalKudos: emp.receivedKudos.length,
+          totalScore,
+          breakdown,
+        };
+      })
+      .sort((a, b) => b.totalScore - a.totalScore);
   }
 }

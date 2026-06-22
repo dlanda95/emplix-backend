@@ -1,6 +1,4 @@
-import { SystemRole } from '@prisma/client';
-
-// ─── Employment History ──────────────────────────────────────────────────────
+import { UserRole } from '../../generated/tenant-client';
 
 export type TimelineEventType =
   | 'contratacion'
@@ -27,15 +25,15 @@ export interface TimelineEventDto {
 }
 
 export interface CreateEmployeeDto {
-  email:        string;
-  firstName:    string;
-  lastName:     string;
-  documentId:   string;
-  hireDate:     string | Date;
-  role?:        SystemRole;
-  birthDate?:   string | Date;
+  email:         string;
+  firstName:     string;
+  lastName:      string;
+  documentId?:   string;
+  hireDate:      string | Date;
+  role?:         UserRole;
+  birthDate?:    string | Date;
   departmentId?: string;
-  positionId?:  string;
+  positionId?:   string;
   supervisorId?: string;
 }
 
@@ -54,8 +52,4 @@ export interface EmployeeResponseDto {
   firstName: string;
   lastName:  string;
   photoUrl?: string | null;
-}
-
-export interface UploadDocumentDto {
-  type: string;
 }

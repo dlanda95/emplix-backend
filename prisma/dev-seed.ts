@@ -1,204 +1,247 @@
 /**
- * dev-seed.ts
+ * dev-seed.ts — Seed de datos para desarrollo (Pattern 2 Multi-Tenant)
  *
- * Script de datos de desarrollo para el tenant "techgans".
- * Crea departamentos, cargos, contratos y turnos si no existen,
- * y enriquece todos los empleados del tenant con datos realistas
- * para que el Histórico Laboral tenga eventos visibles.
+ * Crea usuarios admin, departamentos, cargos, turnos, contratos y empleados
+ * de ejemplo en cada tenant provisionado.
  *
- * Uso:  npx ts-node prisma/dev-seed.ts
+ * Uso: npx ts-node prisma/dev-seed.ts
  */
 
-import { PrismaClient } from '@prisma/client';
+import * as argon2 from 'argon2';
+import { platformPrisma } from '../src/config/platform-prisma';
+import { tenantPrismaManager } from '../src/config/tenant-prisma-manager';
+import type { PrismaClient } from '../src/generated/tenant-client';
 
-const prisma = new PrismaClient();
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
-// ─── Parámetros ───────────────────────────────────────────────────────────────
-const TENANT_SLUG = 'techgans';
-
-// Fechas para dar historia al timeline
 const daysAgo = (n: number) => {
   const d = new Date();
   d.setDate(d.getDate() - n);
   return d;
 };
 
-const HIRE_DATE          = daysAgo(540);  // ~18 meses atrás
-const LABOR_UPDATE_DATE  = daysAgo(360);  // ~12 meses atrás (fin de periodo de prueba)
+// ─── Catálogos compartidos ────────────────────────────────────────────────────
 
-// ─── Catálogos ────────────────────────────────────────────────────────────────
 const DEPARTMENTS = [
-  { name: 'Tecnología',          code: 'TEC', description: 'Desarrollo de software y sistemas' },
-  { name: 'Recursos Humanos',    code: 'RH',  description: 'Gestión del talento humano'         },
-  { name: 'Comercial',           code: 'COM', description: 'Ventas y relaciones comerciales'    },
-  { name: 'Finanzas',            code: 'FIN', description: 'Contabilidad y finanzas'            },
+  { name: 'Tecnología',       code: 'TEC', description: 'Desarrollo de software y sistemas' },
+  { name: 'Recursos Humanos', code: 'RH',  description: 'Gestión del talento humano'        },
+  { name: 'Comercial',        code: 'COM', description: 'Ventas y relaciones comerciales'   },
+  { name: 'Finanzas',         code: 'FIN', description: 'Contabilidad y finanzas'           },
 ];
 
 const POSITIONS = [
-  { name: 'Analista Junior',   dept: 'Tecnología'      },
-  { name: 'Analista',          dept: 'Tecnología'      },
-  { name: 'Analista Senior',   dept: 'Tecnología'      },
-  { name: 'Líder Técnico',     dept: 'Tecnología'      },
-  { name: 'Gerente de Área',   dept: null               },
-  { name: 'Especialista RH',   dept: 'Recursos Humanos' },
-  { name: 'Ejecutivo Comercial', dept: 'Comercial'     },
+  { name: 'Analista Junior',    dept: 'Tecnología'       },
+  { name: 'Analista Senior',    dept: 'Tecnología'       },
+  { name: 'Líder Técnico',      dept: 'Tecnología'       },
+  { name: 'Especialista RH',    dept: 'Recursos Humanos' },
+  { name: 'Ejecutivo Comercial',dept: 'Comercial'        },
+  { name: 'Gerente de Área',    dept: null               },
 ];
 
 const CONTRACT_TYPES = [
-  { name: 'Plazo Fijo',    code: 'PF',  hasBenefits: true,  isLaboral: true  },
   { name: 'Indeterminado', code: 'IND', hasBenefits: true,  isLaboral: true  },
+  { name: 'Plazo Fijo',    code: 'PF',  hasBenefits: true,  isLaboral: true  },
   { name: 'Locación',      code: 'LOC', hasBenefits: false, isLaboral: false },
 ];
 
 const WORK_SHIFTS = [
-  { name: 'Administrativo',  startTime: '09:00', endTime: '18:00', breakTime: 60, tolerance: 10 },
-  { name: 'Turno Mañana',    startTime: '08:00', endTime: '17:00', breakTime: 60, tolerance: 5  },
-  { name: 'Turno Tarde',     startTime: '14:00', endTime: '22:00', breakTime: 60, tolerance: 5  },
-  { name: 'Flexible',        startTime: null,    endTime: null,    breakTime: 60, tolerance: 30, isFiscalized: false },
+  { name: 'Administrativo', startTime: '09:00', endTime: '18:00', breakTime: 60, tolerance: 10 },
+  { name: 'Turno Mañana',   startTime: '08:00', endTime: '17:00', breakTime: 60, tolerance: 5  },
+  { name: 'Flexible',       startTime: null,    endTime: null,    breakTime: 60, tolerance: 30 },
 ];
 
-// ─── Main ─────────────────────────────────────────────────────────────────────
-async function main() {
-  console.log(`\n🌱  Dev-Seed para tenant "${TENANT_SLUG}"\n`);
+// ─── Datos por tenant ─────────────────────────────────────────────────────────
 
-  // 1. Obtener el tenant
-  const tenant = await prisma.tenant.findUnique({ where: { slug: TENANT_SLUG } });
-  if (!tenant) {
-    console.error(`❌  Tenant "${TENANT_SLUG}" no encontrado. Ejecuta primero: npx prisma db seed`);
-    process.exit(1);
-  }
-  console.log(`✅  Tenant encontrado: ${tenant.name} (${tenant.id})`);
+interface TenantSeedConfig {
+  admin: { email: string; firstName: string; lastName: string; password: string };
+  employees: Array<{
+    email: string; firstName: string; lastName: string;
+    role: 'HR_MANAGER' | 'HR_ANALYST' | 'AREA_MANAGER' | 'EMPLOYEE';
+    dept: string; position: string; salary: number; daysHired: number;
+  }>;
+}
 
-  // 2. Crear Departamentos
+const TENANT_DATA: Record<string, TenantSeedConfig> = {
+  demo: {
+    admin: { email: 'admin@demo.com', firstName: 'Admin', lastName: 'Demo', password: 'Admin123!' },
+    employees: [
+      { email: 'carlos.rrhh@demo.com',  firstName: 'Carlos',   lastName: 'Mendoza', role: 'HR_MANAGER',  dept: 'Recursos Humanos', position: 'Especialista RH',     salary: 4500, daysHired: 400 },
+      { email: 'lucia.tec@demo.com',    firstName: 'Lucía',    lastName: 'Torres',  role: 'EMPLOYEE',    dept: 'Tecnología',       position: 'Analista Senior',     salary: 3800, daysHired: 300 },
+      { email: 'pedro.com@demo.com',    firstName: 'Pedro',    lastName: 'Vega',    role: 'AREA_MANAGER',dept: 'Comercial',        position: 'Gerente de Área',     salary: 5500, daysHired: 600 },
+      { email: 'sofia.junior@demo.com', firstName: 'Sofía',    lastName: 'Ruiz',    role: 'EMPLOYEE',    dept: 'Tecnología',       position: 'Analista Junior',     salary: 2800, daysHired: 90  },
+      { email: 'juan.fin@demo.com',     firstName: 'Juan',     lastName: 'Ríos',    role: 'EMPLOYEE',    dept: 'Finanzas',         position: 'Analista Senior',     salary: 4000, daysHired: 200 },
+    ],
+  },
+  techgans: {
+    admin: { email: 'diego@techgans.com', firstName: 'Diego', lastName: 'García', password: 'Admin123!' },
+    employees: [
+      { email: 'ana.rrhh@techgans.com',  firstName: 'Ana',    lastName: 'López',    role: 'HR_MANAGER', dept: 'Recursos Humanos', position: 'Especialista RH',  salary: 5000, daysHired: 540 },
+      { email: 'miguel.dev@techgans.com', firstName: 'Miguel', lastName: 'Sánchez', role: 'EMPLOYEE',   dept: 'Tecnología',       position: 'Analista Senior',  salary: 4200, daysHired: 360 },
+      { email: 'valeria.tl@techgans.com', firstName: 'Valeria',lastName: 'Mora',   role: 'AREA_MANAGER',dept: 'Tecnología',       position: 'Líder Técnico',    salary: 6000, daysHired: 720 },
+      { email: 'robert.jr@techgans.com',  firstName: 'Roberto',lastName: 'Díaz',   role: 'EMPLOYEE',   dept: 'Tecnología',       position: 'Analista Junior',  salary: 2600, daysHired: 60  },
+    ],
+  },
+  conexa: {
+    admin: { email: 'admin@conexa.com', firstName: 'Admin', lastName: 'Conexa', password: 'Admin123!' },
+    employees: [
+      { email: 'gaby.rrhh@conexa.com',  firstName: 'Gabriela', lastName: 'Castro',  role: 'HR_ANALYST', dept: 'Recursos Humanos', position: 'Especialista RH', salary: 3800, daysHired: 250 },
+      { email: 'mario.com@conexa.com',  firstName: 'Mario',    lastName: 'Flores',  role: 'EMPLOYEE',   dept: 'Comercial',        position: 'Ejecutivo Comercial', salary: 3200, daysHired: 180 },
+    ],
+  },
+};
+
+// ─── Seed para un tenant ──────────────────────────────────────────────────────
+
+async function seedTenant(slug: string, schemaName: string, config: TenantSeedConfig) {
+  const db = tenantPrismaManager.getClient(schemaName) as PrismaClient;
+
+  // 1. Departamentos
   const deptMap: Record<string, string> = {};
   for (const d of DEPARTMENTS) {
-    const dept = await prisma.department.upsert({
-      where: { name_tenantId: { name: d.name, tenantId: tenant.id } },
-      update: { description: d.description },
-      create: { name: d.name, code: d.code, description: d.description, tenantId: tenant.id },
+    const dept = await db.department.upsert({
+      where: { name: d.name },
+      update: {},
+      create: { name: d.name, code: d.code, description: d.description },
     });
     deptMap[d.name] = dept.id;
-    console.log(`  📁  Departamento: ${dept.name}`);
   }
+  console.log(`  📁  ${Object.keys(deptMap).length} departamentos`);
 
-  // 3. Crear Cargos
+  // 2. Cargos
   const posMap: Record<string, string> = {};
   for (const p of POSITIONS) {
-    const pos = await prisma.position.upsert({
-      where: { name_tenantId: { name: p.name, tenantId: tenant.id } },
+    const pos = await db.position.upsert({
+      where: { name: p.name },
       update: {},
-      create: {
-        name:         p.name,
-        tenantId:     tenant.id,
-        departmentId: p.dept ? deptMap[p.dept] : null,
-      },
+      create: { name: p.name, departmentId: p.dept ? deptMap[p.dept] : null },
     });
     posMap[p.name] = pos.id;
-    console.log(`  💼  Cargo: ${pos.name}`);
   }
+  console.log(`  💼  ${Object.keys(posMap).length} cargos`);
 
-  // 4. Crear Tipos de Contrato
+  // 3. Tipos de contrato
   const contractMap: Record<string, string> = {};
   for (const c of CONTRACT_TYPES) {
-    const ct = await prisma.contractType.upsert({
-      where: { name_tenantId: { name: c.name, tenantId: tenant.id } },
+    const ct = await db.contractType.upsert({
+      where: { name: c.name },
       update: {},
-      create: { name: c.name, code: c.code, hasBenefits: c.hasBenefits, isLaboral: c.isLaboral, tenantId: tenant.id },
+      create: { name: c.name, code: c.code, hasBenefits: c.hasBenefits, isLaboral: c.isLaboral },
     });
     contractMap[c.name] = ct.id;
-    console.log(`  📄  Contrato: ${ct.name}`);
   }
+  console.log(`  📄  ${Object.keys(contractMap).length} tipos de contrato`);
 
-  // 5. Crear Turnos (sin unique constraint → findFirst + create)
+  // 4. Turnos
   const shiftMap: Record<string, string> = {};
   for (const s of WORK_SHIFTS) {
-    let shift = await prisma.workShift.findFirst({
-      where: { name: s.name, tenantId: tenant.id },
+    const shift = await db.workShift.upsert({
+      where: { name: s.name },
+      update: {},
+      create: {
+        name: s.name, startTime: s.startTime ?? undefined,
+        endTime: s.endTime ?? undefined, breakTime: s.breakTime, tolerance: s.tolerance,
+      },
     });
-    if (!shift) {
-      shift = await prisma.workShift.create({
-        data: {
-          name:            s.name,
-          tenantId:        tenant.id,
-          isFiscalized:    s.isFiscalized ?? true,
-          startTime:       s.startTime ?? undefined,
-          endTime:         s.endTime   ?? undefined,
-          breakTime:       s.breakTime,
-          tolerance:       s.tolerance,
-          allowsOvertime:  false,
-        },
-      });
-    }
     shiftMap[s.name] = shift.id;
-    console.log(`  🕐  Turno: ${shift.name}`);
   }
+  console.log(`  🕐  ${Object.keys(shiftMap).length} turnos`);
 
-  // 6. Enriquecer empleados del tenant
-  const employees = await prisma.employee.findMany({
-    where: { tenantId: tenant.id },
-    include: { laborData: true },
+  // 5. Admin user
+  const adminHash = await argon2.hash(config.admin.password);
+  const adminUser = await db.user.upsert({
+    where: { email: config.admin.email },
+    update: {},
+    create: {
+      email: config.admin.email, passwordHash: adminHash, role: 'COMPANY_ADMIN',
+    },
   });
 
-  console.log(`\n👥  Enriqueciendo ${employees.length} empleado(s)...\n`);
+  const adminEmployee = await db.employee.upsert({
+    where: { userId: adminUser.id },
+    update: {},
+    create: {
+      firstName: config.admin.firstName, lastName: config.admin.lastName,
+      hireDate: daysAgo(800), userId: adminUser.id,
+      departmentId: deptMap['Recursos Humanos'], positionId: posMap['Gerente de Área'],
+    },
+  });
+  console.log(`  👤  Admin: ${config.admin.email} / ${config.admin.password}`);
 
-  for (const emp of employees) {
-    // Asignar departamento y cargo si no tienen
-    const needsUpdate = !emp.departmentId || !emp.positionId;
+  // Asignar leader al depto RH
+  await db.department.update({
+    where: { name: 'Recursos Humanos' },
+    data: { leaderId: adminEmployee.id },
+  });
 
-    if (needsUpdate) {
-      await prisma.employee.update({
-        where: { id: emp.id },
+  // 6. Empleados de ejemplo
+  for (const emp of config.employees) {
+    const hash = await argon2.hash(emp.password ?? 'Emp123!');
+    const user = await db.user.upsert({
+      where: { email: emp.email },
+      update: {},
+      create: { email: emp.email, passwordHash: hash, role: emp.role },
+    });
+
+    const employee = await db.employee.upsert({
+      where: { userId: user.id },
+      update: {},
+      create: {
+        firstName: emp.firstName, lastName: emp.lastName,
+        hireDate: daysAgo(emp.daysHired), userId: user.id,
+        departmentId: deptMap[emp.dept], positionId: posMap[emp.position],
+      },
+    });
+
+    // Labor data
+    const existingLabor = await db.employeeLaborData.findUnique({ where: { employeeId: employee.id } });
+    if (!existingLabor) {
+      await db.employeeLaborData.create({
         data: {
-          hireDate:     HIRE_DATE,
-          departmentId: deptMap['Tecnología'],
-          positionId:   posMap['Analista'],
+          employeeId: employee.id,
+          contractTypeId: contractMap['Indeterminado'],
+          workShiftId: shiftMap['Administrativo'],
+          hierarchyLevel: 'ANALISTA', salary: emp.salary, currency: 'PEN',
+          startDate: daysAgo(emp.daysHired),
         },
       });
-      console.log(`  ✏️   ${emp.firstName} ${emp.lastName} → Área: Tecnología | Cargo: Analista`);
-    } else {
-      // Solo actualizar hireDate para tener historia
-      await prisma.employee.update({
-        where: { id: emp.id },
-        data: { hireDate: HIRE_DATE },
-      });
-      console.log(`  ✏️   ${emp.firstName} ${emp.lastName} → Fecha de ingreso actualizada`);
+    }
+    console.log(`  👤  ${emp.firstName} ${emp.lastName} <${emp.email}>`);
+  }
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
+
+async function main() {
+  console.log('\n🌱  Dev-Seed Multi-Tenant (Pattern 2)\n');
+
+  const tenants = await platformPrisma.tenant.findMany({ where: { status: 'ACTIVE' } });
+  console.log(`Tenants activos: ${tenants.map(t => t.slug).join(', ')}\n`);
+
+  for (const tenant of tenants) {
+    const config = TENANT_DATA[tenant.slug];
+    if (!config) {
+      console.log(`⚠️  Sin configuración para tenant "${tenant.slug}" — saltando\n`);
+      continue;
     }
 
-    // Crear/actualizar labor data con fecha histórica
-    if (!emp.laborData) {
-      await prisma.employeeLaborData.create({
-        data: {
-          employeeId:     emp.id,
-          contractTypeId: contractMap['Indeterminado'],
-          workShiftId:    shiftMap['Administrativo'],
-          hierarchyLevel: 'ANALISTA',
-          startDate:      LABOR_UPDATE_DATE,
-          salary:         3500.00,
-          currency:       'PEN',
-        },
-      });
-      console.log(`  📋  Labor data creada: Contrato Indeterminado, S/ 3500, desde ${LABOR_UPDATE_DATE.toLocaleDateString('es-PE')}`);
-    } else {
-      await prisma.employeeLaborData.update({
-        where: { employeeId: emp.id },
-        data: {
-          contractTypeId: contractMap['Indeterminado'],
-          workShiftId:    shiftMap['Administrativo'],
-          hierarchyLevel: 'ANALISTA',
-          startDate:      LABOR_UPDATE_DATE,
-          salary:         3500.00,
-        },
-      });
-      console.log(`  📋  Labor data actualizada: Contrato Indeterminado, S/ 3500`);
-    }
+    console.log(`── Tenant: ${tenant.name} (${tenant.slug}) ──────────`);
+    await seedTenant(tenant.slug, tenant.schemaName, config);
+    console.log(`✅  ${tenant.name} listo\n`);
   }
 
-  console.log('\n🚀  Dev-Seed completado.\n');
-  console.log('─────────────────────────────────────────────────────────');
-  console.log('  Ahora reinicia el servidor: npm run dev');
-  console.log('─────────────────────────────────────────────────────────\n');
+  console.log('────────────────────────────────────────────────────────');
+  console.log('🚀  Seed completado. Credenciales de acceso:\n');
+
+  for (const [slug, cfg] of Object.entries(TENANT_DATA)) {
+    const tenant = tenants.find(t => t.slug === slug);
+    if (!tenant) continue;
+    console.log(`  ${tenant.name} (tenant: ${slug})`);
+    console.log(`    Admin → ${cfg.admin.email} / ${cfg.admin.password}`);
+    cfg.employees.forEach(e => console.log(`    Emp   → ${e.email} / Emp123!`));
+    console.log('');
+  }
 }
 
 main()
-  .catch(e => { console.error(e); process.exit(1); })
-  .finally(() => prisma.$disconnect());
+  .catch(e => { console.error('❌ Error en seed:', e); process.exit(1); })
+  .finally(() => platformPrisma.$disconnect());

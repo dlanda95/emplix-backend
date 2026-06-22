@@ -1,7 +1,6 @@
-import { prisma } from '../../config/prisma';
 import * as argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import { User, SystemRole } from '@prisma/client';
+import { PrismaClient } from '../../generated/tenant-client';
 import { EntraService } from './entra/entra.services';
 import { AppError } from '../../shared/middlewares/error.middleware';
 
@@ -10,14 +9,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secreto_temporal';
 export class AuthService {
   private readonly entraService = new EntraService();
 
-  async getMyProfile(userId: string, tenantId: string) {
-    const user = await prisma.user.findFirst({
-      where: { id: userId, tenantId },
+  async getMyProfile(userId: string, db: PrismaClient) {
+    const user = await db.user.findUnique({
+      where: { id: userId },
       select: {
         id: true,
         email: true,
         role: true,
-        tenantId: true,
         employee: {
           select: {
             id: true,
@@ -25,69 +23,69 @@ export class AuthService {
             lastName: true,
             documentId: true,
             department: { select: { name: true } },
-            position:   { select: { name: true } },
+            position: { select: { name: true } },
             supervisor: { select: { firstName: true, lastName: true } },
           },
         },
       },
     });
 
-    if (!user) throw new AppError('Usuario no encontrado o no pertenece a esta empresa', 404, 'USER_NOT_FOUND');
+    if (!user) throw new AppError('Usuario no encontrado', 404, 'USER_NOT_FOUND');
     return user;
   }
 
-  async checkEmail(email: string, tenantId: string): Promise<boolean> {
-    const user = await prisma.user.findUnique({
-      where: { email_tenantId: { email, tenantId } },
-      select: { id: true },
-    });
+  async checkEmail(email: string, db: PrismaClient): Promise<boolean> {
+    const user = await db.user.findUnique({ where: { email }, select: { id: true } });
     return !!user;
   }
 
-  async login(email: string, passwordPlain: string, tenantId: string) {
-    const user = await prisma.user.findUnique({
-      where: { email_tenantId: { email, tenantId } },
+  async login(email: string, passwordPlain: string, tenantSlug: string, db: PrismaClient) {
+    const user = await db.user.findUnique({
+      where: { email },
       include: { employee: { select: { firstName: true, lastName: true } } },
     });
 
-    if (!user)             throw new AppError('El correo no está registrado en esta empresa.', 401, 'EMAIL_NOT_FOUND');
-    if (!user.isActive)    throw new AppError('Tu cuenta está desactivada. Contacta al administrador.', 403, 'USER_INACTIVE');
+    if (!user) throw new AppError('El correo no está registrado en esta empresa.', 401, 'EMAIL_NOT_FOUND');
+    if (!user.isActive) throw new AppError('Tu cuenta está desactivada. Contacta al administrador.', 403, 'USER_INACTIVE');
     if (!user.passwordHash) throw new AppError('Esta cuenta usa inicio de sesión con Microsoft.', 400, 'MICROSOFT_ACCOUNT');
 
     const isValid = await argon2.verify(user.passwordHash, passwordPlain);
     if (!isValid) throw new AppError('La contraseña es incorrecta.', 401, 'WRONG_PASSWORD');
 
+    await db.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
+
     return {
       user: {
-        id:        user.id,
-        email:     user.email,
-        role:      user.role,
-        firstName: user.employee?.firstName || 'Usuario',
-        lastName:  user.employee?.lastName  || 'Sistema',
-        tenantId:  user.tenantId,
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        firstName: user.employee?.firstName ?? 'Usuario',
+        lastName: user.employee?.lastName ?? 'Sistema',
+        tenantSlug,
       },
-      token: this.generateToken(user),
+      token: this.generateToken(user.id, user.email, user.role, tenantSlug),
     };
   }
 
-  async register(data: any, tenantId: string) {
+  async register(data: any, tenantSlug: string, db: PrismaClient) {
+    const existing = await db.user.findUnique({ where: { email: data.email } });
+    if (existing) throw new AppError('El correo ya está registrado.', 409, 'EMAIL_TAKEN');
+
     const hash = await argon2.hash(data.password);
 
-    const newUser = await prisma.user.create({
+    const newUser = await db.user.create({
       data: {
-        email:        data.email,
+        email: data.email,
         passwordHash: hash,
-        role:         SystemRole.USER,
-        tenantId,
+        role: 'EMPLOYEE',
         employee: {
           create: {
-            firstName:     data.firstName,
-            middleName:    data.middleName,
-            lastName:      data.lastName,
+            firstName: data.firstName,
+            middleName: data.middleName,
+            lastName: data.lastName,
             secondLastName: data.secondLastName,
-            hireDate:      new Date(),
-            tenantId,
-            status:        'ACTIVE',
+            hireDate: new Date(),
+            status: 'ACTIVE',
           },
         },
       },
@@ -95,60 +93,60 @@ export class AuthService {
     });
 
     return {
-      id:        newUser.id,
-      email:     newUser.email,
+      id: newUser.id,
+      email: newUser.email,
       firstName: newUser.employee?.firstName,
-      lastName:  newUser.employee?.lastName,
+      lastName: newUser.employee?.lastName,
     };
   }
 
-  async loginWithMicrosoft(microsoftToken: string, tenantId: string) {
-    const payload = await this.entraService.verifyToken(microsoftToken);
+  async loginWithMicrosoft(
+    microsoftToken: string,
+    tenantSlug: string,
+    azureTenantId: string,
+    db: PrismaClient,
+  ) {
+    const payload = await this.entraService.verifyToken(microsoftToken, azureTenantId);
 
-    const email     = payload.preferred_username || payload.email;
-    const oid       = payload.oid;
-    const fullName  = payload.name || 'Usuario Microsoft';
-    const [firstName, ...rest] = fullName.split(' ');
-    const lastName  = rest.length ? rest.join(' ') : 'Externo';
+    const email: string | undefined = payload.preferred_username ?? payload.email;
+    const oid: string | undefined = payload.oid;
 
-    if (!email) throw new AppError('Token Microsoft inválido: falta email', 400, 'INVALID_MICROSOFT_TOKEN');
+    if (!email) throw new AppError('Token de Microsoft inválido: no contiene email.', 400, 'INVALID_MICROSOFT_TOKEN');
 
-    let user = await prisma.user.findUnique({
-      where: { email_tenantId: { email, tenantId } },
+    const user = await db.user.findUnique({
+      where: { email },
+      include: { employee: { select: { firstName: true, lastName: true } } },
     });
 
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          email,
-          provider:    'MICROSOFT',
-          providerId:  oid,
-          role:        'USER',
-          isActive:    true,
-          tenantId,
-          employee: {
-            create: { firstName, lastName, hireDate: new Date(), personalEmail: email, tenantId },
-          },
-        },
-      });
-    } else if (user.provider !== 'MICROSOFT') {
-      await prisma.user.update({
-        where: { id: user.id },
-        data:  { provider: 'MICROSOFT', providerId: oid },
-      });
+    if (!user) throw new AppError(
+      'Tu cuenta no está configurada en este sistema. Contacta al administrador de RRHH.',
+      403,
+      'AZURE_USER_NOT_PROVISIONED',
+    );
+
+    if (!user.isActive) throw new AppError('Tu cuenta está desactivada.', 403, 'USER_INACTIVE');
+
+    // Vincular el OID de Microsoft en el primer inicio de sesión
+    if (!user.providerId || user.provider !== 'MICROSOFT') {
+      await db.user.update({ where: { id: user.id }, data: { provider: 'MICROSOFT', providerId: oid, lastLoginAt: new Date() } });
+    } else {
+      await db.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
     }
 
     return {
-      user:  { id: user.id, email: user.email, role: user.role, tenantId },
-      token: this.generateToken(user),
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        firstName: user.employee?.firstName ?? 'Usuario',
+        lastName: user.employee?.lastName ?? 'Externo',
+        tenantSlug,
+      },
+      token: this.generateToken(user.id, user.email, user.role, tenantSlug),
     };
   }
 
-  private generateToken(user: User): string {
-    return jwt.sign(
-      { id: user.id, role: user.role, email: user.email, tenantId: user.tenantId },
-      JWT_SECRET,
-      { expiresIn: '8h' }
-    );
+  private generateToken(id: string, email: string, role: string, tenantSlug: string): string {
+    return jwt.sign({ id, email, role, tenantSlug }, JWT_SECRET, { expiresIn: '8h' });
   }
 }
