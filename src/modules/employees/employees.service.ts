@@ -1,19 +1,20 @@
+import path from 'path';
 import { PrismaClient } from '../../generated/tenant-client';
 import { AppError } from '../../shared/middlewares/error.middleware';
 import * as argon2 from 'argon2';
 import { StorageService } from '../../shared/services/storage.service';
 import { CreateEmployeeDto, AssignAdminDataDto, TimelineEventDto } from './employees.dto';
 
-const getPublicUrl = (path: string) => {
+const getPublicUrl = (blobPath: string) => {
   const account = process.env.AZURE_STORAGE_ACCOUNT_NAME;
-  return account ? `https://${account}.blob.core.windows.net/public-assets/${path}` : null;
+  return account ? `https://${account}.blob.core.windows.net/public-assets/${blobPath}` : null;
 };
 
 export class EmployeesService {
   private storageService = new StorageService();
 
   // ── Crear Empleado ──────────────────────────────────────────────────────────
-  async createEmployee(data: CreateEmployeeDto, tenantSlug: string, db: PrismaClient) {
+  async createEmployee(data: CreateEmployeeDto, _tenantSlug: string, db: PrismaClient) {
     const existingEmail = await db.user.findUnique({ where: { email: data.email } });
     if (existingEmail) throw new AppError('El correo ya está registrado', 409);
 
@@ -127,6 +128,38 @@ export class EmployeesService {
   }
 
   // ── Perfil propio ───────────────────────────────────────────────────────────
+  private static readonly SELF_UPDATABLE = new Set([
+    'personalEmail', 'phone', 'cellPhone',
+    'address', 'district', 'province', 'departmentdirec', 'addressRef',
+    'emergencyName', 'emergencyPhone', 'emergencyRel',
+    'afpType', 'afpEntity', 'afpCommission',
+    'bankEntity', 'bankAccount', 'bankCci',
+  ]);
+
+  async updateMyProfile(userId: string, data: Record<string, unknown>, db: PrismaClient) {
+    const employee = await db.employee.findUnique({ where: { userId } });
+    if (!employee) throw new AppError('Empleado no encontrado', 404);
+
+    const patch: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(data)) {
+      if (EmployeesService.SELF_UPDATABLE.has(key)) patch[key] = value ?? null;
+    }
+    if (Object.keys(patch).length === 0) throw new AppError('Sin campos válidos', 400);
+
+    const updated = await db.employee.update({
+      where: { userId },
+      data:  patch,
+      include: {
+        department: true, position: true,
+        supervisor: { select: { id: true, firstName: true, lastName: true } },
+        user:       { select: { email: true, role: true, isActive: true } },
+        laborData:  { include: { contractType: true, workShift: true } },
+        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' as const }, select: { path: true } },
+      },
+    });
+    return this.transformWithAvatar(updated);
+  }
+
   async getMyProfile(userId: string, db: PrismaClient) {
     const employee = await db.employee.findUnique({
       where: { userId },
@@ -269,16 +302,33 @@ export class EmployeesService {
     return db.document.findMany({ where: { employeeId: employee.id, type: { not: 'AVATAR' } }, orderBy: { createdAt: 'desc' } });
   }
 
-  async uploadMyDocument(userId: string, file: Express.Multer.File, type: any, tenantSlug: string, db: PrismaClient) {
+  async uploadMyDocument(userId: string, file: Express.Multer.File, type: any, tenantSlug: string, db: PrismaClient, label?: string) {
     const employee = await db.employee.findUnique({ where: { userId } });
     if (!employee) throw new AppError('Empleado no encontrado', 404, 'EMPLOYEE_NOT_FOUND');
 
-    const upload = await this.storageService.uploadFile(file, 'private-docs', `tenants/${tenantSlug}/${employee.id}/docs/${String(type).toLowerCase()}`);
+    const ext       = path.extname(file.originalname).toLowerCase();
+    const norm      = (s: string) =>
+      s.toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, '_').replace(/[^A-Z0-9_]/g, '');
+    const lastName  = norm(employee.lastName);
+    const firstName = norm(employee.firstName);
+    const prefix    = (label || String(type)).toUpperCase().replace(/[^A-Z0-9_]/g, '');
+
+    const isIdentity = prefix === 'DNI_CE' || String(type).toUpperCase() === 'ID_CARD';
+    const docId      = norm(employee.documentId ?? '');
+    const strategicName = isIdentity
+      ? `${prefix}_${docId}_${lastName}_${firstName}${ext}`
+      : `${prefix}_${lastName}_${firstName}${ext}`;
+
+    console.log('[uploadMyDocument] label=%s type=%s prefix=%s strategicName=%s originalname=%s',
+      label, type, prefix, strategicName, file.originalname);
+
+    const folder = `tenants/${tenantSlug}/${employee.id}/docs/${String(type).toLowerCase()}`;
+    const upload  = await this.storageService.uploadFile(file, 'private-docs', folder, strategicName);
 
     return db.document.create({
       data: {
         employeeId:   employee.id,
-        name:         file.originalname,
+        name:         strategicName,
         originalName: file.originalname,
         mimeType:     file.mimetype,
         size:         file.size,

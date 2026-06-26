@@ -41,11 +41,15 @@ export class AuthService {
 
   async login(email: string, passwordPlain: string, tenantSlug: string, db: PrismaClient) {
     const user = await db.user.findUnique({
-      where: { email },
-      include: { employee: { select: { firstName: true, lastName: true } } },
+      where:   { email },
+      include: {
+        employee: {
+          select: { firstName: true, lastName: true, status: true, onboardingStatus: true },
+        },
+      },
     });
 
-    if (!user) throw new AppError('El correo no está registrado en esta empresa.', 401, 'EMAIL_NOT_FOUND');
+    if (!user) throw new AppError('El correo o número de documento no está registrado en esta empresa.', 401, 'EMAIL_NOT_FOUND');
     if (!user.isActive) throw new AppError('Tu cuenta está desactivada. Contacta al administrador.', 403, 'USER_INACTIVE');
     if (!user.passwordHash) throw new AppError('Esta cuenta usa inicio de sesión con Microsoft.', 400, 'MICROSOFT_ACCOUNT');
 
@@ -56,12 +60,14 @@ export class AuthService {
 
     return {
       user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        firstName: user.employee?.firstName ?? 'Usuario',
-        lastName: user.employee?.lastName ?? 'Sistema',
+        id:              user.id,
+        email:           user.email,
+        role:            user.role,
+        firstName:       user.employee?.firstName       ?? 'Usuario',
+        lastName:        user.employee?.lastName        ?? 'Sistema',
         tenantSlug,
+        employeeStatus:  user.employee?.status          ?? null,
+        onboardingStatus:user.employee?.onboardingStatus ?? null,
       },
       token: this.generateToken(user.id, user.email, user.role, tenantSlug),
     };

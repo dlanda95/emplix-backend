@@ -11,10 +11,11 @@ export const getMyDocuments = async (req: Request, res: Response, next: NextFunc
 };
 
 export const uploadMyDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  console.log('[CTRL uploadMyDocument] hit — file:%s type:%s label:%s', req.file?.originalname, req.body.type, req.body.label);
   try {
     if (!req.file)      { badRequest(res, 'Falta el archivo');           return; }
     if (!req.body.type) { badRequest(res, 'Falta el tipo de documento'); return; }
-    created(res, await service.uploadMyDocument(req.user!.id, req.file, req.body.type, req.tenant!.slug, req.tenantPrisma!));
+    created(res, await service.uploadMyDocument(req.user!.id, req.file, req.body.type, req.tenant!.slug, req.tenantPrisma!, req.body.label));
   } catch (error) { next(error); }
 };
 
@@ -32,6 +33,11 @@ export const getMyHistory = async (req: Request, res: Response, next: NextFuncti
 
 export const getMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try { ok(res, await service.getMyProfile(req.user!.id, req.tenantPrisma!)); }
+  catch (error) { next(error); }
+};
+
+export const patchMe = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try { ok(res, await service.updateMyProfile(req.user!.id, req.body, req.tenantPrisma!)); }
   catch (error) { next(error); }
 };
 

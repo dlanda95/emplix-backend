@@ -1,24 +1,20 @@
 import { Router } from 'express';
-import { authMiddleware } from '../../shared/middlewares/auth.middleware';
+import { authMiddleware, requireRole } from '../../shared/middlewares/auth.middleware';
 import { validate } from '../../shared/middlewares/validate.middleware';
 import { createRequestSchema } from './requests.schemas';
 import * as controller from './requests.controller';
 
 const router = Router();
 
-router.use(authMiddleware); // Protección global para este módulo
+router.use(authMiddleware);
 
-router.post('/', validate(createRequestSchema), controller.createRequest);
-router.get('/me', controller.getMyRequests);
+// ── Rutas del empleado (cualquier usuario autenticado) ────────────────────────
+router.post('/',        validate(createRequestSchema), controller.createRequest);
+router.get('/me',       controller.getMyRequests);
+router.get('/balance',  controller.getVacationBalance); // IMPORTANTE: antes de /:id
 
-
-// Rutas Admin (Idealmente crear un middleware 'roleMiddleware')
-router.get('/pending', controller.getAllPending);
-router.patch('/:id/status', controller.processRequest);
-
-
-// calculo vacaciones
-router.get('/balance', controller.getVacationBalance); // <--- NUEVA RUTA (Poner antes de /:id para evitar conflictos)
-// ...
+// ── Rutas administrativas (solo RRHH y admins) ────────────────────────────────
+router.get('/pending',      requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.getAllPending);
+router.patch('/:id/status', requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.processRequest);
 
 export default router;

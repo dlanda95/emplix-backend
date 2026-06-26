@@ -19,15 +19,16 @@ export class StorageService {
     this.blobServiceClient = BlobServiceClient.fromConnectionString(AZURE_CONNECTION_STRING);
   }
 
-  // --- MÉTODO DE SUBIDA (Igual que antes) ---
-  async uploadFile(file: Express.Multer.File, containerName: string, folderPath: string) {
+  // --- MÉTODO DE SUBIDA ---
+  async uploadFile(file: Express.Multer.File, containerName: string, folderPath: string, fileName?: string) {
     try {
       const containerClient = this.blobServiceClient.getContainerClient(containerName);
       await containerClient.createIfNotExists({ access: containerName === 'public-assets' ? 'blob' : undefined });
 
       const fileExtension = path.extname(file.originalname);
-      const uniqueFileName = `${uuidv4()}${fileExtension}`;
-      const blobName = `${folderPath}/${uniqueFileName}`;
+      const resolvedFileName = fileName ?? `${uuidv4()}${fileExtension}`;
+      const blobName = `${folderPath}/${resolvedFileName}`;
+      console.log('[StorageService.uploadFile] resolvedFileName=%s blobName=%s', resolvedFileName, blobName);
       
       const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 

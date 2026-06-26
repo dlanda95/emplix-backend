@@ -11,6 +11,7 @@ router.get('/me/history',  controller.getMyHistory);
 router.get('/me/documents', controller.getMyDocuments);
 router.post('/me/documents', upload.single('file'), controller.uploadMyDocument);
 router.get('/me',          controller.getMe);
+router.patch('/me',        controller.patchMe);
 router.get('/my-team',     controller.getMyTeam);
 router.get('/search',      controller.searchEmployees);
 router.get('/',            controller.getDirectory);

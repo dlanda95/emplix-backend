@@ -68,6 +68,16 @@ export type Kudo = $Result.DefaultSelection<Prisma.$KudoPayload>
  * 
  */
 export type Document = $Result.DefaultSelection<Prisma.$DocumentPayload>
+/**
+ * Model Education
+ * 
+ */
+export type Education = $Result.DefaultSelection<Prisma.$EducationPayload>
+/**
+ * Model FamilyMember
+ * 
+ */
+export type FamilyMember = $Result.DefaultSelection<Prisma.$FamilyMemberPayload>
 
 /**
  * Enums
@@ -94,6 +104,7 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
 export const EmployeeStatus: {
+  SELECTED: 'SELECTED',
   ACTIVE: 'ACTIVE',
   TERMINATED: 'TERMINATED',
   ON_LEAVE: 'ON_LEAVE'
@@ -159,6 +170,23 @@ export const DocumentType: {
 
 export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType]
 
+
+export const FamilyRelationship: {
+  FATHER: 'FATHER',
+  MOTHER: 'MOTHER',
+  GUARDIAN: 'GUARDIAN',
+  SPOUSE: 'SPOUSE',
+  PARTNER: 'PARTNER',
+  SON: 'SON',
+  DAUGHTER: 'DAUGHTER',
+  SIBLING: 'SIBLING',
+  DEPENDENT: 'DEPENDENT',
+  HEIR: 'HEIR',
+  OTHER: 'OTHER'
+};
+
+export type FamilyRelationship = (typeof FamilyRelationship)[keyof typeof FamilyRelationship]
+
 }
 
 export type Provider = $Enums.Provider
@@ -192,6 +220,10 @@ export const RequestStatus: typeof $Enums.RequestStatus
 export type DocumentType = $Enums.DocumentType
 
 export const DocumentType: typeof $Enums.DocumentType
+
+export type FamilyRelationship = $Enums.FamilyRelationship
+
+export const FamilyRelationship: typeof $Enums.FamilyRelationship
 
 /**
  * ##  Prisma Client ʲˢ
@@ -425,6 +457,26 @@ export class PrismaClient<
     * ```
     */
   get document(): Prisma.DocumentDelegate<ExtArgs>;
+
+  /**
+   * `prisma.education`: Exposes CRUD operations for the **Education** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Educations
+    * const educations = await prisma.education.findMany()
+    * ```
+    */
+  get education(): Prisma.EducationDelegate<ExtArgs>;
+
+  /**
+   * `prisma.familyMember`: Exposes CRUD operations for the **FamilyMember** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more FamilyMembers
+    * const familyMembers = await prisma.familyMember.findMany()
+    * ```
+    */
+  get familyMember(): Prisma.FamilyMemberDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -876,7 +928,9 @@ export namespace Prisma {
     Attendance: 'Attendance',
     Request: 'Request',
     Kudo: 'Kudo',
-    Document: 'Document'
+    Document: 'Document',
+    Education: 'Education',
+    FamilyMember: 'FamilyMember'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -892,7 +946,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "user" | "department" | "position" | "contractType" | "workShift" | "employee" | "employeeLaborData" | "attendance" | "request" | "kudo" | "document"
+      modelProps: "user" | "department" | "position" | "contractType" | "workShift" | "employee" | "employeeLaborData" | "attendance" | "request" | "kudo" | "document" | "education" | "familyMember"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1666,6 +1720,146 @@ export namespace Prisma {
           }
         }
       }
+      Education: {
+        payload: Prisma.$EducationPayload<ExtArgs>
+        fields: Prisma.EducationFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EducationFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EducationFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>
+          }
+          findFirst: {
+            args: Prisma.EducationFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EducationFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>
+          }
+          findMany: {
+            args: Prisma.EducationFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>[]
+          }
+          create: {
+            args: Prisma.EducationCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>
+          }
+          createMany: {
+            args: Prisma.EducationCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EducationCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>[]
+          }
+          delete: {
+            args: Prisma.EducationDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>
+          }
+          update: {
+            args: Prisma.EducationUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>
+          }
+          deleteMany: {
+            args: Prisma.EducationDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EducationUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.EducationUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationPayload>
+          }
+          aggregate: {
+            args: Prisma.EducationAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEducation>
+          }
+          groupBy: {
+            args: Prisma.EducationGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EducationGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EducationCountArgs<ExtArgs>
+            result: $Utils.Optional<EducationCountAggregateOutputType> | number
+          }
+        }
+      }
+      FamilyMember: {
+        payload: Prisma.$FamilyMemberPayload<ExtArgs>
+        fields: Prisma.FamilyMemberFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.FamilyMemberFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.FamilyMemberFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>
+          }
+          findFirst: {
+            args: Prisma.FamilyMemberFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.FamilyMemberFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>
+          }
+          findMany: {
+            args: Prisma.FamilyMemberFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>[]
+          }
+          create: {
+            args: Prisma.FamilyMemberCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>
+          }
+          createMany: {
+            args: Prisma.FamilyMemberCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.FamilyMemberCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>[]
+          }
+          delete: {
+            args: Prisma.FamilyMemberDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>
+          }
+          update: {
+            args: Prisma.FamilyMemberUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>
+          }
+          deleteMany: {
+            args: Prisma.FamilyMemberDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.FamilyMemberUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.FamilyMemberUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$FamilyMemberPayload>
+          }
+          aggregate: {
+            args: Prisma.FamilyMemberAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateFamilyMember>
+          }
+          groupBy: {
+            args: Prisma.FamilyMemberGroupByArgs<ExtArgs>
+            result: $Utils.Optional<FamilyMemberGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.FamilyMemberCountArgs<ExtArgs>
+            result: $Utils.Optional<FamilyMemberCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1995,6 +2189,8 @@ export namespace Prisma {
     attendances: number
     documents: number
     requests: number
+    familyMembers: number
+    educations: number
     sentKudos: number
     receivedKudos: number
   }
@@ -2004,6 +2200,8 @@ export namespace Prisma {
     attendances?: boolean | EmployeeCountOutputTypeCountAttendancesArgs
     documents?: boolean | EmployeeCountOutputTypeCountDocumentsArgs
     requests?: boolean | EmployeeCountOutputTypeCountRequestsArgs
+    familyMembers?: boolean | EmployeeCountOutputTypeCountFamilyMembersArgs
+    educations?: boolean | EmployeeCountOutputTypeCountEducationsArgs
     sentKudos?: boolean | EmployeeCountOutputTypeCountSentKudosArgs
     receivedKudos?: boolean | EmployeeCountOutputTypeCountReceivedKudosArgs
   }
@@ -2045,6 +2243,20 @@ export namespace Prisma {
    */
   export type EmployeeCountOutputTypeCountRequestsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: RequestWhereInput
+  }
+
+  /**
+   * EmployeeCountOutputType without action
+   */
+  export type EmployeeCountOutputTypeCountFamilyMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FamilyMemberWhereInput
+  }
+
+  /**
+   * EmployeeCountOutputType without action
+   */
+  export type EmployeeCountOutputTypeCountEducationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EducationWhereInput
   }
 
   /**
@@ -7064,12 +7276,36 @@ export namespace Prisma {
     birthDate: Date | null
     documentId: string | null
     gender: string | null
+    maritalStatus: string | null
+    nationality: string | null
+    academicLevel: string | null
+    birthCountry: string | null
+    birthRegion: string | null
+    birthDistrict: string | null
+    licenseNumber: string | null
+    documentType: string | null
+    onboardingStatus: string | null
     personalEmail: string | null
     phone: string | null
+    cellPhone: string | null
     address: string | null
+    district: string | null
+    province: string | null
+    departmentdirec: string | null
+    addressRef: string | null
+    docAddress: string | null
+    docDistrict: string | null
+    docDepartment: string | null
+    docAddressRef: string | null
     emergencyName: string | null
     emergencyPhone: string | null
     emergencyRel: string | null
+    afpType: string | null
+    afpEntity: string | null
+    afpCommission: string | null
+    bankEntity: string | null
+    bankAccount: string | null
+    bankCci: string | null
     status: $Enums.EmployeeStatus | null
     hireDate: Date | null
     userId: string | null
@@ -7089,12 +7325,36 @@ export namespace Prisma {
     birthDate: Date | null
     documentId: string | null
     gender: string | null
+    maritalStatus: string | null
+    nationality: string | null
+    academicLevel: string | null
+    birthCountry: string | null
+    birthRegion: string | null
+    birthDistrict: string | null
+    licenseNumber: string | null
+    documentType: string | null
+    onboardingStatus: string | null
     personalEmail: string | null
     phone: string | null
+    cellPhone: string | null
     address: string | null
+    district: string | null
+    province: string | null
+    departmentdirec: string | null
+    addressRef: string | null
+    docAddress: string | null
+    docDistrict: string | null
+    docDepartment: string | null
+    docAddressRef: string | null
     emergencyName: string | null
     emergencyPhone: string | null
     emergencyRel: string | null
+    afpType: string | null
+    afpEntity: string | null
+    afpCommission: string | null
+    bankEntity: string | null
+    bankAccount: string | null
+    bankCci: string | null
     status: $Enums.EmployeeStatus | null
     hireDate: Date | null
     userId: string | null
@@ -7114,12 +7374,36 @@ export namespace Prisma {
     birthDate: number
     documentId: number
     gender: number
+    maritalStatus: number
+    nationality: number
+    academicLevel: number
+    birthCountry: number
+    birthRegion: number
+    birthDistrict: number
+    licenseNumber: number
+    documentType: number
+    onboardingStatus: number
     personalEmail: number
     phone: number
+    cellPhone: number
     address: number
+    district: number
+    province: number
+    departmentdirec: number
+    addressRef: number
+    docAddress: number
+    docDistrict: number
+    docDepartment: number
+    docAddressRef: number
     emergencyName: number
     emergencyPhone: number
     emergencyRel: number
+    afpType: number
+    afpEntity: number
+    afpCommission: number
+    bankEntity: number
+    bankAccount: number
+    bankCci: number
     status: number
     hireDate: number
     userId: number
@@ -7141,12 +7425,36 @@ export namespace Prisma {
     birthDate?: true
     documentId?: true
     gender?: true
+    maritalStatus?: true
+    nationality?: true
+    academicLevel?: true
+    birthCountry?: true
+    birthRegion?: true
+    birthDistrict?: true
+    licenseNumber?: true
+    documentType?: true
+    onboardingStatus?: true
     personalEmail?: true
     phone?: true
+    cellPhone?: true
     address?: true
+    district?: true
+    province?: true
+    departmentdirec?: true
+    addressRef?: true
+    docAddress?: true
+    docDistrict?: true
+    docDepartment?: true
+    docAddressRef?: true
     emergencyName?: true
     emergencyPhone?: true
     emergencyRel?: true
+    afpType?: true
+    afpEntity?: true
+    afpCommission?: true
+    bankEntity?: true
+    bankAccount?: true
+    bankCci?: true
     status?: true
     hireDate?: true
     userId?: true
@@ -7166,12 +7474,36 @@ export namespace Prisma {
     birthDate?: true
     documentId?: true
     gender?: true
+    maritalStatus?: true
+    nationality?: true
+    academicLevel?: true
+    birthCountry?: true
+    birthRegion?: true
+    birthDistrict?: true
+    licenseNumber?: true
+    documentType?: true
+    onboardingStatus?: true
     personalEmail?: true
     phone?: true
+    cellPhone?: true
     address?: true
+    district?: true
+    province?: true
+    departmentdirec?: true
+    addressRef?: true
+    docAddress?: true
+    docDistrict?: true
+    docDepartment?: true
+    docAddressRef?: true
     emergencyName?: true
     emergencyPhone?: true
     emergencyRel?: true
+    afpType?: true
+    afpEntity?: true
+    afpCommission?: true
+    bankEntity?: true
+    bankAccount?: true
+    bankCci?: true
     status?: true
     hireDate?: true
     userId?: true
@@ -7191,12 +7523,36 @@ export namespace Prisma {
     birthDate?: true
     documentId?: true
     gender?: true
+    maritalStatus?: true
+    nationality?: true
+    academicLevel?: true
+    birthCountry?: true
+    birthRegion?: true
+    birthDistrict?: true
+    licenseNumber?: true
+    documentType?: true
+    onboardingStatus?: true
     personalEmail?: true
     phone?: true
+    cellPhone?: true
     address?: true
+    district?: true
+    province?: true
+    departmentdirec?: true
+    addressRef?: true
+    docAddress?: true
+    docDistrict?: true
+    docDepartment?: true
+    docAddressRef?: true
     emergencyName?: true
     emergencyPhone?: true
     emergencyRel?: true
+    afpType?: true
+    afpEntity?: true
+    afpCommission?: true
+    bankEntity?: true
+    bankAccount?: true
+    bankCci?: true
     status?: true
     hireDate?: true
     userId?: true
@@ -7289,12 +7645,36 @@ export namespace Prisma {
     birthDate: Date | null
     documentId: string | null
     gender: string | null
+    maritalStatus: string | null
+    nationality: string | null
+    academicLevel: string | null
+    birthCountry: string | null
+    birthRegion: string | null
+    birthDistrict: string | null
+    licenseNumber: string | null
+    documentType: string | null
+    onboardingStatus: string | null
     personalEmail: string | null
     phone: string | null
+    cellPhone: string | null
     address: string | null
+    district: string | null
+    province: string | null
+    departmentdirec: string | null
+    addressRef: string | null
+    docAddress: string | null
+    docDistrict: string | null
+    docDepartment: string | null
+    docAddressRef: string | null
     emergencyName: string | null
     emergencyPhone: string | null
     emergencyRel: string | null
+    afpType: string | null
+    afpEntity: string | null
+    afpCommission: string | null
+    bankEntity: string | null
+    bankAccount: string | null
+    bankCci: string | null
     status: $Enums.EmployeeStatus
     hireDate: Date
     userId: string | null
@@ -7331,12 +7711,36 @@ export namespace Prisma {
     birthDate?: boolean
     documentId?: boolean
     gender?: boolean
+    maritalStatus?: boolean
+    nationality?: boolean
+    academicLevel?: boolean
+    birthCountry?: boolean
+    birthRegion?: boolean
+    birthDistrict?: boolean
+    licenseNumber?: boolean
+    documentType?: boolean
+    onboardingStatus?: boolean
     personalEmail?: boolean
     phone?: boolean
+    cellPhone?: boolean
     address?: boolean
+    district?: boolean
+    province?: boolean
+    departmentdirec?: boolean
+    addressRef?: boolean
+    docAddress?: boolean
+    docDistrict?: boolean
+    docDepartment?: boolean
+    docAddressRef?: boolean
     emergencyName?: boolean
     emergencyPhone?: boolean
     emergencyRel?: boolean
+    afpType?: boolean
+    afpEntity?: boolean
+    afpCommission?: boolean
+    bankEntity?: boolean
+    bankAccount?: boolean
+    bankCci?: boolean
     status?: boolean
     hireDate?: boolean
     userId?: boolean
@@ -7354,6 +7758,8 @@ export namespace Prisma {
     attendances?: boolean | Employee$attendancesArgs<ExtArgs>
     documents?: boolean | Employee$documentsArgs<ExtArgs>
     requests?: boolean | Employee$requestsArgs<ExtArgs>
+    familyMembers?: boolean | Employee$familyMembersArgs<ExtArgs>
+    educations?: boolean | Employee$educationsArgs<ExtArgs>
     sentKudos?: boolean | Employee$sentKudosArgs<ExtArgs>
     receivedKudos?: boolean | Employee$receivedKudosArgs<ExtArgs>
     _count?: boolean | EmployeeCountOutputTypeDefaultArgs<ExtArgs>
@@ -7368,12 +7774,36 @@ export namespace Prisma {
     birthDate?: boolean
     documentId?: boolean
     gender?: boolean
+    maritalStatus?: boolean
+    nationality?: boolean
+    academicLevel?: boolean
+    birthCountry?: boolean
+    birthRegion?: boolean
+    birthDistrict?: boolean
+    licenseNumber?: boolean
+    documentType?: boolean
+    onboardingStatus?: boolean
     personalEmail?: boolean
     phone?: boolean
+    cellPhone?: boolean
     address?: boolean
+    district?: boolean
+    province?: boolean
+    departmentdirec?: boolean
+    addressRef?: boolean
+    docAddress?: boolean
+    docDistrict?: boolean
+    docDepartment?: boolean
+    docAddressRef?: boolean
     emergencyName?: boolean
     emergencyPhone?: boolean
     emergencyRel?: boolean
+    afpType?: boolean
+    afpEntity?: boolean
+    afpCommission?: boolean
+    bankEntity?: boolean
+    bankAccount?: boolean
+    bankCci?: boolean
     status?: boolean
     hireDate?: boolean
     userId?: boolean
@@ -7397,12 +7827,36 @@ export namespace Prisma {
     birthDate?: boolean
     documentId?: boolean
     gender?: boolean
+    maritalStatus?: boolean
+    nationality?: boolean
+    academicLevel?: boolean
+    birthCountry?: boolean
+    birthRegion?: boolean
+    birthDistrict?: boolean
+    licenseNumber?: boolean
+    documentType?: boolean
+    onboardingStatus?: boolean
     personalEmail?: boolean
     phone?: boolean
+    cellPhone?: boolean
     address?: boolean
+    district?: boolean
+    province?: boolean
+    departmentdirec?: boolean
+    addressRef?: boolean
+    docAddress?: boolean
+    docDistrict?: boolean
+    docDepartment?: boolean
+    docAddressRef?: boolean
     emergencyName?: boolean
     emergencyPhone?: boolean
     emergencyRel?: boolean
+    afpType?: boolean
+    afpEntity?: boolean
+    afpCommission?: boolean
+    bankEntity?: boolean
+    bankAccount?: boolean
+    bankCci?: boolean
     status?: boolean
     hireDate?: boolean
     userId?: boolean
@@ -7423,6 +7877,8 @@ export namespace Prisma {
     attendances?: boolean | Employee$attendancesArgs<ExtArgs>
     documents?: boolean | Employee$documentsArgs<ExtArgs>
     requests?: boolean | Employee$requestsArgs<ExtArgs>
+    familyMembers?: boolean | Employee$familyMembersArgs<ExtArgs>
+    educations?: boolean | Employee$educationsArgs<ExtArgs>
     sentKudos?: boolean | Employee$sentKudosArgs<ExtArgs>
     receivedKudos?: boolean | Employee$receivedKudosArgs<ExtArgs>
     _count?: boolean | EmployeeCountOutputTypeDefaultArgs<ExtArgs>
@@ -7446,6 +7902,8 @@ export namespace Prisma {
       attendances: Prisma.$AttendancePayload<ExtArgs>[]
       documents: Prisma.$DocumentPayload<ExtArgs>[]
       requests: Prisma.$RequestPayload<ExtArgs>[]
+      familyMembers: Prisma.$FamilyMemberPayload<ExtArgs>[]
+      educations: Prisma.$EducationPayload<ExtArgs>[]
       sentKudos: Prisma.$KudoPayload<ExtArgs>[]
       receivedKudos: Prisma.$KudoPayload<ExtArgs>[]
     }
@@ -7458,12 +7916,36 @@ export namespace Prisma {
       birthDate: Date | null
       documentId: string | null
       gender: string | null
+      maritalStatus: string | null
+      nationality: string | null
+      academicLevel: string | null
+      birthCountry: string | null
+      birthRegion: string | null
+      birthDistrict: string | null
+      licenseNumber: string | null
+      documentType: string | null
+      onboardingStatus: string | null
       personalEmail: string | null
       phone: string | null
+      cellPhone: string | null
       address: string | null
+      district: string | null
+      province: string | null
+      departmentdirec: string | null
+      addressRef: string | null
+      docAddress: string | null
+      docDistrict: string | null
+      docDepartment: string | null
+      docAddressRef: string | null
       emergencyName: string | null
       emergencyPhone: string | null
       emergencyRel: string | null
+      afpType: string | null
+      afpEntity: string | null
+      afpCommission: string | null
+      bankEntity: string | null
+      bankAccount: string | null
+      bankCci: string | null
       status: $Enums.EmployeeStatus
       hireDate: Date
       userId: string | null
@@ -7845,6 +8327,8 @@ export namespace Prisma {
     attendances<T extends Employee$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Employee$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany"> | Null>
     documents<T extends Employee$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
     requests<T extends Employee$requestsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$requestsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RequestPayload<ExtArgs>, T, "findMany"> | Null>
+    familyMembers<T extends Employee$familyMembersArgs<ExtArgs> = {}>(args?: Subset<T, Employee$familyMembersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "findMany"> | Null>
+    educations<T extends Employee$educationsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$educationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "findMany"> | Null>
     sentKudos<T extends Employee$sentKudosArgs<ExtArgs> = {}>(args?: Subset<T, Employee$sentKudosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$KudoPayload<ExtArgs>, T, "findMany"> | Null>
     receivedKudos<T extends Employee$receivedKudosArgs<ExtArgs> = {}>(args?: Subset<T, Employee$receivedKudosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$KudoPayload<ExtArgs>, T, "findMany"> | Null>
     /**
@@ -7884,12 +8368,36 @@ export namespace Prisma {
     readonly birthDate: FieldRef<"Employee", 'DateTime'>
     readonly documentId: FieldRef<"Employee", 'String'>
     readonly gender: FieldRef<"Employee", 'String'>
+    readonly maritalStatus: FieldRef<"Employee", 'String'>
+    readonly nationality: FieldRef<"Employee", 'String'>
+    readonly academicLevel: FieldRef<"Employee", 'String'>
+    readonly birthCountry: FieldRef<"Employee", 'String'>
+    readonly birthRegion: FieldRef<"Employee", 'String'>
+    readonly birthDistrict: FieldRef<"Employee", 'String'>
+    readonly licenseNumber: FieldRef<"Employee", 'String'>
+    readonly documentType: FieldRef<"Employee", 'String'>
+    readonly onboardingStatus: FieldRef<"Employee", 'String'>
     readonly personalEmail: FieldRef<"Employee", 'String'>
     readonly phone: FieldRef<"Employee", 'String'>
+    readonly cellPhone: FieldRef<"Employee", 'String'>
     readonly address: FieldRef<"Employee", 'String'>
+    readonly district: FieldRef<"Employee", 'String'>
+    readonly province: FieldRef<"Employee", 'String'>
+    readonly departmentdirec: FieldRef<"Employee", 'String'>
+    readonly addressRef: FieldRef<"Employee", 'String'>
+    readonly docAddress: FieldRef<"Employee", 'String'>
+    readonly docDistrict: FieldRef<"Employee", 'String'>
+    readonly docDepartment: FieldRef<"Employee", 'String'>
+    readonly docAddressRef: FieldRef<"Employee", 'String'>
     readonly emergencyName: FieldRef<"Employee", 'String'>
     readonly emergencyPhone: FieldRef<"Employee", 'String'>
     readonly emergencyRel: FieldRef<"Employee", 'String'>
+    readonly afpType: FieldRef<"Employee", 'String'>
+    readonly afpEntity: FieldRef<"Employee", 'String'>
+    readonly afpCommission: FieldRef<"Employee", 'String'>
+    readonly bankEntity: FieldRef<"Employee", 'String'>
+    readonly bankAccount: FieldRef<"Employee", 'String'>
+    readonly bankCci: FieldRef<"Employee", 'String'>
     readonly status: FieldRef<"Employee", 'EmployeeStatus'>
     readonly hireDate: FieldRef<"Employee", 'DateTime'>
     readonly userId: FieldRef<"Employee", 'String'>
@@ -8368,6 +8876,46 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RequestScalarFieldEnum | RequestScalarFieldEnum[]
+  }
+
+  /**
+   * Employee.familyMembers
+   */
+  export type Employee$familyMembersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    where?: FamilyMemberWhereInput
+    orderBy?: FamilyMemberOrderByWithRelationInput | FamilyMemberOrderByWithRelationInput[]
+    cursor?: FamilyMemberWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: FamilyMemberScalarFieldEnum | FamilyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * Employee.educations
+   */
+  export type Employee$educationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    where?: EducationWhereInput
+    orderBy?: EducationOrderByWithRelationInput | EducationOrderByWithRelationInput[]
+    cursor?: EducationWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EducationScalarFieldEnum | EducationScalarFieldEnum[]
   }
 
   /**
@@ -13540,6 +14088,2078 @@ export namespace Prisma {
 
 
   /**
+   * Model Education
+   */
+
+  export type AggregateEducation = {
+    _count: EducationCountAggregateOutputType | null
+    _avg: EducationAvgAggregateOutputType | null
+    _sum: EducationSumAggregateOutputType | null
+    _min: EducationMinAggregateOutputType | null
+    _max: EducationMaxAggregateOutputType | null
+  }
+
+  export type EducationAvgAggregateOutputType = {
+    startYear: number | null
+    endYear: number | null
+  }
+
+  export type EducationSumAggregateOutputType = {
+    startYear: number | null
+    endYear: number | null
+  }
+
+  export type EducationMinAggregateOutputType = {
+    id: string | null
+    employeeId: string | null
+    level: string | null
+    institution: string | null
+    program: string | null
+    startYear: number | null
+    endYear: number | null
+    status: string | null
+    country: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EducationMaxAggregateOutputType = {
+    id: string | null
+    employeeId: string | null
+    level: string | null
+    institution: string | null
+    program: string | null
+    startYear: number | null
+    endYear: number | null
+    status: string | null
+    country: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type EducationCountAggregateOutputType = {
+    id: number
+    employeeId: number
+    level: number
+    institution: number
+    program: number
+    startYear: number
+    endYear: number
+    status: number
+    country: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type EducationAvgAggregateInputType = {
+    startYear?: true
+    endYear?: true
+  }
+
+  export type EducationSumAggregateInputType = {
+    startYear?: true
+    endYear?: true
+  }
+
+  export type EducationMinAggregateInputType = {
+    id?: true
+    employeeId?: true
+    level?: true
+    institution?: true
+    program?: true
+    startYear?: true
+    endYear?: true
+    status?: true
+    country?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EducationMaxAggregateInputType = {
+    id?: true
+    employeeId?: true
+    level?: true
+    institution?: true
+    program?: true
+    startYear?: true
+    endYear?: true
+    status?: true
+    country?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type EducationCountAggregateInputType = {
+    id?: true
+    employeeId?: true
+    level?: true
+    institution?: true
+    program?: true
+    startYear?: true
+    endYear?: true
+    status?: true
+    country?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type EducationAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Education to aggregate.
+     */
+    where?: EducationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Educations to fetch.
+     */
+    orderBy?: EducationOrderByWithRelationInput | EducationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EducationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Educations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Educations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Educations
+    **/
+    _count?: true | EducationCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EducationAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EducationSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EducationMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EducationMaxAggregateInputType
+  }
+
+  export type GetEducationAggregateType<T extends EducationAggregateArgs> = {
+        [P in keyof T & keyof AggregateEducation]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEducation[P]>
+      : GetScalarType<T[P], AggregateEducation[P]>
+  }
+
+
+
+
+  export type EducationGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EducationWhereInput
+    orderBy?: EducationOrderByWithAggregationInput | EducationOrderByWithAggregationInput[]
+    by: EducationScalarFieldEnum[] | EducationScalarFieldEnum
+    having?: EducationScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EducationCountAggregateInputType | true
+    _avg?: EducationAvgAggregateInputType
+    _sum?: EducationSumAggregateInputType
+    _min?: EducationMinAggregateInputType
+    _max?: EducationMaxAggregateInputType
+  }
+
+  export type EducationGroupByOutputType = {
+    id: string
+    employeeId: string
+    level: string
+    institution: string
+    program: string
+    startYear: number
+    endYear: number | null
+    status: string
+    country: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: EducationCountAggregateOutputType | null
+    _avg: EducationAvgAggregateOutputType | null
+    _sum: EducationSumAggregateOutputType | null
+    _min: EducationMinAggregateOutputType | null
+    _max: EducationMaxAggregateOutputType | null
+  }
+
+  type GetEducationGroupByPayload<T extends EducationGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EducationGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EducationGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EducationGroupByOutputType[P]>
+            : GetScalarType<T[P], EducationGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EducationSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    employeeId?: boolean
+    level?: boolean
+    institution?: boolean
+    program?: boolean
+    startYear?: boolean
+    endYear?: boolean
+    status?: boolean
+    country?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["education"]>
+
+  export type EducationSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    employeeId?: boolean
+    level?: boolean
+    institution?: boolean
+    program?: boolean
+    startYear?: boolean
+    endYear?: boolean
+    status?: boolean
+    country?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["education"]>
+
+  export type EducationSelectScalar = {
+    id?: boolean
+    employeeId?: boolean
+    level?: boolean
+    institution?: boolean
+    program?: boolean
+    startYear?: boolean
+    endYear?: boolean
+    status?: boolean
+    country?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type EducationInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+  export type EducationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+
+  export type $EducationPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Education"
+    objects: {
+      employee: Prisma.$EmployeePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      employeeId: string
+      level: string
+      institution: string
+      program: string
+      startYear: number
+      endYear: number | null
+      status: string
+      country: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["education"]>
+    composites: {}
+  }
+
+  type EducationGetPayload<S extends boolean | null | undefined | EducationDefaultArgs> = $Result.GetResult<Prisma.$EducationPayload, S>
+
+  type EducationCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<EducationFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: EducationCountAggregateInputType | true
+    }
+
+  export interface EducationDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Education'], meta: { name: 'Education' } }
+    /**
+     * Find zero or one Education that matches the filter.
+     * @param {EducationFindUniqueArgs} args - Arguments to find a Education
+     * @example
+     * // Get one Education
+     * const education = await prisma.education.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EducationFindUniqueArgs>(args: SelectSubset<T, EducationFindUniqueArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one Education that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {EducationFindUniqueOrThrowArgs} args - Arguments to find a Education
+     * @example
+     * // Get one Education
+     * const education = await prisma.education.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EducationFindUniqueOrThrowArgs>(args: SelectSubset<T, EducationFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first Education that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationFindFirstArgs} args - Arguments to find a Education
+     * @example
+     * // Get one Education
+     * const education = await prisma.education.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EducationFindFirstArgs>(args?: SelectSubset<T, EducationFindFirstArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first Education that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationFindFirstOrThrowArgs} args - Arguments to find a Education
+     * @example
+     * // Get one Education
+     * const education = await prisma.education.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EducationFindFirstOrThrowArgs>(args?: SelectSubset<T, EducationFindFirstOrThrowArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more Educations that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Educations
+     * const educations = await prisma.education.findMany()
+     * 
+     * // Get first 10 Educations
+     * const educations = await prisma.education.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const educationWithIdOnly = await prisma.education.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EducationFindManyArgs>(args?: SelectSubset<T, EducationFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a Education.
+     * @param {EducationCreateArgs} args - Arguments to create a Education.
+     * @example
+     * // Create one Education
+     * const Education = await prisma.education.create({
+     *   data: {
+     *     // ... data to create a Education
+     *   }
+     * })
+     * 
+     */
+    create<T extends EducationCreateArgs>(args: SelectSubset<T, EducationCreateArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many Educations.
+     * @param {EducationCreateManyArgs} args - Arguments to create many Educations.
+     * @example
+     * // Create many Educations
+     * const education = await prisma.education.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EducationCreateManyArgs>(args?: SelectSubset<T, EducationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Educations and returns the data saved in the database.
+     * @param {EducationCreateManyAndReturnArgs} args - Arguments to create many Educations.
+     * @example
+     * // Create many Educations
+     * const education = await prisma.education.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Educations and only return the `id`
+     * const educationWithIdOnly = await prisma.education.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EducationCreateManyAndReturnArgs>(args?: SelectSubset<T, EducationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a Education.
+     * @param {EducationDeleteArgs} args - Arguments to delete one Education.
+     * @example
+     * // Delete one Education
+     * const Education = await prisma.education.delete({
+     *   where: {
+     *     // ... filter to delete one Education
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EducationDeleteArgs>(args: SelectSubset<T, EducationDeleteArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one Education.
+     * @param {EducationUpdateArgs} args - Arguments to update one Education.
+     * @example
+     * // Update one Education
+     * const education = await prisma.education.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EducationUpdateArgs>(args: SelectSubset<T, EducationUpdateArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more Educations.
+     * @param {EducationDeleteManyArgs} args - Arguments to filter Educations to delete.
+     * @example
+     * // Delete a few Educations
+     * const { count } = await prisma.education.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EducationDeleteManyArgs>(args?: SelectSubset<T, EducationDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Educations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Educations
+     * const education = await prisma.education.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EducationUpdateManyArgs>(args: SelectSubset<T, EducationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Education.
+     * @param {EducationUpsertArgs} args - Arguments to update or create a Education.
+     * @example
+     * // Update or create a Education
+     * const education = await prisma.education.upsert({
+     *   create: {
+     *     // ... data to create a Education
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Education we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EducationUpsertArgs>(args: SelectSubset<T, EducationUpsertArgs<ExtArgs>>): Prisma__EducationClient<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of Educations.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCountArgs} args - Arguments to filter Educations to count.
+     * @example
+     * // Count the number of Educations
+     * const count = await prisma.education.count({
+     *   where: {
+     *     // ... the filter for the Educations we want to count
+     *   }
+     * })
+    **/
+    count<T extends EducationCountArgs>(
+      args?: Subset<T, EducationCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EducationCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Education.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EducationAggregateArgs>(args: Subset<T, EducationAggregateArgs>): Prisma.PrismaPromise<GetEducationAggregateType<T>>
+
+    /**
+     * Group by Education.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EducationGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EducationGroupByArgs['orderBy'] }
+        : { orderBy?: EducationGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EducationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEducationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Education model
+   */
+  readonly fields: EducationFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Education.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EducationClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    employee<T extends EmployeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EmployeeDefaultArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Education model
+   */ 
+  interface EducationFieldRefs {
+    readonly id: FieldRef<"Education", 'String'>
+    readonly employeeId: FieldRef<"Education", 'String'>
+    readonly level: FieldRef<"Education", 'String'>
+    readonly institution: FieldRef<"Education", 'String'>
+    readonly program: FieldRef<"Education", 'String'>
+    readonly startYear: FieldRef<"Education", 'Int'>
+    readonly endYear: FieldRef<"Education", 'Int'>
+    readonly status: FieldRef<"Education", 'String'>
+    readonly country: FieldRef<"Education", 'String'>
+    readonly createdAt: FieldRef<"Education", 'DateTime'>
+    readonly updatedAt: FieldRef<"Education", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Education findUnique
+   */
+  export type EducationFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * Filter, which Education to fetch.
+     */
+    where: EducationWhereUniqueInput
+  }
+
+  /**
+   * Education findUniqueOrThrow
+   */
+  export type EducationFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * Filter, which Education to fetch.
+     */
+    where: EducationWhereUniqueInput
+  }
+
+  /**
+   * Education findFirst
+   */
+  export type EducationFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * Filter, which Education to fetch.
+     */
+    where?: EducationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Educations to fetch.
+     */
+    orderBy?: EducationOrderByWithRelationInput | EducationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Educations.
+     */
+    cursor?: EducationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Educations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Educations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Educations.
+     */
+    distinct?: EducationScalarFieldEnum | EducationScalarFieldEnum[]
+  }
+
+  /**
+   * Education findFirstOrThrow
+   */
+  export type EducationFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * Filter, which Education to fetch.
+     */
+    where?: EducationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Educations to fetch.
+     */
+    orderBy?: EducationOrderByWithRelationInput | EducationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Educations.
+     */
+    cursor?: EducationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Educations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Educations.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Educations.
+     */
+    distinct?: EducationScalarFieldEnum | EducationScalarFieldEnum[]
+  }
+
+  /**
+   * Education findMany
+   */
+  export type EducationFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * Filter, which Educations to fetch.
+     */
+    where?: EducationWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Educations to fetch.
+     */
+    orderBy?: EducationOrderByWithRelationInput | EducationOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Educations.
+     */
+    cursor?: EducationWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Educations from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Educations.
+     */
+    skip?: number
+    distinct?: EducationScalarFieldEnum | EducationScalarFieldEnum[]
+  }
+
+  /**
+   * Education create
+   */
+  export type EducationCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Education.
+     */
+    data: XOR<EducationCreateInput, EducationUncheckedCreateInput>
+  }
+
+  /**
+   * Education createMany
+   */
+  export type EducationCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Educations.
+     */
+    data: EducationCreateManyInput | EducationCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Education createManyAndReturn
+   */
+  export type EducationCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many Educations.
+     */
+    data: EducationCreateManyInput | EducationCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Education update
+   */
+  export type EducationUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Education.
+     */
+    data: XOR<EducationUpdateInput, EducationUncheckedUpdateInput>
+    /**
+     * Choose, which Education to update.
+     */
+    where: EducationWhereUniqueInput
+  }
+
+  /**
+   * Education updateMany
+   */
+  export type EducationUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Educations.
+     */
+    data: XOR<EducationUpdateManyMutationInput, EducationUncheckedUpdateManyInput>
+    /**
+     * Filter which Educations to update
+     */
+    where?: EducationWhereInput
+  }
+
+  /**
+   * Education upsert
+   */
+  export type EducationUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Education to update in case it exists.
+     */
+    where: EducationWhereUniqueInput
+    /**
+     * In case the Education found by the `where` argument doesn't exist, create a new Education with this data.
+     */
+    create: XOR<EducationCreateInput, EducationUncheckedCreateInput>
+    /**
+     * In case the Education was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EducationUpdateInput, EducationUncheckedUpdateInput>
+  }
+
+  /**
+   * Education delete
+   */
+  export type EducationDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+    /**
+     * Filter which Education to delete.
+     */
+    where: EducationWhereUniqueInput
+  }
+
+  /**
+   * Education deleteMany
+   */
+  export type EducationDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Educations to delete
+     */
+    where?: EducationWhereInput
+  }
+
+  /**
+   * Education without action
+   */
+  export type EducationDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Education
+     */
+    select?: EducationSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model FamilyMember
+   */
+
+  export type AggregateFamilyMember = {
+    _count: FamilyMemberCountAggregateOutputType | null
+    _min: FamilyMemberMinAggregateOutputType | null
+    _max: FamilyMemberMaxAggregateOutputType | null
+  }
+
+  export type FamilyMemberMinAggregateOutputType = {
+    id: string | null
+    employeeId: string | null
+    firstName: string | null
+    lastName: string | null
+    relationship: $Enums.FamilyRelationship | null
+    documentType: string | null
+    documentId: string | null
+    birthDate: Date | null
+    phone: string | null
+    isDependent: boolean | null
+    isHeir: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FamilyMemberMaxAggregateOutputType = {
+    id: string | null
+    employeeId: string | null
+    firstName: string | null
+    lastName: string | null
+    relationship: $Enums.FamilyRelationship | null
+    documentType: string | null
+    documentId: string | null
+    birthDate: Date | null
+    phone: string | null
+    isDependent: boolean | null
+    isHeir: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type FamilyMemberCountAggregateOutputType = {
+    id: number
+    employeeId: number
+    firstName: number
+    lastName: number
+    relationship: number
+    documentType: number
+    documentId: number
+    birthDate: number
+    phone: number
+    isDependent: number
+    isHeir: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type FamilyMemberMinAggregateInputType = {
+    id?: true
+    employeeId?: true
+    firstName?: true
+    lastName?: true
+    relationship?: true
+    documentType?: true
+    documentId?: true
+    birthDate?: true
+    phone?: true
+    isDependent?: true
+    isHeir?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FamilyMemberMaxAggregateInputType = {
+    id?: true
+    employeeId?: true
+    firstName?: true
+    lastName?: true
+    relationship?: true
+    documentType?: true
+    documentId?: true
+    birthDate?: true
+    phone?: true
+    isDependent?: true
+    isHeir?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type FamilyMemberCountAggregateInputType = {
+    id?: true
+    employeeId?: true
+    firstName?: true
+    lastName?: true
+    relationship?: true
+    documentType?: true
+    documentId?: true
+    birthDate?: true
+    phone?: true
+    isDependent?: true
+    isHeir?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type FamilyMemberAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FamilyMember to aggregate.
+     */
+    where?: FamilyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamilyMembers to fetch.
+     */
+    orderBy?: FamilyMemberOrderByWithRelationInput | FamilyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: FamilyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamilyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamilyMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned FamilyMembers
+    **/
+    _count?: true | FamilyMemberCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: FamilyMemberMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: FamilyMemberMaxAggregateInputType
+  }
+
+  export type GetFamilyMemberAggregateType<T extends FamilyMemberAggregateArgs> = {
+        [P in keyof T & keyof AggregateFamilyMember]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateFamilyMember[P]>
+      : GetScalarType<T[P], AggregateFamilyMember[P]>
+  }
+
+
+
+
+  export type FamilyMemberGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: FamilyMemberWhereInput
+    orderBy?: FamilyMemberOrderByWithAggregationInput | FamilyMemberOrderByWithAggregationInput[]
+    by: FamilyMemberScalarFieldEnum[] | FamilyMemberScalarFieldEnum
+    having?: FamilyMemberScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: FamilyMemberCountAggregateInputType | true
+    _min?: FamilyMemberMinAggregateInputType
+    _max?: FamilyMemberMaxAggregateInputType
+  }
+
+  export type FamilyMemberGroupByOutputType = {
+    id: string
+    employeeId: string
+    firstName: string
+    lastName: string
+    relationship: $Enums.FamilyRelationship
+    documentType: string
+    documentId: string | null
+    birthDate: Date | null
+    phone: string | null
+    isDependent: boolean
+    isHeir: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: FamilyMemberCountAggregateOutputType | null
+    _min: FamilyMemberMinAggregateOutputType | null
+    _max: FamilyMemberMaxAggregateOutputType | null
+  }
+
+  type GetFamilyMemberGroupByPayload<T extends FamilyMemberGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<FamilyMemberGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof FamilyMemberGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], FamilyMemberGroupByOutputType[P]>
+            : GetScalarType<T[P], FamilyMemberGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type FamilyMemberSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    employeeId?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    relationship?: boolean
+    documentType?: boolean
+    documentId?: boolean
+    birthDate?: boolean
+    phone?: boolean
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["familyMember"]>
+
+  export type FamilyMemberSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    employeeId?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    relationship?: boolean
+    documentType?: boolean
+    documentId?: boolean
+    birthDate?: boolean
+    phone?: boolean
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["familyMember"]>
+
+  export type FamilyMemberSelectScalar = {
+    id?: boolean
+    employeeId?: boolean
+    firstName?: boolean
+    lastName?: boolean
+    relationship?: boolean
+    documentType?: boolean
+    documentId?: boolean
+    birthDate?: boolean
+    phone?: boolean
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type FamilyMemberInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+  export type FamilyMemberIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+
+  export type $FamilyMemberPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "FamilyMember"
+    objects: {
+      employee: Prisma.$EmployeePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      employeeId: string
+      firstName: string
+      lastName: string
+      relationship: $Enums.FamilyRelationship
+      documentType: string
+      documentId: string | null
+      birthDate: Date | null
+      phone: string | null
+      isDependent: boolean
+      isHeir: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["familyMember"]>
+    composites: {}
+  }
+
+  type FamilyMemberGetPayload<S extends boolean | null | undefined | FamilyMemberDefaultArgs> = $Result.GetResult<Prisma.$FamilyMemberPayload, S>
+
+  type FamilyMemberCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<FamilyMemberFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: FamilyMemberCountAggregateInputType | true
+    }
+
+  export interface FamilyMemberDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['FamilyMember'], meta: { name: 'FamilyMember' } }
+    /**
+     * Find zero or one FamilyMember that matches the filter.
+     * @param {FamilyMemberFindUniqueArgs} args - Arguments to find a FamilyMember
+     * @example
+     * // Get one FamilyMember
+     * const familyMember = await prisma.familyMember.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends FamilyMemberFindUniqueArgs>(args: SelectSubset<T, FamilyMemberFindUniqueArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one FamilyMember that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {FamilyMemberFindUniqueOrThrowArgs} args - Arguments to find a FamilyMember
+     * @example
+     * // Get one FamilyMember
+     * const familyMember = await prisma.familyMember.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends FamilyMemberFindUniqueOrThrowArgs>(args: SelectSubset<T, FamilyMemberFindUniqueOrThrowArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first FamilyMember that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamilyMemberFindFirstArgs} args - Arguments to find a FamilyMember
+     * @example
+     * // Get one FamilyMember
+     * const familyMember = await prisma.familyMember.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends FamilyMemberFindFirstArgs>(args?: SelectSubset<T, FamilyMemberFindFirstArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first FamilyMember that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamilyMemberFindFirstOrThrowArgs} args - Arguments to find a FamilyMember
+     * @example
+     * // Get one FamilyMember
+     * const familyMember = await prisma.familyMember.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends FamilyMemberFindFirstOrThrowArgs>(args?: SelectSubset<T, FamilyMemberFindFirstOrThrowArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more FamilyMembers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamilyMemberFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all FamilyMembers
+     * const familyMembers = await prisma.familyMember.findMany()
+     * 
+     * // Get first 10 FamilyMembers
+     * const familyMembers = await prisma.familyMember.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const familyMemberWithIdOnly = await prisma.familyMember.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends FamilyMemberFindManyArgs>(args?: SelectSubset<T, FamilyMemberFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a FamilyMember.
+     * @param {FamilyMemberCreateArgs} args - Arguments to create a FamilyMember.
+     * @example
+     * // Create one FamilyMember
+     * const FamilyMember = await prisma.familyMember.create({
+     *   data: {
+     *     // ... data to create a FamilyMember
+     *   }
+     * })
+     * 
+     */
+    create<T extends FamilyMemberCreateArgs>(args: SelectSubset<T, FamilyMemberCreateArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many FamilyMembers.
+     * @param {FamilyMemberCreateManyArgs} args - Arguments to create many FamilyMembers.
+     * @example
+     * // Create many FamilyMembers
+     * const familyMember = await prisma.familyMember.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends FamilyMemberCreateManyArgs>(args?: SelectSubset<T, FamilyMemberCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many FamilyMembers and returns the data saved in the database.
+     * @param {FamilyMemberCreateManyAndReturnArgs} args - Arguments to create many FamilyMembers.
+     * @example
+     * // Create many FamilyMembers
+     * const familyMember = await prisma.familyMember.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many FamilyMembers and only return the `id`
+     * const familyMemberWithIdOnly = await prisma.familyMember.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends FamilyMemberCreateManyAndReturnArgs>(args?: SelectSubset<T, FamilyMemberCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a FamilyMember.
+     * @param {FamilyMemberDeleteArgs} args - Arguments to delete one FamilyMember.
+     * @example
+     * // Delete one FamilyMember
+     * const FamilyMember = await prisma.familyMember.delete({
+     *   where: {
+     *     // ... filter to delete one FamilyMember
+     *   }
+     * })
+     * 
+     */
+    delete<T extends FamilyMemberDeleteArgs>(args: SelectSubset<T, FamilyMemberDeleteArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one FamilyMember.
+     * @param {FamilyMemberUpdateArgs} args - Arguments to update one FamilyMember.
+     * @example
+     * // Update one FamilyMember
+     * const familyMember = await prisma.familyMember.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends FamilyMemberUpdateArgs>(args: SelectSubset<T, FamilyMemberUpdateArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more FamilyMembers.
+     * @param {FamilyMemberDeleteManyArgs} args - Arguments to filter FamilyMembers to delete.
+     * @example
+     * // Delete a few FamilyMembers
+     * const { count } = await prisma.familyMember.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends FamilyMemberDeleteManyArgs>(args?: SelectSubset<T, FamilyMemberDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more FamilyMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamilyMemberUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many FamilyMembers
+     * const familyMember = await prisma.familyMember.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends FamilyMemberUpdateManyArgs>(args: SelectSubset<T, FamilyMemberUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one FamilyMember.
+     * @param {FamilyMemberUpsertArgs} args - Arguments to update or create a FamilyMember.
+     * @example
+     * // Update or create a FamilyMember
+     * const familyMember = await prisma.familyMember.upsert({
+     *   create: {
+     *     // ... data to create a FamilyMember
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the FamilyMember we want to update
+     *   }
+     * })
+     */
+    upsert<T extends FamilyMemberUpsertArgs>(args: SelectSubset<T, FamilyMemberUpsertArgs<ExtArgs>>): Prisma__FamilyMemberClient<$Result.GetResult<Prisma.$FamilyMemberPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of FamilyMembers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamilyMemberCountArgs} args - Arguments to filter FamilyMembers to count.
+     * @example
+     * // Count the number of FamilyMembers
+     * const count = await prisma.familyMember.count({
+     *   where: {
+     *     // ... the filter for the FamilyMembers we want to count
+     *   }
+     * })
+    **/
+    count<T extends FamilyMemberCountArgs>(
+      args?: Subset<T, FamilyMemberCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], FamilyMemberCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a FamilyMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamilyMemberAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends FamilyMemberAggregateArgs>(args: Subset<T, FamilyMemberAggregateArgs>): Prisma.PrismaPromise<GetFamilyMemberAggregateType<T>>
+
+    /**
+     * Group by FamilyMember.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {FamilyMemberGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends FamilyMemberGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: FamilyMemberGroupByArgs['orderBy'] }
+        : { orderBy?: FamilyMemberGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, FamilyMemberGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetFamilyMemberGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the FamilyMember model
+   */
+  readonly fields: FamilyMemberFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for FamilyMember.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__FamilyMemberClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    employee<T extends EmployeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EmployeeDefaultArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the FamilyMember model
+   */ 
+  interface FamilyMemberFieldRefs {
+    readonly id: FieldRef<"FamilyMember", 'String'>
+    readonly employeeId: FieldRef<"FamilyMember", 'String'>
+    readonly firstName: FieldRef<"FamilyMember", 'String'>
+    readonly lastName: FieldRef<"FamilyMember", 'String'>
+    readonly relationship: FieldRef<"FamilyMember", 'FamilyRelationship'>
+    readonly documentType: FieldRef<"FamilyMember", 'String'>
+    readonly documentId: FieldRef<"FamilyMember", 'String'>
+    readonly birthDate: FieldRef<"FamilyMember", 'DateTime'>
+    readonly phone: FieldRef<"FamilyMember", 'String'>
+    readonly isDependent: FieldRef<"FamilyMember", 'Boolean'>
+    readonly isHeir: FieldRef<"FamilyMember", 'Boolean'>
+    readonly createdAt: FieldRef<"FamilyMember", 'DateTime'>
+    readonly updatedAt: FieldRef<"FamilyMember", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * FamilyMember findUnique
+   */
+  export type FamilyMemberFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which FamilyMember to fetch.
+     */
+    where: FamilyMemberWhereUniqueInput
+  }
+
+  /**
+   * FamilyMember findUniqueOrThrow
+   */
+  export type FamilyMemberFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which FamilyMember to fetch.
+     */
+    where: FamilyMemberWhereUniqueInput
+  }
+
+  /**
+   * FamilyMember findFirst
+   */
+  export type FamilyMemberFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which FamilyMember to fetch.
+     */
+    where?: FamilyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamilyMembers to fetch.
+     */
+    orderBy?: FamilyMemberOrderByWithRelationInput | FamilyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FamilyMembers.
+     */
+    cursor?: FamilyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamilyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamilyMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FamilyMembers.
+     */
+    distinct?: FamilyMemberScalarFieldEnum | FamilyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * FamilyMember findFirstOrThrow
+   */
+  export type FamilyMemberFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which FamilyMember to fetch.
+     */
+    where?: FamilyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamilyMembers to fetch.
+     */
+    orderBy?: FamilyMemberOrderByWithRelationInput | FamilyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for FamilyMembers.
+     */
+    cursor?: FamilyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamilyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamilyMembers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of FamilyMembers.
+     */
+    distinct?: FamilyMemberScalarFieldEnum | FamilyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * FamilyMember findMany
+   */
+  export type FamilyMemberFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * Filter, which FamilyMembers to fetch.
+     */
+    where?: FamilyMemberWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of FamilyMembers to fetch.
+     */
+    orderBy?: FamilyMemberOrderByWithRelationInput | FamilyMemberOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing FamilyMembers.
+     */
+    cursor?: FamilyMemberWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` FamilyMembers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` FamilyMembers.
+     */
+    skip?: number
+    distinct?: FamilyMemberScalarFieldEnum | FamilyMemberScalarFieldEnum[]
+  }
+
+  /**
+   * FamilyMember create
+   */
+  export type FamilyMemberCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to create a FamilyMember.
+     */
+    data: XOR<FamilyMemberCreateInput, FamilyMemberUncheckedCreateInput>
+  }
+
+  /**
+   * FamilyMember createMany
+   */
+  export type FamilyMemberCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many FamilyMembers.
+     */
+    data: FamilyMemberCreateManyInput | FamilyMemberCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * FamilyMember createManyAndReturn
+   */
+  export type FamilyMemberCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many FamilyMembers.
+     */
+    data: FamilyMemberCreateManyInput | FamilyMemberCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * FamilyMember update
+   */
+  export type FamilyMemberUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * The data needed to update a FamilyMember.
+     */
+    data: XOR<FamilyMemberUpdateInput, FamilyMemberUncheckedUpdateInput>
+    /**
+     * Choose, which FamilyMember to update.
+     */
+    where: FamilyMemberWhereUniqueInput
+  }
+
+  /**
+   * FamilyMember updateMany
+   */
+  export type FamilyMemberUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update FamilyMembers.
+     */
+    data: XOR<FamilyMemberUpdateManyMutationInput, FamilyMemberUncheckedUpdateManyInput>
+    /**
+     * Filter which FamilyMembers to update
+     */
+    where?: FamilyMemberWhereInput
+  }
+
+  /**
+   * FamilyMember upsert
+   */
+  export type FamilyMemberUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * The filter to search for the FamilyMember to update in case it exists.
+     */
+    where: FamilyMemberWhereUniqueInput
+    /**
+     * In case the FamilyMember found by the `where` argument doesn't exist, create a new FamilyMember with this data.
+     */
+    create: XOR<FamilyMemberCreateInput, FamilyMemberUncheckedCreateInput>
+    /**
+     * In case the FamilyMember was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<FamilyMemberUpdateInput, FamilyMemberUncheckedUpdateInput>
+  }
+
+  /**
+   * FamilyMember delete
+   */
+  export type FamilyMemberDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+    /**
+     * Filter which FamilyMember to delete.
+     */
+    where: FamilyMemberWhereUniqueInput
+  }
+
+  /**
+   * FamilyMember deleteMany
+   */
+  export type FamilyMemberDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which FamilyMembers to delete
+     */
+    where?: FamilyMemberWhereInput
+  }
+
+  /**
+   * FamilyMember without action
+   */
+  export type FamilyMemberDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the FamilyMember
+     */
+    select?: FamilyMemberSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: FamilyMemberInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -13628,12 +16248,36 @@ export namespace Prisma {
     birthDate: 'birthDate',
     documentId: 'documentId',
     gender: 'gender',
+    maritalStatus: 'maritalStatus',
+    nationality: 'nationality',
+    academicLevel: 'academicLevel',
+    birthCountry: 'birthCountry',
+    birthRegion: 'birthRegion',
+    birthDistrict: 'birthDistrict',
+    licenseNumber: 'licenseNumber',
+    documentType: 'documentType',
+    onboardingStatus: 'onboardingStatus',
     personalEmail: 'personalEmail',
     phone: 'phone',
+    cellPhone: 'cellPhone',
     address: 'address',
+    district: 'district',
+    province: 'province',
+    departmentdirec: 'departmentdirec',
+    addressRef: 'addressRef',
+    docAddress: 'docAddress',
+    docDistrict: 'docDistrict',
+    docDepartment: 'docDepartment',
+    docAddressRef: 'docAddressRef',
     emergencyName: 'emergencyName',
     emergencyPhone: 'emergencyPhone',
     emergencyRel: 'emergencyRel',
+    afpType: 'afpType',
+    afpEntity: 'afpEntity',
+    afpCommission: 'afpCommission',
+    bankEntity: 'bankEntity',
+    bankAccount: 'bankAccount',
+    bankCci: 'bankCci',
     status: 'status',
     hireDate: 'hireDate',
     userId: 'userId',
@@ -13726,6 +16370,42 @@ export namespace Prisma {
   };
 
   export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
+
+
+  export const EducationScalarFieldEnum: {
+    id: 'id',
+    employeeId: 'employeeId',
+    level: 'level',
+    institution: 'institution',
+    program: 'program',
+    startYear: 'startYear',
+    endYear: 'endYear',
+    status: 'status',
+    country: 'country',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type EducationScalarFieldEnum = (typeof EducationScalarFieldEnum)[keyof typeof EducationScalarFieldEnum]
+
+
+  export const FamilyMemberScalarFieldEnum: {
+    id: 'id',
+    employeeId: 'employeeId',
+    firstName: 'firstName',
+    lastName: 'lastName',
+    relationship: 'relationship',
+    documentType: 'documentType',
+    documentId: 'documentId',
+    birthDate: 'birthDate',
+    phone: 'phone',
+    isDependent: 'isDependent',
+    isHeir: 'isHeir',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type FamilyMemberScalarFieldEnum = (typeof FamilyMemberScalarFieldEnum)[keyof typeof FamilyMemberScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -13953,6 +16633,20 @@ export namespace Prisma {
    * Reference to a field of type 'DocumentType[]'
    */
   export type ListEnumDocumentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DocumentType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'FamilyRelationship'
+   */
+  export type EnumFamilyRelationshipFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FamilyRelationship'>
+    
+
+
+  /**
+   * Reference to a field of type 'FamilyRelationship[]'
+   */
+  export type ListEnumFamilyRelationshipFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FamilyRelationship[]'>
     
 
 
@@ -14326,12 +17020,36 @@ export namespace Prisma {
     birthDate?: DateTimeNullableFilter<"Employee"> | Date | string | null
     documentId?: StringNullableFilter<"Employee"> | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableFilter<"Employee"> | string | null
+    nationality?: StringNullableFilter<"Employee"> | string | null
+    academicLevel?: StringNullableFilter<"Employee"> | string | null
+    birthCountry?: StringNullableFilter<"Employee"> | string | null
+    birthRegion?: StringNullableFilter<"Employee"> | string | null
+    birthDistrict?: StringNullableFilter<"Employee"> | string | null
+    licenseNumber?: StringNullableFilter<"Employee"> | string | null
+    documentType?: StringNullableFilter<"Employee"> | string | null
+    onboardingStatus?: StringNullableFilter<"Employee"> | string | null
     personalEmail?: StringNullableFilter<"Employee"> | string | null
     phone?: StringNullableFilter<"Employee"> | string | null
+    cellPhone?: StringNullableFilter<"Employee"> | string | null
     address?: StringNullableFilter<"Employee"> | string | null
+    district?: StringNullableFilter<"Employee"> | string | null
+    province?: StringNullableFilter<"Employee"> | string | null
+    departmentdirec?: StringNullableFilter<"Employee"> | string | null
+    addressRef?: StringNullableFilter<"Employee"> | string | null
+    docAddress?: StringNullableFilter<"Employee"> | string | null
+    docDistrict?: StringNullableFilter<"Employee"> | string | null
+    docDepartment?: StringNullableFilter<"Employee"> | string | null
+    docAddressRef?: StringNullableFilter<"Employee"> | string | null
     emergencyName?: StringNullableFilter<"Employee"> | string | null
     emergencyPhone?: StringNullableFilter<"Employee"> | string | null
     emergencyRel?: StringNullableFilter<"Employee"> | string | null
+    afpType?: StringNullableFilter<"Employee"> | string | null
+    afpEntity?: StringNullableFilter<"Employee"> | string | null
+    afpCommission?: StringNullableFilter<"Employee"> | string | null
+    bankEntity?: StringNullableFilter<"Employee"> | string | null
+    bankAccount?: StringNullableFilter<"Employee"> | string | null
+    bankCci?: StringNullableFilter<"Employee"> | string | null
     status?: EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
     hireDate?: DateTimeFilter<"Employee"> | Date | string
     userId?: StringNullableFilter<"Employee"> | string | null
@@ -14349,6 +17067,8 @@ export namespace Prisma {
     attendances?: AttendanceListRelationFilter
     documents?: DocumentListRelationFilter
     requests?: RequestListRelationFilter
+    familyMembers?: FamilyMemberListRelationFilter
+    educations?: EducationListRelationFilter
     sentKudos?: KudoListRelationFilter
     receivedKudos?: KudoListRelationFilter
   }
@@ -14362,12 +17082,36 @@ export namespace Prisma {
     birthDate?: SortOrderInput | SortOrder
     documentId?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
+    maritalStatus?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
+    academicLevel?: SortOrderInput | SortOrder
+    birthCountry?: SortOrderInput | SortOrder
+    birthRegion?: SortOrderInput | SortOrder
+    birthDistrict?: SortOrderInput | SortOrder
+    licenseNumber?: SortOrderInput | SortOrder
+    documentType?: SortOrderInput | SortOrder
+    onboardingStatus?: SortOrderInput | SortOrder
     personalEmail?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
+    cellPhone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    district?: SortOrderInput | SortOrder
+    province?: SortOrderInput | SortOrder
+    departmentdirec?: SortOrderInput | SortOrder
+    addressRef?: SortOrderInput | SortOrder
+    docAddress?: SortOrderInput | SortOrder
+    docDistrict?: SortOrderInput | SortOrder
+    docDepartment?: SortOrderInput | SortOrder
+    docAddressRef?: SortOrderInput | SortOrder
     emergencyName?: SortOrderInput | SortOrder
     emergencyPhone?: SortOrderInput | SortOrder
     emergencyRel?: SortOrderInput | SortOrder
+    afpType?: SortOrderInput | SortOrder
+    afpEntity?: SortOrderInput | SortOrder
+    afpCommission?: SortOrderInput | SortOrder
+    bankEntity?: SortOrderInput | SortOrder
+    bankAccount?: SortOrderInput | SortOrder
+    bankCci?: SortOrderInput | SortOrder
     status?: SortOrder
     hireDate?: SortOrder
     userId?: SortOrderInput | SortOrder
@@ -14385,6 +17129,8 @@ export namespace Prisma {
     attendances?: AttendanceOrderByRelationAggregateInput
     documents?: DocumentOrderByRelationAggregateInput
     requests?: RequestOrderByRelationAggregateInput
+    familyMembers?: FamilyMemberOrderByRelationAggregateInput
+    educations?: EducationOrderByRelationAggregateInput
     sentKudos?: KudoOrderByRelationAggregateInput
     receivedKudos?: KudoOrderByRelationAggregateInput
   }
@@ -14402,12 +17148,36 @@ export namespace Prisma {
     secondLastName?: StringNullableFilter<"Employee"> | string | null
     birthDate?: DateTimeNullableFilter<"Employee"> | Date | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableFilter<"Employee"> | string | null
+    nationality?: StringNullableFilter<"Employee"> | string | null
+    academicLevel?: StringNullableFilter<"Employee"> | string | null
+    birthCountry?: StringNullableFilter<"Employee"> | string | null
+    birthRegion?: StringNullableFilter<"Employee"> | string | null
+    birthDistrict?: StringNullableFilter<"Employee"> | string | null
+    licenseNumber?: StringNullableFilter<"Employee"> | string | null
+    documentType?: StringNullableFilter<"Employee"> | string | null
+    onboardingStatus?: StringNullableFilter<"Employee"> | string | null
     personalEmail?: StringNullableFilter<"Employee"> | string | null
     phone?: StringNullableFilter<"Employee"> | string | null
+    cellPhone?: StringNullableFilter<"Employee"> | string | null
     address?: StringNullableFilter<"Employee"> | string | null
+    district?: StringNullableFilter<"Employee"> | string | null
+    province?: StringNullableFilter<"Employee"> | string | null
+    departmentdirec?: StringNullableFilter<"Employee"> | string | null
+    addressRef?: StringNullableFilter<"Employee"> | string | null
+    docAddress?: StringNullableFilter<"Employee"> | string | null
+    docDistrict?: StringNullableFilter<"Employee"> | string | null
+    docDepartment?: StringNullableFilter<"Employee"> | string | null
+    docAddressRef?: StringNullableFilter<"Employee"> | string | null
     emergencyName?: StringNullableFilter<"Employee"> | string | null
     emergencyPhone?: StringNullableFilter<"Employee"> | string | null
     emergencyRel?: StringNullableFilter<"Employee"> | string | null
+    afpType?: StringNullableFilter<"Employee"> | string | null
+    afpEntity?: StringNullableFilter<"Employee"> | string | null
+    afpCommission?: StringNullableFilter<"Employee"> | string | null
+    bankEntity?: StringNullableFilter<"Employee"> | string | null
+    bankAccount?: StringNullableFilter<"Employee"> | string | null
+    bankCci?: StringNullableFilter<"Employee"> | string | null
     status?: EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
     hireDate?: DateTimeFilter<"Employee"> | Date | string
     departmentId?: StringNullableFilter<"Employee"> | string | null
@@ -14424,6 +17194,8 @@ export namespace Prisma {
     attendances?: AttendanceListRelationFilter
     documents?: DocumentListRelationFilter
     requests?: RequestListRelationFilter
+    familyMembers?: FamilyMemberListRelationFilter
+    educations?: EducationListRelationFilter
     sentKudos?: KudoListRelationFilter
     receivedKudos?: KudoListRelationFilter
   }, "id" | "documentId" | "userId">
@@ -14437,12 +17209,36 @@ export namespace Prisma {
     birthDate?: SortOrderInput | SortOrder
     documentId?: SortOrderInput | SortOrder
     gender?: SortOrderInput | SortOrder
+    maritalStatus?: SortOrderInput | SortOrder
+    nationality?: SortOrderInput | SortOrder
+    academicLevel?: SortOrderInput | SortOrder
+    birthCountry?: SortOrderInput | SortOrder
+    birthRegion?: SortOrderInput | SortOrder
+    birthDistrict?: SortOrderInput | SortOrder
+    licenseNumber?: SortOrderInput | SortOrder
+    documentType?: SortOrderInput | SortOrder
+    onboardingStatus?: SortOrderInput | SortOrder
     personalEmail?: SortOrderInput | SortOrder
     phone?: SortOrderInput | SortOrder
+    cellPhone?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
+    district?: SortOrderInput | SortOrder
+    province?: SortOrderInput | SortOrder
+    departmentdirec?: SortOrderInput | SortOrder
+    addressRef?: SortOrderInput | SortOrder
+    docAddress?: SortOrderInput | SortOrder
+    docDistrict?: SortOrderInput | SortOrder
+    docDepartment?: SortOrderInput | SortOrder
+    docAddressRef?: SortOrderInput | SortOrder
     emergencyName?: SortOrderInput | SortOrder
     emergencyPhone?: SortOrderInput | SortOrder
     emergencyRel?: SortOrderInput | SortOrder
+    afpType?: SortOrderInput | SortOrder
+    afpEntity?: SortOrderInput | SortOrder
+    afpCommission?: SortOrderInput | SortOrder
+    bankEntity?: SortOrderInput | SortOrder
+    bankAccount?: SortOrderInput | SortOrder
+    bankCci?: SortOrderInput | SortOrder
     status?: SortOrder
     hireDate?: SortOrder
     userId?: SortOrderInput | SortOrder
@@ -14468,12 +17264,36 @@ export namespace Prisma {
     birthDate?: DateTimeNullableWithAggregatesFilter<"Employee"> | Date | string | null
     documentId?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     gender?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    nationality?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    academicLevel?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    birthCountry?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    birthRegion?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    birthDistrict?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    licenseNumber?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    documentType?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    onboardingStatus?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     personalEmail?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     phone?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    cellPhone?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     address?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    district?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    province?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    departmentdirec?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    addressRef?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    docAddress?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    docDistrict?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    docDepartment?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    docAddressRef?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     emergencyName?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     emergencyPhone?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     emergencyRel?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    afpType?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    afpEntity?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    afpCommission?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    bankEntity?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    bankAccount?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    bankCci?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     status?: EnumEmployeeStatusWithAggregatesFilter<"Employee"> | $Enums.EmployeeStatus
     hireDate?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
     userId?: StringNullableWithAggregatesFilter<"Employee"> | string | null
@@ -14908,6 +17728,188 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
   }
 
+  export type EducationWhereInput = {
+    AND?: EducationWhereInput | EducationWhereInput[]
+    OR?: EducationWhereInput[]
+    NOT?: EducationWhereInput | EducationWhereInput[]
+    id?: StringFilter<"Education"> | string
+    employeeId?: StringFilter<"Education"> | string
+    level?: StringFilter<"Education"> | string
+    institution?: StringFilter<"Education"> | string
+    program?: StringFilter<"Education"> | string
+    startYear?: IntFilter<"Education"> | number
+    endYear?: IntNullableFilter<"Education"> | number | null
+    status?: StringFilter<"Education"> | string
+    country?: StringNullableFilter<"Education"> | string | null
+    createdAt?: DateTimeFilter<"Education"> | Date | string
+    updatedAt?: DateTimeFilter<"Education"> | Date | string
+    employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }
+
+  export type EducationOrderByWithRelationInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    level?: SortOrder
+    institution?: SortOrder
+    program?: SortOrder
+    startYear?: SortOrder
+    endYear?: SortOrderInput | SortOrder
+    status?: SortOrder
+    country?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    employee?: EmployeeOrderByWithRelationInput
+  }
+
+  export type EducationWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: EducationWhereInput | EducationWhereInput[]
+    OR?: EducationWhereInput[]
+    NOT?: EducationWhereInput | EducationWhereInput[]
+    employeeId?: StringFilter<"Education"> | string
+    level?: StringFilter<"Education"> | string
+    institution?: StringFilter<"Education"> | string
+    program?: StringFilter<"Education"> | string
+    startYear?: IntFilter<"Education"> | number
+    endYear?: IntNullableFilter<"Education"> | number | null
+    status?: StringFilter<"Education"> | string
+    country?: StringNullableFilter<"Education"> | string | null
+    createdAt?: DateTimeFilter<"Education"> | Date | string
+    updatedAt?: DateTimeFilter<"Education"> | Date | string
+    employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }, "id">
+
+  export type EducationOrderByWithAggregationInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    level?: SortOrder
+    institution?: SortOrder
+    program?: SortOrder
+    startYear?: SortOrder
+    endYear?: SortOrderInput | SortOrder
+    status?: SortOrder
+    country?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: EducationCountOrderByAggregateInput
+    _avg?: EducationAvgOrderByAggregateInput
+    _max?: EducationMaxOrderByAggregateInput
+    _min?: EducationMinOrderByAggregateInput
+    _sum?: EducationSumOrderByAggregateInput
+  }
+
+  export type EducationScalarWhereWithAggregatesInput = {
+    AND?: EducationScalarWhereWithAggregatesInput | EducationScalarWhereWithAggregatesInput[]
+    OR?: EducationScalarWhereWithAggregatesInput[]
+    NOT?: EducationScalarWhereWithAggregatesInput | EducationScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Education"> | string
+    employeeId?: StringWithAggregatesFilter<"Education"> | string
+    level?: StringWithAggregatesFilter<"Education"> | string
+    institution?: StringWithAggregatesFilter<"Education"> | string
+    program?: StringWithAggregatesFilter<"Education"> | string
+    startYear?: IntWithAggregatesFilter<"Education"> | number
+    endYear?: IntNullableWithAggregatesFilter<"Education"> | number | null
+    status?: StringWithAggregatesFilter<"Education"> | string
+    country?: StringNullableWithAggregatesFilter<"Education"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Education"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Education"> | Date | string
+  }
+
+  export type FamilyMemberWhereInput = {
+    AND?: FamilyMemberWhereInput | FamilyMemberWhereInput[]
+    OR?: FamilyMemberWhereInput[]
+    NOT?: FamilyMemberWhereInput | FamilyMemberWhereInput[]
+    id?: StringFilter<"FamilyMember"> | string
+    employeeId?: StringFilter<"FamilyMember"> | string
+    firstName?: StringFilter<"FamilyMember"> | string
+    lastName?: StringFilter<"FamilyMember"> | string
+    relationship?: EnumFamilyRelationshipFilter<"FamilyMember"> | $Enums.FamilyRelationship
+    documentType?: StringFilter<"FamilyMember"> | string
+    documentId?: StringNullableFilter<"FamilyMember"> | string | null
+    birthDate?: DateTimeNullableFilter<"FamilyMember"> | Date | string | null
+    phone?: StringNullableFilter<"FamilyMember"> | string | null
+    isDependent?: BoolFilter<"FamilyMember"> | boolean
+    isHeir?: BoolFilter<"FamilyMember"> | boolean
+    createdAt?: DateTimeFilter<"FamilyMember"> | Date | string
+    updatedAt?: DateTimeFilter<"FamilyMember"> | Date | string
+    employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }
+
+  export type FamilyMemberOrderByWithRelationInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    relationship?: SortOrder
+    documentType?: SortOrder
+    documentId?: SortOrderInput | SortOrder
+    birthDate?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    isDependent?: SortOrder
+    isHeir?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    employee?: EmployeeOrderByWithRelationInput
+  }
+
+  export type FamilyMemberWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: FamilyMemberWhereInput | FamilyMemberWhereInput[]
+    OR?: FamilyMemberWhereInput[]
+    NOT?: FamilyMemberWhereInput | FamilyMemberWhereInput[]
+    employeeId?: StringFilter<"FamilyMember"> | string
+    firstName?: StringFilter<"FamilyMember"> | string
+    lastName?: StringFilter<"FamilyMember"> | string
+    relationship?: EnumFamilyRelationshipFilter<"FamilyMember"> | $Enums.FamilyRelationship
+    documentType?: StringFilter<"FamilyMember"> | string
+    documentId?: StringNullableFilter<"FamilyMember"> | string | null
+    birthDate?: DateTimeNullableFilter<"FamilyMember"> | Date | string | null
+    phone?: StringNullableFilter<"FamilyMember"> | string | null
+    isDependent?: BoolFilter<"FamilyMember"> | boolean
+    isHeir?: BoolFilter<"FamilyMember"> | boolean
+    createdAt?: DateTimeFilter<"FamilyMember"> | Date | string
+    updatedAt?: DateTimeFilter<"FamilyMember"> | Date | string
+    employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }, "id">
+
+  export type FamilyMemberOrderByWithAggregationInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    relationship?: SortOrder
+    documentType?: SortOrder
+    documentId?: SortOrderInput | SortOrder
+    birthDate?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    isDependent?: SortOrder
+    isHeir?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: FamilyMemberCountOrderByAggregateInput
+    _max?: FamilyMemberMaxOrderByAggregateInput
+    _min?: FamilyMemberMinOrderByAggregateInput
+  }
+
+  export type FamilyMemberScalarWhereWithAggregatesInput = {
+    AND?: FamilyMemberScalarWhereWithAggregatesInput | FamilyMemberScalarWhereWithAggregatesInput[]
+    OR?: FamilyMemberScalarWhereWithAggregatesInput[]
+    NOT?: FamilyMemberScalarWhereWithAggregatesInput | FamilyMemberScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"FamilyMember"> | string
+    employeeId?: StringWithAggregatesFilter<"FamilyMember"> | string
+    firstName?: StringWithAggregatesFilter<"FamilyMember"> | string
+    lastName?: StringWithAggregatesFilter<"FamilyMember"> | string
+    relationship?: EnumFamilyRelationshipWithAggregatesFilter<"FamilyMember"> | $Enums.FamilyRelationship
+    documentType?: StringWithAggregatesFilter<"FamilyMember"> | string
+    documentId?: StringNullableWithAggregatesFilter<"FamilyMember"> | string | null
+    birthDate?: DateTimeNullableWithAggregatesFilter<"FamilyMember"> | Date | string | null
+    phone?: StringNullableWithAggregatesFilter<"FamilyMember"> | string | null
+    isDependent?: BoolWithAggregatesFilter<"FamilyMember"> | boolean
+    isHeir?: BoolWithAggregatesFilter<"FamilyMember"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"FamilyMember"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"FamilyMember"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -15301,12 +18303,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -15320,6 +18346,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -15333,12 +18361,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -15352,6 +18404,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -15365,12 +18419,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15384,6 +18462,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -15397,12 +18477,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15416,6 +18520,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -15429,12 +18535,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -15454,12 +18584,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15475,12 +18629,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -15944,6 +19122,214 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EducationCreateInput = {
+    id?: string
+    level: string
+    institution: string
+    program: string
+    startYear: number
+    endYear?: number | null
+    status?: string
+    country?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    employee: EmployeeCreateNestedOneWithoutEducationsInput
+  }
+
+  export type EducationUncheckedCreateInput = {
+    id?: string
+    employeeId: string
+    level: string
+    institution: string
+    program: string
+    startYear: number
+    endYear?: number | null
+    status?: string
+    country?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EducationUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    institution?: StringFieldUpdateOperationsInput | string
+    program?: StringFieldUpdateOperationsInput | string
+    startYear?: IntFieldUpdateOperationsInput | number
+    endYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUpdateOneRequiredWithoutEducationsNestedInput
+  }
+
+  export type EducationUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    institution?: StringFieldUpdateOperationsInput | string
+    program?: StringFieldUpdateOperationsInput | string
+    startYear?: IntFieldUpdateOperationsInput | number
+    endYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationCreateManyInput = {
+    id?: string
+    employeeId: string
+    level: string
+    institution: string
+    program: string
+    startYear: number
+    endYear?: number | null
+    status?: string
+    country?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EducationUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    institution?: StringFieldUpdateOperationsInput | string
+    program?: StringFieldUpdateOperationsInput | string
+    startYear?: IntFieldUpdateOperationsInput | number
+    endYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    institution?: StringFieldUpdateOperationsInput | string
+    program?: StringFieldUpdateOperationsInput | string
+    startYear?: IntFieldUpdateOperationsInput | number
+    endYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FamilyMemberCreateInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    relationship: $Enums.FamilyRelationship
+    documentType?: string
+    documentId?: string | null
+    birthDate?: Date | string | null
+    phone?: string | null
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    employee: EmployeeCreateNestedOneWithoutFamilyMembersInput
+  }
+
+  export type FamilyMemberUncheckedCreateInput = {
+    id?: string
+    employeeId: string
+    firstName: string
+    lastName: string
+    relationship: $Enums.FamilyRelationship
+    documentType?: string
+    documentId?: string | null
+    birthDate?: Date | string | null
+    phone?: string | null
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FamilyMemberUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    relationship?: EnumFamilyRelationshipFieldUpdateOperationsInput | $Enums.FamilyRelationship
+    documentType?: StringFieldUpdateOperationsInput | string
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDependent?: BoolFieldUpdateOperationsInput | boolean
+    isHeir?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUpdateOneRequiredWithoutFamilyMembersNestedInput
+  }
+
+  export type FamilyMemberUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    relationship?: EnumFamilyRelationshipFieldUpdateOperationsInput | $Enums.FamilyRelationship
+    documentType?: StringFieldUpdateOperationsInput | string
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDependent?: BoolFieldUpdateOperationsInput | boolean
+    isHeir?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FamilyMemberCreateManyInput = {
+    id?: string
+    employeeId: string
+    firstName: string
+    lastName: string
+    relationship: $Enums.FamilyRelationship
+    documentType?: string
+    documentId?: string | null
+    birthDate?: Date | string | null
+    phone?: string | null
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FamilyMemberUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    relationship?: EnumFamilyRelationshipFieldUpdateOperationsInput | $Enums.FamilyRelationship
+    documentType?: StringFieldUpdateOperationsInput | string
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDependent?: BoolFieldUpdateOperationsInput | boolean
+    isHeir?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FamilyMemberUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    relationship?: EnumFamilyRelationshipFieldUpdateOperationsInput | $Enums.FamilyRelationship
+    documentType?: StringFieldUpdateOperationsInput | string
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDependent?: BoolFieldUpdateOperationsInput | boolean
+    isHeir?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16386,6 +19772,18 @@ export namespace Prisma {
     none?: DocumentWhereInput
   }
 
+  export type FamilyMemberListRelationFilter = {
+    every?: FamilyMemberWhereInput
+    some?: FamilyMemberWhereInput
+    none?: FamilyMemberWhereInput
+  }
+
+  export type EducationListRelationFilter = {
+    every?: EducationWhereInput
+    some?: EducationWhereInput
+    none?: EducationWhereInput
+  }
+
   export type KudoListRelationFilter = {
     every?: KudoWhereInput
     some?: KudoWhereInput
@@ -16397,6 +19795,14 @@ export namespace Prisma {
   }
 
   export type DocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type FamilyMemberOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type EducationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -16413,12 +19819,36 @@ export namespace Prisma {
     birthDate?: SortOrder
     documentId?: SortOrder
     gender?: SortOrder
+    maritalStatus?: SortOrder
+    nationality?: SortOrder
+    academicLevel?: SortOrder
+    birthCountry?: SortOrder
+    birthRegion?: SortOrder
+    birthDistrict?: SortOrder
+    licenseNumber?: SortOrder
+    documentType?: SortOrder
+    onboardingStatus?: SortOrder
     personalEmail?: SortOrder
     phone?: SortOrder
+    cellPhone?: SortOrder
     address?: SortOrder
+    district?: SortOrder
+    province?: SortOrder
+    departmentdirec?: SortOrder
+    addressRef?: SortOrder
+    docAddress?: SortOrder
+    docDistrict?: SortOrder
+    docDepartment?: SortOrder
+    docAddressRef?: SortOrder
     emergencyName?: SortOrder
     emergencyPhone?: SortOrder
     emergencyRel?: SortOrder
+    afpType?: SortOrder
+    afpEntity?: SortOrder
+    afpCommission?: SortOrder
+    bankEntity?: SortOrder
+    bankAccount?: SortOrder
+    bankCci?: SortOrder
     status?: SortOrder
     hireDate?: SortOrder
     userId?: SortOrder
@@ -16438,12 +19868,36 @@ export namespace Prisma {
     birthDate?: SortOrder
     documentId?: SortOrder
     gender?: SortOrder
+    maritalStatus?: SortOrder
+    nationality?: SortOrder
+    academicLevel?: SortOrder
+    birthCountry?: SortOrder
+    birthRegion?: SortOrder
+    birthDistrict?: SortOrder
+    licenseNumber?: SortOrder
+    documentType?: SortOrder
+    onboardingStatus?: SortOrder
     personalEmail?: SortOrder
     phone?: SortOrder
+    cellPhone?: SortOrder
     address?: SortOrder
+    district?: SortOrder
+    province?: SortOrder
+    departmentdirec?: SortOrder
+    addressRef?: SortOrder
+    docAddress?: SortOrder
+    docDistrict?: SortOrder
+    docDepartment?: SortOrder
+    docAddressRef?: SortOrder
     emergencyName?: SortOrder
     emergencyPhone?: SortOrder
     emergencyRel?: SortOrder
+    afpType?: SortOrder
+    afpEntity?: SortOrder
+    afpCommission?: SortOrder
+    bankEntity?: SortOrder
+    bankAccount?: SortOrder
+    bankCci?: SortOrder
     status?: SortOrder
     hireDate?: SortOrder
     userId?: SortOrder
@@ -16463,12 +19917,36 @@ export namespace Prisma {
     birthDate?: SortOrder
     documentId?: SortOrder
     gender?: SortOrder
+    maritalStatus?: SortOrder
+    nationality?: SortOrder
+    academicLevel?: SortOrder
+    birthCountry?: SortOrder
+    birthRegion?: SortOrder
+    birthDistrict?: SortOrder
+    licenseNumber?: SortOrder
+    documentType?: SortOrder
+    onboardingStatus?: SortOrder
     personalEmail?: SortOrder
     phone?: SortOrder
+    cellPhone?: SortOrder
     address?: SortOrder
+    district?: SortOrder
+    province?: SortOrder
+    departmentdirec?: SortOrder
+    addressRef?: SortOrder
+    docAddress?: SortOrder
+    docDistrict?: SortOrder
+    docDepartment?: SortOrder
+    docAddressRef?: SortOrder
     emergencyName?: SortOrder
     emergencyPhone?: SortOrder
     emergencyRel?: SortOrder
+    afpType?: SortOrder
+    afpEntity?: SortOrder
+    afpCommission?: SortOrder
+    bankEntity?: SortOrder
+    bankAccount?: SortOrder
+    bankCci?: SortOrder
     status?: SortOrder
     hireDate?: SortOrder
     userId?: SortOrder
@@ -16920,6 +20398,150 @@ export namespace Prisma {
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type EducationCountOrderByAggregateInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    level?: SortOrder
+    institution?: SortOrder
+    program?: SortOrder
+    startYear?: SortOrder
+    endYear?: SortOrder
+    status?: SortOrder
+    country?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EducationAvgOrderByAggregateInput = {
+    startYear?: SortOrder
+    endYear?: SortOrder
+  }
+
+  export type EducationMaxOrderByAggregateInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    level?: SortOrder
+    institution?: SortOrder
+    program?: SortOrder
+    startYear?: SortOrder
+    endYear?: SortOrder
+    status?: SortOrder
+    country?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EducationMinOrderByAggregateInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    level?: SortOrder
+    institution?: SortOrder
+    program?: SortOrder
+    startYear?: SortOrder
+    endYear?: SortOrder
+    status?: SortOrder
+    country?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EducationSumOrderByAggregateInput = {
+    startYear?: SortOrder
+    endYear?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type EnumFamilyRelationshipFilter<$PrismaModel = never> = {
+    equals?: $Enums.FamilyRelationship | EnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    in?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    not?: NestedEnumFamilyRelationshipFilter<$PrismaModel> | $Enums.FamilyRelationship
+  }
+
+  export type FamilyMemberCountOrderByAggregateInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    relationship?: SortOrder
+    documentType?: SortOrder
+    documentId?: SortOrder
+    birthDate?: SortOrder
+    phone?: SortOrder
+    isDependent?: SortOrder
+    isHeir?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FamilyMemberMaxOrderByAggregateInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    relationship?: SortOrder
+    documentType?: SortOrder
+    documentId?: SortOrder
+    birthDate?: SortOrder
+    phone?: SortOrder
+    isDependent?: SortOrder
+    isHeir?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type FamilyMemberMinOrderByAggregateInput = {
+    id?: SortOrder
+    employeeId?: SortOrder
+    firstName?: SortOrder
+    lastName?: SortOrder
+    relationship?: SortOrder
+    documentType?: SortOrder
+    documentId?: SortOrder
+    birthDate?: SortOrder
+    phone?: SortOrder
+    isDependent?: SortOrder
+    isHeir?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumFamilyRelationshipWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FamilyRelationship | EnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    in?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    not?: NestedEnumFamilyRelationshipWithAggregatesFilter<$PrismaModel> | $Enums.FamilyRelationship
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFamilyRelationshipFilter<$PrismaModel>
+    _max?: NestedEnumFamilyRelationshipFilter<$PrismaModel>
+  }
+
   export type EmployeeCreateNestedOneWithoutUserInput = {
     create?: XOR<EmployeeCreateWithoutUserInput, EmployeeUncheckedCreateWithoutUserInput>
     connectOrCreate?: EmployeeCreateOrConnectWithoutUserInput
@@ -17314,6 +20936,20 @@ export namespace Prisma {
     connect?: RequestWhereUniqueInput | RequestWhereUniqueInput[]
   }
 
+  export type FamilyMemberCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<FamilyMemberCreateWithoutEmployeeInput, FamilyMemberUncheckedCreateWithoutEmployeeInput> | FamilyMemberCreateWithoutEmployeeInput[] | FamilyMemberUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: FamilyMemberCreateOrConnectWithoutEmployeeInput | FamilyMemberCreateOrConnectWithoutEmployeeInput[]
+    createMany?: FamilyMemberCreateManyEmployeeInputEnvelope
+    connect?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+  }
+
+  export type EducationCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<EducationCreateWithoutEmployeeInput, EducationUncheckedCreateWithoutEmployeeInput> | EducationCreateWithoutEmployeeInput[] | EducationUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: EducationCreateOrConnectWithoutEmployeeInput | EducationCreateOrConnectWithoutEmployeeInput[]
+    createMany?: EducationCreateManyEmployeeInputEnvelope
+    connect?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+  }
+
   export type KudoCreateNestedManyWithoutSenderInput = {
     create?: XOR<KudoCreateWithoutSenderInput, KudoUncheckedCreateWithoutSenderInput> | KudoCreateWithoutSenderInput[] | KudoUncheckedCreateWithoutSenderInput[]
     connectOrCreate?: KudoCreateOrConnectWithoutSenderInput | KudoCreateOrConnectWithoutSenderInput[]
@@ -17360,6 +20996,20 @@ export namespace Prisma {
     connectOrCreate?: RequestCreateOrConnectWithoutEmployeeInput | RequestCreateOrConnectWithoutEmployeeInput[]
     createMany?: RequestCreateManyEmployeeInputEnvelope
     connect?: RequestWhereUniqueInput | RequestWhereUniqueInput[]
+  }
+
+  export type FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<FamilyMemberCreateWithoutEmployeeInput, FamilyMemberUncheckedCreateWithoutEmployeeInput> | FamilyMemberCreateWithoutEmployeeInput[] | FamilyMemberUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: FamilyMemberCreateOrConnectWithoutEmployeeInput | FamilyMemberCreateOrConnectWithoutEmployeeInput[]
+    createMany?: FamilyMemberCreateManyEmployeeInputEnvelope
+    connect?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+  }
+
+  export type EducationUncheckedCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<EducationCreateWithoutEmployeeInput, EducationUncheckedCreateWithoutEmployeeInput> | EducationCreateWithoutEmployeeInput[] | EducationUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: EducationCreateOrConnectWithoutEmployeeInput | EducationCreateOrConnectWithoutEmployeeInput[]
+    createMany?: EducationCreateManyEmployeeInputEnvelope
+    connect?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
   }
 
   export type KudoUncheckedCreateNestedManyWithoutSenderInput = {
@@ -17486,6 +21136,34 @@ export namespace Prisma {
     deleteMany?: RequestScalarWhereInput | RequestScalarWhereInput[]
   }
 
+  export type FamilyMemberUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<FamilyMemberCreateWithoutEmployeeInput, FamilyMemberUncheckedCreateWithoutEmployeeInput> | FamilyMemberCreateWithoutEmployeeInput[] | FamilyMemberUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: FamilyMemberCreateOrConnectWithoutEmployeeInput | FamilyMemberCreateOrConnectWithoutEmployeeInput[]
+    upsert?: FamilyMemberUpsertWithWhereUniqueWithoutEmployeeInput | FamilyMemberUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: FamilyMemberCreateManyEmployeeInputEnvelope
+    set?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    disconnect?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    delete?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    connect?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    update?: FamilyMemberUpdateWithWhereUniqueWithoutEmployeeInput | FamilyMemberUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: FamilyMemberUpdateManyWithWhereWithoutEmployeeInput | FamilyMemberUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: FamilyMemberScalarWhereInput | FamilyMemberScalarWhereInput[]
+  }
+
+  export type EducationUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<EducationCreateWithoutEmployeeInput, EducationUncheckedCreateWithoutEmployeeInput> | EducationCreateWithoutEmployeeInput[] | EducationUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: EducationCreateOrConnectWithoutEmployeeInput | EducationCreateOrConnectWithoutEmployeeInput[]
+    upsert?: EducationUpsertWithWhereUniqueWithoutEmployeeInput | EducationUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: EducationCreateManyEmployeeInputEnvelope
+    set?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    disconnect?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    delete?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    connect?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    update?: EducationUpdateWithWhereUniqueWithoutEmployeeInput | EducationUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: EducationUpdateManyWithWhereWithoutEmployeeInput | EducationUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: EducationScalarWhereInput | EducationScalarWhereInput[]
+  }
+
   export type KudoUpdateManyWithoutSenderNestedInput = {
     create?: XOR<KudoCreateWithoutSenderInput, KudoUncheckedCreateWithoutSenderInput> | KudoCreateWithoutSenderInput[] | KudoUncheckedCreateWithoutSenderInput[]
     connectOrCreate?: KudoCreateOrConnectWithoutSenderInput | KudoCreateOrConnectWithoutSenderInput[]
@@ -17578,6 +21256,34 @@ export namespace Prisma {
     update?: RequestUpdateWithWhereUniqueWithoutEmployeeInput | RequestUpdateWithWhereUniqueWithoutEmployeeInput[]
     updateMany?: RequestUpdateManyWithWhereWithoutEmployeeInput | RequestUpdateManyWithWhereWithoutEmployeeInput[]
     deleteMany?: RequestScalarWhereInput | RequestScalarWhereInput[]
+  }
+
+  export type FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<FamilyMemberCreateWithoutEmployeeInput, FamilyMemberUncheckedCreateWithoutEmployeeInput> | FamilyMemberCreateWithoutEmployeeInput[] | FamilyMemberUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: FamilyMemberCreateOrConnectWithoutEmployeeInput | FamilyMemberCreateOrConnectWithoutEmployeeInput[]
+    upsert?: FamilyMemberUpsertWithWhereUniqueWithoutEmployeeInput | FamilyMemberUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: FamilyMemberCreateManyEmployeeInputEnvelope
+    set?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    disconnect?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    delete?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    connect?: FamilyMemberWhereUniqueInput | FamilyMemberWhereUniqueInput[]
+    update?: FamilyMemberUpdateWithWhereUniqueWithoutEmployeeInput | FamilyMemberUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: FamilyMemberUpdateManyWithWhereWithoutEmployeeInput | FamilyMemberUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: FamilyMemberScalarWhereInput | FamilyMemberScalarWhereInput[]
+  }
+
+  export type EducationUncheckedUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<EducationCreateWithoutEmployeeInput, EducationUncheckedCreateWithoutEmployeeInput> | EducationCreateWithoutEmployeeInput[] | EducationUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: EducationCreateOrConnectWithoutEmployeeInput | EducationCreateOrConnectWithoutEmployeeInput[]
+    upsert?: EducationUpsertWithWhereUniqueWithoutEmployeeInput | EducationUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: EducationCreateManyEmployeeInputEnvelope
+    set?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    disconnect?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    delete?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    connect?: EducationWhereUniqueInput | EducationWhereUniqueInput[]
+    update?: EducationUpdateWithWhereUniqueWithoutEmployeeInput | EducationUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: EducationUpdateManyWithWhereWithoutEmployeeInput | EducationUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: EducationScalarWhereInput | EducationScalarWhereInput[]
   }
 
   export type KudoUncheckedUpdateManyWithoutSenderNestedInput = {
@@ -17770,6 +21476,46 @@ export namespace Prisma {
     upsert?: EmployeeUpsertWithoutDocumentsInput
     connect?: EmployeeWhereUniqueInput
     update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutDocumentsInput, EmployeeUpdateWithoutDocumentsInput>, EmployeeUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type EmployeeCreateNestedOneWithoutEducationsInput = {
+    create?: XOR<EmployeeCreateWithoutEducationsInput, EmployeeUncheckedCreateWithoutEducationsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutEducationsInput
+    connect?: EmployeeWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type EmployeeUpdateOneRequiredWithoutEducationsNestedInput = {
+    create?: XOR<EmployeeCreateWithoutEducationsInput, EmployeeUncheckedCreateWithoutEducationsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutEducationsInput
+    upsert?: EmployeeUpsertWithoutEducationsInput
+    connect?: EmployeeWhereUniqueInput
+    update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutEducationsInput, EmployeeUpdateWithoutEducationsInput>, EmployeeUncheckedUpdateWithoutEducationsInput>
+  }
+
+  export type EmployeeCreateNestedOneWithoutFamilyMembersInput = {
+    create?: XOR<EmployeeCreateWithoutFamilyMembersInput, EmployeeUncheckedCreateWithoutFamilyMembersInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutFamilyMembersInput
+    connect?: EmployeeWhereUniqueInput
+  }
+
+  export type EnumFamilyRelationshipFieldUpdateOperationsInput = {
+    set?: $Enums.FamilyRelationship
+  }
+
+  export type EmployeeUpdateOneRequiredWithoutFamilyMembersNestedInput = {
+    create?: XOR<EmployeeCreateWithoutFamilyMembersInput, EmployeeUncheckedCreateWithoutFamilyMembersInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutFamilyMembersInput
+    upsert?: EmployeeUpsertWithoutFamilyMembersInput
+    connect?: EmployeeWhereUniqueInput
+    update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutFamilyMembersInput, EmployeeUpdateWithoutFamilyMembersInput>, EmployeeUncheckedUpdateWithoutFamilyMembersInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -18158,6 +21904,50 @@ export namespace Prisma {
     _max?: NestedEnumDocumentTypeFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedEnumFamilyRelationshipFilter<$PrismaModel = never> = {
+    equals?: $Enums.FamilyRelationship | EnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    in?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    not?: NestedEnumFamilyRelationshipFilter<$PrismaModel> | $Enums.FamilyRelationship
+  }
+
+  export type NestedEnumFamilyRelationshipWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.FamilyRelationship | EnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    in?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    notIn?: $Enums.FamilyRelationship[] | ListEnumFamilyRelationshipFieldRefInput<$PrismaModel>
+    not?: NestedEnumFamilyRelationshipWithAggregatesFilter<$PrismaModel> | $Enums.FamilyRelationship
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumFamilyRelationshipFilter<$PrismaModel>
+    _max?: NestedEnumFamilyRelationshipFilter<$PrismaModel>
+  }
+
   export type EmployeeCreateWithoutUserInput = {
     id?: string
     firstName: string
@@ -18167,12 +21957,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -18185,6 +21999,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -18198,12 +22014,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     departmentId?: string | null
@@ -18216,6 +22056,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -18281,12 +22123,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18299,6 +22165,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -18312,12 +22180,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18330,6 +22222,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -18376,12 +22270,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -18394,6 +22312,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -18407,12 +22327,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -18425,6 +22369,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -18495,12 +22441,36 @@ export namespace Prisma {
     birthDate?: DateTimeNullableFilter<"Employee"> | Date | string | null
     documentId?: StringNullableFilter<"Employee"> | string | null
     gender?: StringNullableFilter<"Employee"> | string | null
+    maritalStatus?: StringNullableFilter<"Employee"> | string | null
+    nationality?: StringNullableFilter<"Employee"> | string | null
+    academicLevel?: StringNullableFilter<"Employee"> | string | null
+    birthCountry?: StringNullableFilter<"Employee"> | string | null
+    birthRegion?: StringNullableFilter<"Employee"> | string | null
+    birthDistrict?: StringNullableFilter<"Employee"> | string | null
+    licenseNumber?: StringNullableFilter<"Employee"> | string | null
+    documentType?: StringNullableFilter<"Employee"> | string | null
+    onboardingStatus?: StringNullableFilter<"Employee"> | string | null
     personalEmail?: StringNullableFilter<"Employee"> | string | null
     phone?: StringNullableFilter<"Employee"> | string | null
+    cellPhone?: StringNullableFilter<"Employee"> | string | null
     address?: StringNullableFilter<"Employee"> | string | null
+    district?: StringNullableFilter<"Employee"> | string | null
+    province?: StringNullableFilter<"Employee"> | string | null
+    departmentdirec?: StringNullableFilter<"Employee"> | string | null
+    addressRef?: StringNullableFilter<"Employee"> | string | null
+    docAddress?: StringNullableFilter<"Employee"> | string | null
+    docDistrict?: StringNullableFilter<"Employee"> | string | null
+    docDepartment?: StringNullableFilter<"Employee"> | string | null
+    docAddressRef?: StringNullableFilter<"Employee"> | string | null
     emergencyName?: StringNullableFilter<"Employee"> | string | null
     emergencyPhone?: StringNullableFilter<"Employee"> | string | null
     emergencyRel?: StringNullableFilter<"Employee"> | string | null
+    afpType?: StringNullableFilter<"Employee"> | string | null
+    afpEntity?: StringNullableFilter<"Employee"> | string | null
+    afpCommission?: StringNullableFilter<"Employee"> | string | null
+    bankEntity?: StringNullableFilter<"Employee"> | string | null
+    bankAccount?: StringNullableFilter<"Employee"> | string | null
+    bankCci?: StringNullableFilter<"Employee"> | string | null
     status?: EnumEmployeeStatusFilter<"Employee"> | $Enums.EmployeeStatus
     hireDate?: DateTimeFilter<"Employee"> | Date | string
     userId?: StringNullableFilter<"Employee"> | string | null
@@ -18575,12 +22545,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -18593,6 +22587,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -18606,12 +22602,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -18624,6 +22644,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -18890,12 +22912,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -18908,6 +22954,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -18921,12 +22969,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -18939,6 +23011,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -18957,12 +23031,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -18975,6 +23073,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -18988,12 +23088,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -19006,6 +23130,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -19158,6 +23284,82 @@ export namespace Prisma {
 
   export type RequestCreateManyEmployeeInputEnvelope = {
     data: RequestCreateManyEmployeeInput | RequestCreateManyEmployeeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type FamilyMemberCreateWithoutEmployeeInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    relationship: $Enums.FamilyRelationship
+    documentType?: string
+    documentId?: string | null
+    birthDate?: Date | string | null
+    phone?: string | null
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FamilyMemberUncheckedCreateWithoutEmployeeInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    relationship: $Enums.FamilyRelationship
+    documentType?: string
+    documentId?: string | null
+    birthDate?: Date | string | null
+    phone?: string | null
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type FamilyMemberCreateOrConnectWithoutEmployeeInput = {
+    where: FamilyMemberWhereUniqueInput
+    create: XOR<FamilyMemberCreateWithoutEmployeeInput, FamilyMemberUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type FamilyMemberCreateManyEmployeeInputEnvelope = {
+    data: FamilyMemberCreateManyEmployeeInput | FamilyMemberCreateManyEmployeeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type EducationCreateWithoutEmployeeInput = {
+    id?: string
+    level: string
+    institution: string
+    program: string
+    startYear: number
+    endYear?: number | null
+    status?: string
+    country?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EducationUncheckedCreateWithoutEmployeeInput = {
+    id?: string
+    level: string
+    institution: string
+    program: string
+    startYear: number
+    endYear?: number | null
+    status?: string
+    country?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EducationCreateOrConnectWithoutEmployeeInput = {
+    where: EducationWhereUniqueInput
+    create: XOR<EducationCreateWithoutEmployeeInput, EducationUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type EducationCreateManyEmployeeInputEnvelope = {
+    data: EducationCreateManyEmployeeInput | EducationCreateManyEmployeeInput[]
     skipDuplicates?: boolean
   }
 
@@ -19334,12 +23536,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19352,6 +23578,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -19365,12 +23593,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19383,6 +23635,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -19521,6 +23775,74 @@ export namespace Prisma {
     data: XOR<RequestUpdateManyMutationInput, RequestUncheckedUpdateManyWithoutEmployeeInput>
   }
 
+  export type FamilyMemberUpsertWithWhereUniqueWithoutEmployeeInput = {
+    where: FamilyMemberWhereUniqueInput
+    update: XOR<FamilyMemberUpdateWithoutEmployeeInput, FamilyMemberUncheckedUpdateWithoutEmployeeInput>
+    create: XOR<FamilyMemberCreateWithoutEmployeeInput, FamilyMemberUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type FamilyMemberUpdateWithWhereUniqueWithoutEmployeeInput = {
+    where: FamilyMemberWhereUniqueInput
+    data: XOR<FamilyMemberUpdateWithoutEmployeeInput, FamilyMemberUncheckedUpdateWithoutEmployeeInput>
+  }
+
+  export type FamilyMemberUpdateManyWithWhereWithoutEmployeeInput = {
+    where: FamilyMemberScalarWhereInput
+    data: XOR<FamilyMemberUpdateManyMutationInput, FamilyMemberUncheckedUpdateManyWithoutEmployeeInput>
+  }
+
+  export type FamilyMemberScalarWhereInput = {
+    AND?: FamilyMemberScalarWhereInput | FamilyMemberScalarWhereInput[]
+    OR?: FamilyMemberScalarWhereInput[]
+    NOT?: FamilyMemberScalarWhereInput | FamilyMemberScalarWhereInput[]
+    id?: StringFilter<"FamilyMember"> | string
+    employeeId?: StringFilter<"FamilyMember"> | string
+    firstName?: StringFilter<"FamilyMember"> | string
+    lastName?: StringFilter<"FamilyMember"> | string
+    relationship?: EnumFamilyRelationshipFilter<"FamilyMember"> | $Enums.FamilyRelationship
+    documentType?: StringFilter<"FamilyMember"> | string
+    documentId?: StringNullableFilter<"FamilyMember"> | string | null
+    birthDate?: DateTimeNullableFilter<"FamilyMember"> | Date | string | null
+    phone?: StringNullableFilter<"FamilyMember"> | string | null
+    isDependent?: BoolFilter<"FamilyMember"> | boolean
+    isHeir?: BoolFilter<"FamilyMember"> | boolean
+    createdAt?: DateTimeFilter<"FamilyMember"> | Date | string
+    updatedAt?: DateTimeFilter<"FamilyMember"> | Date | string
+  }
+
+  export type EducationUpsertWithWhereUniqueWithoutEmployeeInput = {
+    where: EducationWhereUniqueInput
+    update: XOR<EducationUpdateWithoutEmployeeInput, EducationUncheckedUpdateWithoutEmployeeInput>
+    create: XOR<EducationCreateWithoutEmployeeInput, EducationUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type EducationUpdateWithWhereUniqueWithoutEmployeeInput = {
+    where: EducationWhereUniqueInput
+    data: XOR<EducationUpdateWithoutEmployeeInput, EducationUncheckedUpdateWithoutEmployeeInput>
+  }
+
+  export type EducationUpdateManyWithWhereWithoutEmployeeInput = {
+    where: EducationScalarWhereInput
+    data: XOR<EducationUpdateManyMutationInput, EducationUncheckedUpdateManyWithoutEmployeeInput>
+  }
+
+  export type EducationScalarWhereInput = {
+    AND?: EducationScalarWhereInput | EducationScalarWhereInput[]
+    OR?: EducationScalarWhereInput[]
+    NOT?: EducationScalarWhereInput | EducationScalarWhereInput[]
+    id?: StringFilter<"Education"> | string
+    employeeId?: StringFilter<"Education"> | string
+    level?: StringFilter<"Education"> | string
+    institution?: StringFilter<"Education"> | string
+    program?: StringFilter<"Education"> | string
+    startYear?: IntFilter<"Education"> | number
+    endYear?: IntNullableFilter<"Education"> | number | null
+    status?: StringFilter<"Education"> | string
+    country?: StringNullableFilter<"Education"> | string | null
+    createdAt?: DateTimeFilter<"Education"> | Date | string
+    updatedAt?: DateTimeFilter<"Education"> | Date | string
+  }
+
   export type KudoUpsertWithWhereUniqueWithoutSenderInput = {
     where: KudoWhereUniqueInput
     update: XOR<KudoUpdateWithoutSenderInput, KudoUncheckedUpdateWithoutSenderInput>
@@ -19574,12 +23896,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -19592,6 +23938,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -19605,12 +23953,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -19623,6 +23995,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -19700,12 +24074,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19718,6 +24116,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -19731,12 +24131,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19749,6 +24173,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -19822,12 +24248,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -19840,6 +24290,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -19853,12 +24305,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -19871,6 +24347,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -19900,12 +24378,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19918,6 +24420,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -19931,12 +24435,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -19949,6 +24477,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -19962,12 +24492,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -19980,6 +24534,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -19993,12 +24549,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -20011,6 +24591,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -20073,12 +24655,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20091,6 +24697,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -20104,12 +24712,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20122,6 +24754,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -20174,12 +24808,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -20193,6 +24851,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
 
@@ -20205,12 +24865,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -20224,6 +24908,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
 
@@ -20241,12 +24927,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -20260,6 +24970,8 @@ export namespace Prisma {
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
   }
 
@@ -20272,12 +24984,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -20291,6 +25027,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
   }
 
@@ -20319,12 +25057,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20338,6 +25100,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
 
@@ -20350,12 +25114,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20369,6 +25157,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
 
@@ -20392,12 +25182,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20411,6 +25225,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
   }
 
@@ -20423,12 +25239,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20442,6 +25282,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
   }
 
@@ -20454,12 +25296,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     createdAt?: Date | string
@@ -20472,6 +25338,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
   }
@@ -20485,12 +25353,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -20503,6 +25395,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
     requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
   }
@@ -20532,12 +25426,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20550,6 +25468,8 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -20563,12 +25483,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20581,6 +25525,496 @@ export namespace Prisma {
     laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+  }
+
+  export type EmployeeCreateWithoutEducationsInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutEmployeeInput
+    department?: DepartmentCreateNestedOneWithoutEmployeesInput
+    position?: PositionCreateNestedOneWithoutEmployeesInput
+    supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
+    subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentCreateNestedManyWithoutEmployeeInput
+    requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutEducationsInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    userId?: string | null
+    departmentId?: string | null
+    positionId?: string | null
+    supervisorId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
+    requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutEducationsInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutEducationsInput, EmployeeUncheckedCreateWithoutEducationsInput>
+  }
+
+  export type EmployeeUpsertWithoutEducationsInput = {
+    update: XOR<EmployeeUpdateWithoutEducationsInput, EmployeeUncheckedUpdateWithoutEducationsInput>
+    create: XOR<EmployeeCreateWithoutEducationsInput, EmployeeUncheckedCreateWithoutEducationsInput>
+    where?: EmployeeWhereInput
+  }
+
+  export type EmployeeUpdateToOneWithWhereWithoutEducationsInput = {
+    where?: EmployeeWhereInput
+    data: XOR<EmployeeUpdateWithoutEducationsInput, EmployeeUncheckedUpdateWithoutEducationsInput>
+  }
+
+  export type EmployeeUpdateWithoutEducationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutEmployeeNestedInput
+    department?: DepartmentUpdateOneWithoutEmployeesNestedInput
+    position?: PositionUpdateOneWithoutEmployeesNestedInput
+    supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutEducationsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+  }
+
+  export type EmployeeCreateWithoutFamilyMembersInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutEmployeeInput
+    department?: DepartmentCreateNestedOneWithoutEmployeesInput
+    position?: PositionCreateNestedOneWithoutEmployeesInput
+    supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
+    subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentCreateNestedManyWithoutEmployeeInput
+    requests?: RequestCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutFamilyMembersInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    userId?: string | null
+    departmentId?: string | null
+    positionId?: string | null
+    supervisorId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
+    requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutFamilyMembersInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutFamilyMembersInput, EmployeeUncheckedCreateWithoutFamilyMembersInput>
+  }
+
+  export type EmployeeUpsertWithoutFamilyMembersInput = {
+    update: XOR<EmployeeUpdateWithoutFamilyMembersInput, EmployeeUncheckedUpdateWithoutFamilyMembersInput>
+    create: XOR<EmployeeCreateWithoutFamilyMembersInput, EmployeeUncheckedCreateWithoutFamilyMembersInput>
+    where?: EmployeeWhereInput
+  }
+
+  export type EmployeeUpdateToOneWithWhereWithoutFamilyMembersInput = {
+    where?: EmployeeWhereInput
+    data: XOR<EmployeeUpdateWithoutFamilyMembersInput, EmployeeUncheckedUpdateWithoutFamilyMembersInput>
+  }
+
+  export type EmployeeUpdateWithoutFamilyMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutEmployeeNestedInput
+    department?: DepartmentUpdateOneWithoutEmployeesNestedInput
+    position?: PositionUpdateOneWithoutEmployeesNestedInput
+    supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutFamilyMembersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -20646,12 +26080,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -20678,12 +26136,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20696,6 +26178,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -20709,12 +26193,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20727,6 +26235,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -20740,12 +26250,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20790,12 +26324,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -20814,12 +26372,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20832,6 +26414,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -20845,12 +26429,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20863,6 +26471,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -20876,12 +26486,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20988,12 +26622,36 @@ export namespace Prisma {
     birthDate?: Date | string | null
     documentId?: string | null
     gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
     personalEmail?: string | null
     phone?: string | null
+    cellPhone?: string | null
     address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
     emergencyName?: string | null
     emergencyPhone?: string | null
     emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
     status?: $Enums.EmployeeStatus
     hireDate: Date | string
     userId?: string | null
@@ -21045,6 +26703,34 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type FamilyMemberCreateManyEmployeeInput = {
+    id?: string
+    firstName: string
+    lastName: string
+    relationship: $Enums.FamilyRelationship
+    documentType?: string
+    documentId?: string | null
+    birthDate?: Date | string | null
+    phone?: string | null
+    isDependent?: boolean
+    isHeir?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EducationCreateManyEmployeeInput = {
+    id?: string
+    level: string
+    institution: string
+    program: string
+    startYear: number
+    endYear?: number | null
+    status?: string
+    country?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type KudoCreateManySenderInput = {
     id?: string
     message: string
@@ -21070,12 +26756,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -21088,6 +26798,8 @@ export namespace Prisma {
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
   }
@@ -21101,12 +26813,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21119,6 +26855,8 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
   }
@@ -21132,12 +26870,36 @@ export namespace Prisma {
     birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     documentId?: NullableStringFieldUpdateOperationsInput | string | null
     gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
     personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
     phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
     emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21273,6 +27035,90 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type FamilyMemberUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    relationship?: EnumFamilyRelationshipFieldUpdateOperationsInput | $Enums.FamilyRelationship
+    documentType?: StringFieldUpdateOperationsInput | string
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDependent?: BoolFieldUpdateOperationsInput | boolean
+    isHeir?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FamilyMemberUncheckedUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    relationship?: EnumFamilyRelationshipFieldUpdateOperationsInput | $Enums.FamilyRelationship
+    documentType?: StringFieldUpdateOperationsInput | string
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDependent?: BoolFieldUpdateOperationsInput | boolean
+    isHeir?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type FamilyMemberUncheckedUpdateManyWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    lastName?: StringFieldUpdateOperationsInput | string
+    relationship?: EnumFamilyRelationshipFieldUpdateOperationsInput | $Enums.FamilyRelationship
+    documentType?: StringFieldUpdateOperationsInput | string
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    isDependent?: BoolFieldUpdateOperationsInput | boolean
+    isHeir?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    institution?: StringFieldUpdateOperationsInput | string
+    program?: StringFieldUpdateOperationsInput | string
+    startYear?: IntFieldUpdateOperationsInput | number
+    endYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationUncheckedUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    institution?: StringFieldUpdateOperationsInput | string
+    program?: StringFieldUpdateOperationsInput | string
+    startYear?: IntFieldUpdateOperationsInput | number
+    endYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationUncheckedUpdateManyWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    level?: StringFieldUpdateOperationsInput | string
+    institution?: StringFieldUpdateOperationsInput | string
+    program?: StringFieldUpdateOperationsInput | string
+    startYear?: IntFieldUpdateOperationsInput | number
+    endYear?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: StringFieldUpdateOperationsInput | string
+    country?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type KudoUpdateWithoutSenderInput = {
     id?: StringFieldUpdateOperationsInput | string
     message?: StringFieldUpdateOperationsInput | string
@@ -21394,6 +27240,14 @@ export namespace Prisma {
      * @deprecated Use DocumentDefaultArgs instead
      */
     export type DocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DocumentDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use EducationDefaultArgs instead
+     */
+    export type EducationArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EducationDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use FamilyMemberDefaultArgs instead
+     */
+    export type FamilyMemberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = FamilyMemberDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

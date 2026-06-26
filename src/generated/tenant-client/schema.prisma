@@ -32,6 +32,7 @@ enum Provider {
 }
 
 enum EmployeeStatus {
+  SELECTED // Candidato en proceso de onboarding
   ACTIVE
   TERMINATED
   ON_LEAVE
@@ -78,6 +79,20 @@ enum AttendanceStatus {
   MEDICAL_LEAVE
   HOLIDAY
   DAY_OFF
+}
+
+enum FamilyRelationship {
+  FATHER
+  MOTHER
+  GUARDIAN
+  SPOUSE
+  PARTNER
+  SON
+  DAUGHTER
+  SIBLING
+  DEPENDENT
+  HEIR
+  OTHER
 }
 
 // ── Users ─────────────────────────────────────────────────────────────────────
@@ -163,22 +178,46 @@ model WorkShift {
 // ── Employees ─────────────────────────────────────────────────────────────────
 
 model Employee {
-  id             String         @id @default(uuid())
-  firstName      String
-  middleName     String?
-  lastName       String
-  secondLastName String?
-  birthDate      DateTime?
-  documentId     String?        @unique
-  gender         String?
-  personalEmail  String?
-  phone          String?
-  address        String?
-  emergencyName  String?
-  emergencyPhone String?
-  emergencyRel   String?
-  status         EmployeeStatus @default(ACTIVE)
-  hireDate       DateTime
+  id               String         @id @default(uuid())
+  firstName        String
+  middleName       String?
+  lastName         String
+  secondLastName   String?
+  birthDate        DateTime?
+  documentId       String?        @unique
+  gender           String?
+  maritalStatus    String?
+  nationality      String?
+  academicLevel    String?
+  birthCountry     String?
+  birthRegion      String?
+  birthDistrict    String?
+  licenseNumber    String?
+  documentType     String?        @default("DNI")
+  onboardingStatus String?
+  personalEmail    String?
+  phone            String?
+  cellPhone        String?
+  address          String?
+  district         String?
+  province         String?
+  departmentdirec  String?
+  addressRef       String?
+  docAddress       String?
+  docDistrict      String?
+  docDepartment    String?
+  docAddressRef    String?
+  emergencyName    String?
+  emergencyPhone   String?
+  emergencyRel     String?
+  afpType          String?
+  afpEntity        String?
+  afpCommission    String?
+  bankEntity       String?
+  bankAccount      String?
+  bankCci          String?
+  status           EmployeeStatus @default(ACTIVE)
+  hireDate         DateTime
 
   userId String? @unique
   user   User?   @relation(fields: [userId], references: [id])
@@ -197,6 +236,8 @@ model Employee {
   attendances   Attendance[]
   documents     Document[]
   requests      Request[]
+  familyMembers FamilyMember[]
+  educations    Education[]
   sentKudos     Kudo[]             @relation("Sender")
   receivedKudos Kudo[]             @relation("Receiver")
 
@@ -315,4 +356,49 @@ model Document {
   @@index([employeeId])
   @@index([type])
   @@map("documents")
+}
+
+// ── Education ─────────────────────────────────────────────────────────────────
+
+model Education {
+  id          String   @id @default(uuid())
+  employeeId  String
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  level       String
+  institution String
+  program     String
+  startYear   Int
+  endYear     Int?
+  status      String   @default("COMPLETED")
+  country     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([employeeId])
+  @@map("educations")
+}
+
+// ── Family ────────────────────────────────────────────────────────────────────
+
+model FamilyMember {
+  id         String   @id @default(uuid())
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  firstName    String
+  lastName     String
+  relationship FamilyRelationship
+  documentType String             @default("DNI")
+  documentId   String?
+  birthDate    DateTime?
+  phone        String?
+  isDependent  Boolean            @default(false)
+  isHeir       Boolean            @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([employeeId])
+  @@map("family_members")
 }

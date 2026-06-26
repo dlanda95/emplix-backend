@@ -14,7 +14,11 @@ import requestsRoutes from './modules/requests/requests.routes';
 import employeesRoutes from './modules/employees/employees.routes';
 import attendanceRoutes from './modules/attendance/attendance.routes';
 import kudosRoutes from './modules/kudos/kudos.routes';
-import { laborRoutes } from './modules/labor/labor.routes'; // 👈 IMPORTAR
+import { laborRoutes } from './modules/labor/labor.routes';
+import familyRoutes     from './modules/family/family.routes';
+import educationRoutes  from './modules/education/education.routes';
+import candidatesRoutes from './modules/candidates/candidates.routes';
+import onboardingRoutes from './modules/onboarding/onboarding.routes';
 
 const app: Application = express();
 
@@ -70,11 +74,19 @@ app.use('/api/auth', authRoutes);
 app.use('/api/organization', organizationRoutes);
 app.use('/api/requests', requestsRoutes);
 app.use('/api/attendance', attendanceRoutes);
-app.use('/api/employees', employeesRoutes);
+app.use('/api/employees', (req, _res, next) => {
+  if (req.method === 'POST' && req.path.includes('documents')) {
+    console.log('[APP] POST employees/documents intercepted — path:', req.path, 'content-type:', req.headers['content-type']);
+  }
+  next();
+}, employeesRoutes);
 app.use('/api/kudos', kudosRoutes);
 
-//--
-app.use('/api/labor', laborRoutes); // 👈 AGREGAR
+app.use('/api/labor',      laborRoutes);
+app.use('/api/family',     familyRoutes);
+app.use('/api/education',  educationRoutes);
+app.use('/api/candidates', candidatesRoutes);
+app.use('/api/onboarding', onboardingRoutes);
 
 // ==========================================
 // 6. MANEJO DE ERRORES (Siempre al final)

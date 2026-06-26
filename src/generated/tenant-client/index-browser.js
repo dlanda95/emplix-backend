@@ -182,12 +182,36 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   birthDate: 'birthDate',
   documentId: 'documentId',
   gender: 'gender',
+  maritalStatus: 'maritalStatus',
+  nationality: 'nationality',
+  academicLevel: 'academicLevel',
+  birthCountry: 'birthCountry',
+  birthRegion: 'birthRegion',
+  birthDistrict: 'birthDistrict',
+  licenseNumber: 'licenseNumber',
+  documentType: 'documentType',
+  onboardingStatus: 'onboardingStatus',
   personalEmail: 'personalEmail',
   phone: 'phone',
+  cellPhone: 'cellPhone',
   address: 'address',
+  district: 'district',
+  province: 'province',
+  departmentdirec: 'departmentdirec',
+  addressRef: 'addressRef',
+  docAddress: 'docAddress',
+  docDistrict: 'docDistrict',
+  docDepartment: 'docDepartment',
+  docAddressRef: 'docAddressRef',
   emergencyName: 'emergencyName',
   emergencyPhone: 'emergencyPhone',
   emergencyRel: 'emergencyRel',
+  afpType: 'afpType',
+  afpEntity: 'afpEntity',
+  afpCommission: 'afpCommission',
+  bankEntity: 'bankEntity',
+  bankAccount: 'bankAccount',
+  bankCci: 'bankCci',
   status: 'status',
   hireDate: 'hireDate',
   userId: 'userId',
@@ -264,6 +288,36 @@ exports.Prisma.DocumentScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EducationScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  level: 'level',
+  institution: 'institution',
+  program: 'program',
+  startYear: 'startYear',
+  endYear: 'endYear',
+  status: 'status',
+  country: 'country',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.FamilyMemberScalarFieldEnum = {
+  id: 'id',
+  employeeId: 'employeeId',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  relationship: 'relationship',
+  documentType: 'documentType',
+  documentId: 'documentId',
+  birthDate: 'birthDate',
+  phone: 'phone',
+  isDependent: 'isDependent',
+  isHeir: 'isHeir',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -304,6 +358,7 @@ exports.UserRole = exports.$Enums.UserRole = {
 };
 
 exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
+  SELECTED: 'SELECTED',
   ACTIVE: 'ACTIVE',
   TERMINATED: 'TERMINATED',
   ON_LEAVE: 'ON_LEAVE'
@@ -352,6 +407,20 @@ exports.DocumentType = exports.$Enums.DocumentType = {
   OTHER: 'OTHER'
 };
 
+exports.FamilyRelationship = exports.$Enums.FamilyRelationship = {
+  FATHER: 'FATHER',
+  MOTHER: 'MOTHER',
+  GUARDIAN: 'GUARDIAN',
+  SPOUSE: 'SPOUSE',
+  PARTNER: 'PARTNER',
+  SON: 'SON',
+  DAUGHTER: 'DAUGHTER',
+  SIBLING: 'SIBLING',
+  DEPENDENT: 'DEPENDENT',
+  HEIR: 'HEIR',
+  OTHER: 'OTHER'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Department: 'Department',
@@ -363,7 +432,9 @@ exports.Prisma.ModelName = {
   Attendance: 'Attendance',
   Request: 'Request',
   Kudo: 'Kudo',
-  Document: 'Document'
+  Document: 'Document',
+  Education: 'Education',
+  FamilyMember: 'FamilyMember'
 };
 
 /**
