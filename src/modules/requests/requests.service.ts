@@ -4,11 +4,16 @@ import { AppError } from '../../shared/middlewares/error.middleware';
 // Campos que un empleado puede solicitar cambiar en su perfil.
 // Lista blanca explícita — previene que un usuario malicioso modifique role, salary, etc.
 const ALLOWED_PROFILE_FIELDS = [
+  // Datos personales
   'firstName', 'middleName', 'lastName', 'secondLastName',
   'documentId', 'birthDate', 'gender', 'maritalStatus', 'nationality', 'academicLevel',
   'birthCountry', 'birthRegion', 'birthDistrict',
   'licenseNumber', 'documentType',
   'docAddress', 'docDistrict', 'docDepartment', 'docAddressRef',
+  // Domicilio
+  'address', 'district', 'province', 'departmentdirec', 'addressRef',
+  // Financiero
+  'afpType', 'afpEntity', 'afpCommission', 'bankEntity', 'bankAccount', 'bankCci',
 ] as const;
 
 export interface CreateRequestPayload {

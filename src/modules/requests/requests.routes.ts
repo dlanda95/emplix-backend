@@ -14,6 +14,8 @@ router.get('/me',       controller.getMyRequests);
 router.get('/balance',  controller.getVacationBalance); // IMPORTANTE: antes de /:id
 
 // ── Rutas administrativas (solo RRHH y admins) ────────────────────────────────
+// GET /requests?type=PROFILE_UPDATE&status=PENDING  — todas las solicitudes con filtros opcionales
+router.get('/',             requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.getAllRequests);
 router.get('/pending',      requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.getAllPending);
 router.patch('/:id/status', requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.processRequest);
 
