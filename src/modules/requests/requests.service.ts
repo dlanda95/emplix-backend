@@ -144,31 +144,28 @@ export class RequestsService {
   ) {
     if (!rawData || typeof rawData !== 'object') return;
 
-    const changes = rawData as Record<string, unknown>;
-
-    // Normaliza para comparar: null / undefined / '' → null
-    const norm = (v: unknown): unknown => (v === null || v === undefined || v === '') ? null : v;
-
-    // Leer valores actuales del empleado para evitar unique constraint en campos sin cambio real
-    const current = await tx.employee.findUnique({
-      where:  { userId },
-      select: Object.fromEntries(ALLOWED_PROFILE_FIELDS.map(f => [f, true])) as Record<string, true>,
-    }) as Record<string, unknown> | null;
-
+    const changes  = rawData as Record<string, unknown>;
+    const norm     = (v: unknown) => (v === null || v === undefined || v === '') ? null : v;
     const safeData: Record<string, unknown> = {};
 
     for (const field of ALLOWED_PROFILE_FIELDS) {
       if (!(field in changes) || changes[field] === undefined) continue;
-
-      const incoming = norm(changes[field]);
-      const existing = norm(current?.[field]);
-
-      // Omitir si el valor no cambió respecto a lo que ya tiene en BD
-      if (incoming === existing) continue;
-
       safeData[field] = field === 'birthDate' && typeof changes[field] === 'string'
         ? new Date(changes[field] as string)
         : changes[field];
+    }
+
+    if (Object.keys(safeData).length === 0) return;
+
+    // documentId tiene unique constraint — solo incluir si el valor realmente cambió
+    if ('documentId' in safeData) {
+      const row = await tx.employee.findUnique({
+        where:  { userId },
+        select: { documentId: true },
+      });
+      if (norm(safeData['documentId']) === norm(row?.documentId)) {
+        delete safeData['documentId'];
+      }
     }
 
     if (Object.keys(safeData).length === 0) return;
