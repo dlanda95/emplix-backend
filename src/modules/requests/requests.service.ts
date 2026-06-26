@@ -3,10 +3,12 @@ import { AppError } from '../../shared/middlewares/error.middleware';
 
 // Campos que un empleado puede solicitar cambiar en su perfil.
 // Lista blanca explícita — previene que un usuario malicioso modifique role, salary, etc.
+// documentId se excluye intencionalmente: tiene @unique en BD y requiere
+// verificación física del documento — HR debe actualizarlo manualmente.
 const ALLOWED_PROFILE_FIELDS = [
   // Datos personales
   'firstName', 'middleName', 'lastName', 'secondLastName',
-  'documentId', 'birthDate', 'gender', 'maritalStatus', 'nationality', 'academicLevel',
+  'birthDate', 'gender', 'maritalStatus', 'nationality', 'academicLevel',
   'birthCountry', 'birthRegion', 'birthDistrict',
   'licenseNumber', 'documentType',
   'docAddress', 'docDistrict', 'docDepartment', 'docAddressRef',
@@ -145,7 +147,6 @@ export class RequestsService {
     if (!rawData || typeof rawData !== 'object') return;
 
     const changes  = rawData as Record<string, unknown>;
-    const norm     = (v: unknown) => (v === null || v === undefined || v === '') ? null : v;
     const safeData: Record<string, unknown> = {};
 
     for (const field of ALLOWED_PROFILE_FIELDS) {
@@ -153,19 +154,6 @@ export class RequestsService {
       safeData[field] = field === 'birthDate' && typeof changes[field] === 'string'
         ? new Date(changes[field] as string)
         : changes[field];
-    }
-
-    if (Object.keys(safeData).length === 0) return;
-
-    // documentId tiene unique constraint — solo incluir si el valor realmente cambió
-    if ('documentId' in safeData) {
-      const row = await tx.employee.findUnique({
-        where:  { userId },
-        select: { documentId: true },
-      });
-      if (norm(safeData['documentId']) === norm(row?.documentId)) {
-        delete safeData['documentId'];
-      }
     }
 
     if (Object.keys(safeData).length === 0) return;
