@@ -103,6 +103,24 @@ export const UserRole: {
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
 
+export const AreaType: {
+  TRANSVERSAL: 'TRANSVERSAL',
+  EMISSIVE: 'EMISSIVE',
+  RECEPTIVE: 'RECEPTIVE'
+};
+
+export type AreaType = (typeof AreaType)[keyof typeof AreaType]
+
+
+export const RoleType: {
+  OPERATIONAL: 'OPERATIONAL',
+  TACTICAL: 'TACTICAL',
+  STRATEGIC: 'STRATEGIC'
+};
+
+export type RoleType = (typeof RoleType)[keyof typeof RoleType]
+
+
 export const EmployeeStatus: {
   SELECTED: 'SELECTED',
   ACTIVE: 'ACTIVE',
@@ -196,6 +214,14 @@ export const Provider: typeof $Enums.Provider
 export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
+
+export type AreaType = $Enums.AreaType
+
+export const AreaType: typeof $Enums.AreaType
+
+export type RoleType = $Enums.RoleType
+
+export const RoleType: typeof $Enums.RoleType
 
 export type EmployeeStatus = $Enums.EmployeeStatus
 
@@ -2052,11 +2078,13 @@ export namespace Prisma {
    */
 
   export type DepartmentCountOutputType = {
+    children: number
     employees: number
     positions: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    children?: boolean | DepartmentCountOutputTypeCountChildrenArgs
     employees?: boolean | DepartmentCountOutputTypeCountEmployeesArgs
     positions?: boolean | DepartmentCountOutputTypeCountPositionsArgs
   }
@@ -2070,6 +2098,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the DepartmentCountOutputType
      */
     select?: DepartmentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountChildrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DepartmentWhereInput
   }
 
   /**
@@ -3320,6 +3355,9 @@ export namespace Prisma {
     name: string | null
     code: string | null
     description: string | null
+    areaType: $Enums.AreaType | null
+    isActive: boolean | null
+    parentId: string | null
     leaderId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3330,6 +3368,9 @@ export namespace Prisma {
     name: string | null
     code: string | null
     description: string | null
+    areaType: $Enums.AreaType | null
+    isActive: boolean | null
+    parentId: string | null
     leaderId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3340,6 +3381,9 @@ export namespace Prisma {
     name: number
     code: number
     description: number
+    areaType: number
+    isActive: number
+    parentId: number
     leaderId: number
     createdAt: number
     updatedAt: number
@@ -3352,6 +3396,9 @@ export namespace Prisma {
     name?: true
     code?: true
     description?: true
+    areaType?: true
+    isActive?: true
+    parentId?: true
     leaderId?: true
     createdAt?: true
     updatedAt?: true
@@ -3362,6 +3409,9 @@ export namespace Prisma {
     name?: true
     code?: true
     description?: true
+    areaType?: true
+    isActive?: true
+    parentId?: true
     leaderId?: true
     createdAt?: true
     updatedAt?: true
@@ -3372,6 +3422,9 @@ export namespace Prisma {
     name?: true
     code?: true
     description?: true
+    areaType?: true
+    isActive?: true
+    parentId?: true
     leaderId?: true
     createdAt?: true
     updatedAt?: true
@@ -3455,6 +3508,9 @@ export namespace Prisma {
     name: string
     code: string | null
     description: string | null
+    areaType: $Enums.AreaType
+    isActive: boolean
+    parentId: string | null
     leaderId: string | null
     createdAt: Date
     updatedAt: Date
@@ -3482,9 +3538,14 @@ export namespace Prisma {
     name?: boolean
     code?: boolean
     description?: boolean
+    areaType?: boolean
+    isActive?: boolean
+    parentId?: boolean
     leaderId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parent?: boolean | Department$parentArgs<ExtArgs>
+    children?: boolean | Department$childrenArgs<ExtArgs>
     employees?: boolean | Department$employeesArgs<ExtArgs>
     positions?: boolean | Department$positionsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
@@ -3495,9 +3556,13 @@ export namespace Prisma {
     name?: boolean
     code?: boolean
     description?: boolean
+    areaType?: boolean
+    isActive?: boolean
+    parentId?: boolean
     leaderId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    parent?: boolean | Department$parentArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
   export type DepartmentSelectScalar = {
@@ -3505,21 +3570,30 @@ export namespace Prisma {
     name?: boolean
     code?: boolean
     description?: boolean
+    areaType?: boolean
+    isActive?: boolean
+    parentId?: boolean
     leaderId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
   export type DepartmentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    parent?: boolean | Department$parentArgs<ExtArgs>
+    children?: boolean | Department$childrenArgs<ExtArgs>
     employees?: boolean | Department$employeesArgs<ExtArgs>
     positions?: boolean | Department$positionsArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    parent?: boolean | Department$parentArgs<ExtArgs>
+  }
 
   export type $DepartmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Department"
     objects: {
+      parent: Prisma.$DepartmentPayload<ExtArgs> | null
+      children: Prisma.$DepartmentPayload<ExtArgs>[]
       employees: Prisma.$EmployeePayload<ExtArgs>[]
       positions: Prisma.$PositionPayload<ExtArgs>[]
     }
@@ -3528,6 +3602,9 @@ export namespace Prisma {
       name: string
       code: string | null
       description: string | null
+      areaType: $Enums.AreaType
+      isActive: boolean
+      parentId: string | null
       leaderId: string | null
       createdAt: Date
       updatedAt: Date
@@ -3895,6 +3972,8 @@ export namespace Prisma {
    */
   export interface Prisma__DepartmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    parent<T extends Department$parentArgs<ExtArgs> = {}>(args?: Subset<T, Department$parentArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    children<T extends Department$childrenArgs<ExtArgs> = {}>(args?: Subset<T, Department$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany"> | Null>
     employees<T extends Department$employeesArgs<ExtArgs> = {}>(args?: Subset<T, Department$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany"> | Null>
     positions<T extends Department$positionsArgs<ExtArgs> = {}>(args?: Subset<T, Department$positionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findMany"> | Null>
     /**
@@ -3930,6 +4009,9 @@ export namespace Prisma {
     readonly name: FieldRef<"Department", 'String'>
     readonly code: FieldRef<"Department", 'String'>
     readonly description: FieldRef<"Department", 'String'>
+    readonly areaType: FieldRef<"Department", 'AreaType'>
+    readonly isActive: FieldRef<"Department", 'Boolean'>
+    readonly parentId: FieldRef<"Department", 'String'>
     readonly leaderId: FieldRef<"Department", 'String'>
     readonly createdAt: FieldRef<"Department", 'DateTime'>
     readonly updatedAt: FieldRef<"Department", 'DateTime'>
@@ -4154,6 +4236,10 @@ export namespace Prisma {
      */
     data: DepartmentCreateManyInput | DepartmentCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4247,6 +4333,41 @@ export namespace Prisma {
   }
 
   /**
+   * Department.parent
+   */
+  export type Department$parentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    where?: DepartmentWhereInput
+  }
+
+  /**
+   * Department.children
+   */
+  export type Department$childrenArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    where?: DepartmentWhereInput
+    orderBy?: DepartmentOrderByWithRelationInput | DepartmentOrderByWithRelationInput[]
+    cursor?: DepartmentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DepartmentScalarFieldEnum | DepartmentScalarFieldEnum[]
+  }
+
+  /**
    * Department.employees
    */
   export type Department$employeesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4307,14 +4428,27 @@ export namespace Prisma {
 
   export type AggregatePosition = {
     _count: PositionCountAggregateOutputType | null
+    _avg: PositionAvgAggregateOutputType | null
+    _sum: PositionSumAggregateOutputType | null
     _min: PositionMinAggregateOutputType | null
     _max: PositionMaxAggregateOutputType | null
+  }
+
+  export type PositionAvgAggregateOutputType = {
+    hierarchyLevel: number | null
+  }
+
+  export type PositionSumAggregateOutputType = {
+    hierarchyLevel: number | null
   }
 
   export type PositionMinAggregateOutputType = {
     id: string | null
     name: string | null
     description: string | null
+    hierarchyLevel: number | null
+    roleType: $Enums.RoleType | null
+    isActive: boolean | null
     departmentId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4324,6 +4458,9 @@ export namespace Prisma {
     id: string | null
     name: string | null
     description: string | null
+    hierarchyLevel: number | null
+    roleType: $Enums.RoleType | null
+    isActive: boolean | null
     departmentId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4333,6 +4470,9 @@ export namespace Prisma {
     id: number
     name: number
     description: number
+    hierarchyLevel: number
+    roleType: number
+    isActive: number
     departmentId: number
     createdAt: number
     updatedAt: number
@@ -4340,10 +4480,21 @@ export namespace Prisma {
   }
 
 
+  export type PositionAvgAggregateInputType = {
+    hierarchyLevel?: true
+  }
+
+  export type PositionSumAggregateInputType = {
+    hierarchyLevel?: true
+  }
+
   export type PositionMinAggregateInputType = {
     id?: true
     name?: true
     description?: true
+    hierarchyLevel?: true
+    roleType?: true
+    isActive?: true
     departmentId?: true
     createdAt?: true
     updatedAt?: true
@@ -4353,6 +4504,9 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    hierarchyLevel?: true
+    roleType?: true
+    isActive?: true
     departmentId?: true
     createdAt?: true
     updatedAt?: true
@@ -4362,6 +4516,9 @@ export namespace Prisma {
     id?: true
     name?: true
     description?: true
+    hierarchyLevel?: true
+    roleType?: true
+    isActive?: true
     departmentId?: true
     createdAt?: true
     updatedAt?: true
@@ -4406,6 +4563,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: PositionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PositionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: PositionMinAggregateInputType
@@ -4436,6 +4605,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: PositionCountAggregateInputType | true
+    _avg?: PositionAvgAggregateInputType
+    _sum?: PositionSumAggregateInputType
     _min?: PositionMinAggregateInputType
     _max?: PositionMaxAggregateInputType
   }
@@ -4444,10 +4615,15 @@ export namespace Prisma {
     id: string
     name: string
     description: string | null
+    hierarchyLevel: number
+    roleType: $Enums.RoleType
+    isActive: boolean
     departmentId: string | null
     createdAt: Date
     updatedAt: Date
     _count: PositionCountAggregateOutputType | null
+    _avg: PositionAvgAggregateOutputType | null
+    _sum: PositionSumAggregateOutputType | null
     _min: PositionMinAggregateOutputType | null
     _max: PositionMaxAggregateOutputType | null
   }
@@ -4470,6 +4646,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    hierarchyLevel?: boolean
+    roleType?: boolean
+    isActive?: boolean
     departmentId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4482,6 +4661,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    hierarchyLevel?: boolean
+    roleType?: boolean
+    isActive?: boolean
     departmentId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4492,6 +4674,9 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     description?: boolean
+    hierarchyLevel?: boolean
+    roleType?: boolean
+    isActive?: boolean
     departmentId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4516,6 +4701,9 @@ export namespace Prisma {
       id: string
       name: string
       description: string | null
+      hierarchyLevel: number
+      roleType: $Enums.RoleType
+      isActive: boolean
       departmentId: string | null
       createdAt: Date
       updatedAt: Date
@@ -4917,6 +5105,9 @@ export namespace Prisma {
     readonly id: FieldRef<"Position", 'String'>
     readonly name: FieldRef<"Position", 'String'>
     readonly description: FieldRef<"Position", 'String'>
+    readonly hierarchyLevel: FieldRef<"Position", 'Int'>
+    readonly roleType: FieldRef<"Position", 'RoleType'>
+    readonly isActive: FieldRef<"Position", 'Boolean'>
     readonly departmentId: FieldRef<"Position", 'String'>
     readonly createdAt: FieldRef<"Position", 'DateTime'>
     readonly updatedAt: FieldRef<"Position", 'DateTime'>
@@ -16194,6 +16385,9 @@ export namespace Prisma {
     name: 'name',
     code: 'code',
     description: 'description',
+    areaType: 'areaType',
+    isActive: 'isActive',
+    parentId: 'parentId',
     leaderId: 'leaderId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -16206,6 +16400,9 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     description: 'description',
+    hierarchyLevel: 'hierarchyLevel',
+    roleType: 'roleType',
+    isActive: 'isActive',
     departmentId: 'departmentId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -16518,6 +16715,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AreaType'
+   */
+  export type EnumAreaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AreaType'>
+    
+
+
+  /**
+   * Reference to a field of type 'AreaType[]'
+   */
+  export type ListEnumAreaTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AreaType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Int'
    */
   export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -16528,6 +16739,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RoleType'
+   */
+  export type EnumRoleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RoleType'>
+    
+
+
+  /**
+   * Reference to a field of type 'RoleType[]'
+   */
+  export type ListEnumRoleTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RoleType[]'>
     
 
 
@@ -16758,9 +16983,14 @@ export namespace Prisma {
     name?: StringFilter<"Department"> | string
     code?: StringNullableFilter<"Department"> | string | null
     description?: StringNullableFilter<"Department"> | string | null
+    areaType?: EnumAreaTypeFilter<"Department"> | $Enums.AreaType
+    isActive?: BoolFilter<"Department"> | boolean
+    parentId?: StringNullableFilter<"Department"> | string | null
     leaderId?: StringNullableFilter<"Department"> | string | null
     createdAt?: DateTimeFilter<"Department"> | Date | string
     updatedAt?: DateTimeFilter<"Department"> | Date | string
+    parent?: XOR<DepartmentNullableRelationFilter, DepartmentWhereInput> | null
+    children?: DepartmentListRelationFilter
     employees?: EmployeeListRelationFilter
     positions?: PositionListRelationFilter
   }
@@ -16770,33 +17000,46 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    areaType?: SortOrder
+    isActive?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     leaderId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    parent?: DepartmentOrderByWithRelationInput
+    children?: DepartmentOrderByRelationAggregateInput
     employees?: EmployeeOrderByRelationAggregateInput
     positions?: PositionOrderByRelationAggregateInput
   }
 
   export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    name?: string
     code?: string
     AND?: DepartmentWhereInput | DepartmentWhereInput[]
     OR?: DepartmentWhereInput[]
     NOT?: DepartmentWhereInput | DepartmentWhereInput[]
+    name?: StringFilter<"Department"> | string
     description?: StringNullableFilter<"Department"> | string | null
+    areaType?: EnumAreaTypeFilter<"Department"> | $Enums.AreaType
+    isActive?: BoolFilter<"Department"> | boolean
+    parentId?: StringNullableFilter<"Department"> | string | null
     leaderId?: StringNullableFilter<"Department"> | string | null
     createdAt?: DateTimeFilter<"Department"> | Date | string
     updatedAt?: DateTimeFilter<"Department"> | Date | string
+    parent?: XOR<DepartmentNullableRelationFilter, DepartmentWhereInput> | null
+    children?: DepartmentListRelationFilter
     employees?: EmployeeListRelationFilter
     positions?: PositionListRelationFilter
-  }, "id" | "name" | "code">
+  }, "id" | "code">
 
   export type DepartmentOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
     code?: SortOrderInput | SortOrder
     description?: SortOrderInput | SortOrder
+    areaType?: SortOrder
+    isActive?: SortOrder
+    parentId?: SortOrderInput | SortOrder
     leaderId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16813,6 +17056,9 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Department"> | string
     code?: StringNullableWithAggregatesFilter<"Department"> | string | null
     description?: StringNullableWithAggregatesFilter<"Department"> | string | null
+    areaType?: EnumAreaTypeWithAggregatesFilter<"Department"> | $Enums.AreaType
+    isActive?: BoolWithAggregatesFilter<"Department"> | boolean
+    parentId?: StringNullableWithAggregatesFilter<"Department"> | string | null
     leaderId?: StringNullableWithAggregatesFilter<"Department"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Department"> | Date | string
@@ -16825,6 +17071,9 @@ export namespace Prisma {
     id?: StringFilter<"Position"> | string
     name?: StringFilter<"Position"> | string
     description?: StringNullableFilter<"Position"> | string | null
+    hierarchyLevel?: IntFilter<"Position"> | number
+    roleType?: EnumRoleTypeFilter<"Position"> | $Enums.RoleType
+    isActive?: BoolFilter<"Position"> | boolean
     departmentId?: StringNullableFilter<"Position"> | string | null
     createdAt?: DateTimeFilter<"Position"> | Date | string
     updatedAt?: DateTimeFilter<"Position"> | Date | string
@@ -16836,6 +17085,9 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    hierarchyLevel?: SortOrder
+    roleType?: SortOrder
+    isActive?: SortOrder
     departmentId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16850,6 +17102,9 @@ export namespace Prisma {
     OR?: PositionWhereInput[]
     NOT?: PositionWhereInput | PositionWhereInput[]
     description?: StringNullableFilter<"Position"> | string | null
+    hierarchyLevel?: IntFilter<"Position"> | number
+    roleType?: EnumRoleTypeFilter<"Position"> | $Enums.RoleType
+    isActive?: BoolFilter<"Position"> | boolean
     departmentId?: StringNullableFilter<"Position"> | string | null
     createdAt?: DateTimeFilter<"Position"> | Date | string
     updatedAt?: DateTimeFilter<"Position"> | Date | string
@@ -16861,12 +17116,17 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrderInput | SortOrder
+    hierarchyLevel?: SortOrder
+    roleType?: SortOrder
+    isActive?: SortOrder
     departmentId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PositionCountOrderByAggregateInput
+    _avg?: PositionAvgOrderByAggregateInput
     _max?: PositionMaxOrderByAggregateInput
     _min?: PositionMinOrderByAggregateInput
+    _sum?: PositionSumOrderByAggregateInput
   }
 
   export type PositionScalarWhereWithAggregatesInput = {
@@ -16876,6 +17136,9 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Position"> | string
     name?: StringWithAggregatesFilter<"Position"> | string
     description?: StringNullableWithAggregatesFilter<"Position"> | string | null
+    hierarchyLevel?: IntWithAggregatesFilter<"Position"> | number
+    roleType?: EnumRoleTypeWithAggregatesFilter<"Position"> | $Enums.RoleType
+    isActive?: BoolWithAggregatesFilter<"Position"> | boolean
     departmentId?: StringNullableWithAggregatesFilter<"Position"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Position"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Position"> | Date | string
@@ -18014,9 +18277,13 @@ export namespace Prisma {
     name: string
     code?: string | null
     description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
     leaderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parent?: DepartmentCreateNestedOneWithoutChildrenInput
+    children?: DepartmentCreateNestedManyWithoutParentInput
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
     positions?: PositionCreateNestedManyWithoutDepartmentInput
   }
@@ -18026,9 +18293,13 @@ export namespace Prisma {
     name: string
     code?: string | null
     description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    parentId?: string | null
     leaderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
     positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
   }
@@ -18038,9 +18309,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: DepartmentUpdateOneWithoutChildrenNestedInput
+    children?: DepartmentUpdateManyWithoutParentNestedInput
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUpdateManyWithoutDepartmentNestedInput
   }
@@ -18050,9 +18325,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
@@ -18062,6 +18341,9 @@ export namespace Prisma {
     name: string
     code?: string | null
     description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    parentId?: string | null
     leaderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18072,6 +18354,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18082,6 +18366,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18091,6 +18378,9 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutPositionsInput
@@ -18101,6 +18391,9 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     departmentId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18111,6 +18404,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutPositionsNestedInput
@@ -18121,6 +18417,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18131,6 +18430,9 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     departmentId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -18140,6 +18442,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -18148,6 +18453,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19552,6 +19860,24 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type EnumAreaTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AreaType | EnumAreaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAreaTypeFilter<$PrismaModel> | $Enums.AreaType
+  }
+
+  export type DepartmentNullableRelationFilter = {
+    is?: DepartmentWhereInput | null
+    isNot?: DepartmentWhereInput | null
+  }
+
+  export type DepartmentListRelationFilter = {
+    every?: DepartmentWhereInput
+    some?: DepartmentWhereInput
+    none?: DepartmentWhereInput
+  }
+
   export type EmployeeListRelationFilter = {
     every?: EmployeeWhereInput
     some?: EmployeeWhereInput
@@ -19562,6 +19888,10 @@ export namespace Prisma {
     every?: PositionWhereInput
     some?: PositionWhereInput
     none?: PositionWhereInput
+  }
+
+  export type DepartmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type EmployeeOrderByRelationAggregateInput = {
@@ -19577,6 +19907,9 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrder
     description?: SortOrder
+    areaType?: SortOrder
+    isActive?: SortOrder
+    parentId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19587,6 +19920,9 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrder
     description?: SortOrder
+    areaType?: SortOrder
+    isActive?: SortOrder
+    parentId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19597,29 +19933,65 @@ export namespace Prisma {
     name?: SortOrder
     code?: SortOrder
     description?: SortOrder
+    areaType?: SortOrder
+    isActive?: SortOrder
+    parentId?: SortOrder
     leaderId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
-  export type DepartmentNullableRelationFilter = {
-    is?: DepartmentWhereInput | null
-    isNot?: DepartmentWhereInput | null
+  export type EnumAreaTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AreaType | EnumAreaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAreaTypeWithAggregatesFilter<$PrismaModel> | $Enums.AreaType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAreaTypeFilter<$PrismaModel>
+    _max?: NestedEnumAreaTypeFilter<$PrismaModel>
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type EnumRoleTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.RoleType | EnumRoleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleTypeFilter<$PrismaModel> | $Enums.RoleType
   }
 
   export type PositionCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    hierarchyLevel?: SortOrder
+    roleType?: SortOrder
+    isActive?: SortOrder
     departmentId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type PositionAvgOrderByAggregateInput = {
+    hierarchyLevel?: SortOrder
   }
 
   export type PositionMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    hierarchyLevel?: SortOrder
+    roleType?: SortOrder
+    isActive?: SortOrder
     departmentId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -19629,9 +20001,42 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     description?: SortOrder
+    hierarchyLevel?: SortOrder
+    roleType?: SortOrder
+    isActive?: SortOrder
     departmentId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type PositionSumOrderByAggregateInput = {
+    hierarchyLevel?: SortOrder
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type EnumRoleTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RoleType | EnumRoleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleTypeWithAggregatesFilter<$PrismaModel> | $Enums.RoleType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRoleTypeFilter<$PrismaModel>
+    _max?: NestedEnumRoleTypeFilter<$PrismaModel>
   }
 
   export type EmployeeLaborDataListRelationFilter = {
@@ -19666,17 +20071,6 @@ export namespace Prisma {
     code?: SortOrder
     hasBenefits?: SortOrder
     isLaboral?: SortOrder
-  }
-
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type WorkShiftCountOrderByAggregateInput = {
@@ -19720,22 +20114,6 @@ export namespace Prisma {
   export type WorkShiftSumOrderByAggregateInput = {
     breakTime?: SortOrder
     tolerance?: SortOrder
-  }
-
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type EnumEmployeeStatusFilter<$PrismaModel = never> = {
@@ -20644,6 +21022,19 @@ export namespace Prisma {
     deleteMany?: RequestScalarWhereInput | RequestScalarWhereInput[]
   }
 
+  export type DepartmentCreateNestedOneWithoutChildrenInput = {
+    create?: XOR<DepartmentCreateWithoutChildrenInput, DepartmentUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutChildrenInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type DepartmentCreateNestedManyWithoutParentInput = {
+    create?: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput> | DepartmentCreateWithoutParentInput[] | DepartmentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutParentInput | DepartmentCreateOrConnectWithoutParentInput[]
+    createMany?: DepartmentCreateManyParentInputEnvelope
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+  }
+
   export type EmployeeCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<EmployeeCreateWithoutDepartmentInput, EmployeeUncheckedCreateWithoutDepartmentInput> | EmployeeCreateWithoutDepartmentInput[] | EmployeeUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: EmployeeCreateOrConnectWithoutDepartmentInput | EmployeeCreateOrConnectWithoutDepartmentInput[]
@@ -20658,6 +21049,13 @@ export namespace Prisma {
     connect?: PositionWhereUniqueInput | PositionWhereUniqueInput[]
   }
 
+  export type DepartmentUncheckedCreateNestedManyWithoutParentInput = {
+    create?: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput> | DepartmentCreateWithoutParentInput[] | DepartmentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutParentInput | DepartmentCreateOrConnectWithoutParentInput[]
+    createMany?: DepartmentCreateManyParentInputEnvelope
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+  }
+
   export type EmployeeUncheckedCreateNestedManyWithoutDepartmentInput = {
     create?: XOR<EmployeeCreateWithoutDepartmentInput, EmployeeUncheckedCreateWithoutDepartmentInput> | EmployeeCreateWithoutDepartmentInput[] | EmployeeUncheckedCreateWithoutDepartmentInput[]
     connectOrCreate?: EmployeeCreateOrConnectWithoutDepartmentInput | EmployeeCreateOrConnectWithoutDepartmentInput[]
@@ -20670,6 +21068,34 @@ export namespace Prisma {
     connectOrCreate?: PositionCreateOrConnectWithoutDepartmentInput | PositionCreateOrConnectWithoutDepartmentInput[]
     createMany?: PositionCreateManyDepartmentInputEnvelope
     connect?: PositionWhereUniqueInput | PositionWhereUniqueInput[]
+  }
+
+  export type EnumAreaTypeFieldUpdateOperationsInput = {
+    set?: $Enums.AreaType
+  }
+
+  export type DepartmentUpdateOneWithoutChildrenNestedInput = {
+    create?: XOR<DepartmentCreateWithoutChildrenInput, DepartmentUncheckedCreateWithoutChildrenInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutChildrenInput
+    upsert?: DepartmentUpsertWithoutChildrenInput
+    disconnect?: DepartmentWhereInput | boolean
+    delete?: DepartmentWhereInput | boolean
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutChildrenInput, DepartmentUpdateWithoutChildrenInput>, DepartmentUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type DepartmentUpdateManyWithoutParentNestedInput = {
+    create?: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput> | DepartmentCreateWithoutParentInput[] | DepartmentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutParentInput | DepartmentCreateOrConnectWithoutParentInput[]
+    upsert?: DepartmentUpsertWithWhereUniqueWithoutParentInput | DepartmentUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: DepartmentCreateManyParentInputEnvelope
+    set?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    disconnect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    delete?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    update?: DepartmentUpdateWithWhereUniqueWithoutParentInput | DepartmentUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: DepartmentUpdateManyWithWhereWithoutParentInput | DepartmentUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
   }
 
   export type EmployeeUpdateManyWithoutDepartmentNestedInput = {
@@ -20698,6 +21124,20 @@ export namespace Prisma {
     update?: PositionUpdateWithWhereUniqueWithoutDepartmentInput | PositionUpdateWithWhereUniqueWithoutDepartmentInput[]
     updateMany?: PositionUpdateManyWithWhereWithoutDepartmentInput | PositionUpdateManyWithWhereWithoutDepartmentInput[]
     deleteMany?: PositionScalarWhereInput | PositionScalarWhereInput[]
+  }
+
+  export type DepartmentUncheckedUpdateManyWithoutParentNestedInput = {
+    create?: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput> | DepartmentCreateWithoutParentInput[] | DepartmentUncheckedCreateWithoutParentInput[]
+    connectOrCreate?: DepartmentCreateOrConnectWithoutParentInput | DepartmentCreateOrConnectWithoutParentInput[]
+    upsert?: DepartmentUpsertWithWhereUniqueWithoutParentInput | DepartmentUpsertWithWhereUniqueWithoutParentInput[]
+    createMany?: DepartmentCreateManyParentInputEnvelope
+    set?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    disconnect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    delete?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    connect?: DepartmentWhereUniqueInput | DepartmentWhereUniqueInput[]
+    update?: DepartmentUpdateWithWhereUniqueWithoutParentInput | DepartmentUpdateWithWhereUniqueWithoutParentInput[]
+    updateMany?: DepartmentUpdateManyWithWhereWithoutParentInput | DepartmentUpdateManyWithWhereWithoutParentInput[]
+    deleteMany?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
   }
 
   export type EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput = {
@@ -20746,6 +21186,18 @@ export namespace Prisma {
     connectOrCreate?: EmployeeCreateOrConnectWithoutPositionInput | EmployeeCreateOrConnectWithoutPositionInput[]
     createMany?: EmployeeCreateManyPositionInputEnvelope
     connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type EnumRoleTypeFieldUpdateOperationsInput = {
+    set?: $Enums.RoleType
   }
 
   export type DepartmentUpdateOneWithoutPositionsNestedInput = {
@@ -20840,14 +21292,6 @@ export namespace Prisma {
     connectOrCreate?: EmployeeLaborDataCreateOrConnectWithoutWorkShiftInput | EmployeeLaborDataCreateOrConnectWithoutWorkShiftInput[]
     createMany?: EmployeeLaborDataCreateManyWorkShiftInputEnvelope
     connect?: EmployeeLaborDataWhereUniqueInput | EmployeeLaborDataWhereUniqueInput[]
-  }
-
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type EmployeeLaborDataUpdateManyWithoutWorkShiftNestedInput = {
@@ -21699,6 +22143,30 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedEnumAreaTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.AreaType | EnumAreaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAreaTypeFilter<$PrismaModel> | $Enums.AreaType
+  }
+
+  export type NestedEnumAreaTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AreaType | EnumAreaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AreaType[] | ListEnumAreaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumAreaTypeWithAggregatesFilter<$PrismaModel> | $Enums.AreaType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAreaTypeFilter<$PrismaModel>
+    _max?: NestedEnumAreaTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumRoleTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.RoleType | EnumRoleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleTypeFilter<$PrismaModel> | $Enums.RoleType
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -21724,6 +22192,16 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumRoleTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RoleType | EnumRoleTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.RoleType[] | ListEnumRoleTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumRoleTypeWithAggregatesFilter<$PrismaModel> | $Enums.RoleType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumRoleTypeFilter<$PrismaModel>
+    _max?: NestedEnumRoleTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumEmployeeStatusFilter<$PrismaModel = never> = {
@@ -22261,6 +22739,81 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Request"> | Date | string
   }
 
+  export type DepartmentCreateWithoutChildrenInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    leaderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parent?: DepartmentCreateNestedOneWithoutChildrenInput
+    employees?: EmployeeCreateNestedManyWithoutDepartmentInput
+    positions?: PositionCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutChildrenInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    parentId?: string | null
+    leaderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+    positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutChildrenInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutChildrenInput, DepartmentUncheckedCreateWithoutChildrenInput>
+  }
+
+  export type DepartmentCreateWithoutParentInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    leaderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: DepartmentCreateNestedManyWithoutParentInput
+    employees?: EmployeeCreateNestedManyWithoutDepartmentInput
+    positions?: PositionCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutParentInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    leaderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
+    employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+    positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutParentInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput>
+  }
+
+  export type DepartmentCreateManyParentInputEnvelope = {
+    data: DepartmentCreateManyParentInput | DepartmentCreateManyParentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type EmployeeCreateWithoutDepartmentInput = {
     id?: string
     firstName: string
@@ -22389,6 +22942,9 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     employees?: EmployeeCreateNestedManyWithoutPositionInput
@@ -22398,6 +22954,9 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     employees?: EmployeeUncheckedCreateNestedManyWithoutPositionInput
@@ -22411,6 +22970,79 @@ export namespace Prisma {
   export type PositionCreateManyDepartmentInputEnvelope = {
     data: PositionCreateManyDepartmentInput | PositionCreateManyDepartmentInput[]
     skipDuplicates?: boolean
+  }
+
+  export type DepartmentUpsertWithoutChildrenInput = {
+    update: XOR<DepartmentUpdateWithoutChildrenInput, DepartmentUncheckedUpdateWithoutChildrenInput>
+    create: XOR<DepartmentCreateWithoutChildrenInput, DepartmentUncheckedCreateWithoutChildrenInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutChildrenInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutChildrenInput, DepartmentUncheckedUpdateWithoutChildrenInput>
+  }
+
+  export type DepartmentUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    leaderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: DepartmentUpdateOneWithoutChildrenNestedInput
+    employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
+    positions?: PositionUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutChildrenInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+    positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUpsertWithWhereUniqueWithoutParentInput = {
+    where: DepartmentWhereUniqueInput
+    update: XOR<DepartmentUpdateWithoutParentInput, DepartmentUncheckedUpdateWithoutParentInput>
+    create: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput>
+  }
+
+  export type DepartmentUpdateWithWhereUniqueWithoutParentInput = {
+    where: DepartmentWhereUniqueInput
+    data: XOR<DepartmentUpdateWithoutParentInput, DepartmentUncheckedUpdateWithoutParentInput>
+  }
+
+  export type DepartmentUpdateManyWithWhereWithoutParentInput = {
+    where: DepartmentScalarWhereInput
+    data: XOR<DepartmentUpdateManyMutationInput, DepartmentUncheckedUpdateManyWithoutParentInput>
+  }
+
+  export type DepartmentScalarWhereInput = {
+    AND?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+    OR?: DepartmentScalarWhereInput[]
+    NOT?: DepartmentScalarWhereInput | DepartmentScalarWhereInput[]
+    id?: StringFilter<"Department"> | string
+    name?: StringFilter<"Department"> | string
+    code?: StringNullableFilter<"Department"> | string | null
+    description?: StringNullableFilter<"Department"> | string | null
+    areaType?: EnumAreaTypeFilter<"Department"> | $Enums.AreaType
+    isActive?: BoolFilter<"Department"> | boolean
+    parentId?: StringNullableFilter<"Department"> | string | null
+    leaderId?: StringNullableFilter<"Department"> | string | null
+    createdAt?: DateTimeFilter<"Department"> | Date | string
+    updatedAt?: DateTimeFilter<"Department"> | Date | string
   }
 
   export type EmployeeUpsertWithWhereUniqueWithoutDepartmentInput = {
@@ -22504,6 +23136,9 @@ export namespace Prisma {
     id?: StringFilter<"Position"> | string
     name?: StringFilter<"Position"> | string
     description?: StringNullableFilter<"Position"> | string | null
+    hierarchyLevel?: IntFilter<"Position"> | number
+    roleType?: EnumRoleTypeFilter<"Position"> | $Enums.RoleType
+    isActive?: BoolFilter<"Position"> | boolean
     departmentId?: StringNullableFilter<"Position"> | string | null
     createdAt?: DateTimeFilter<"Position"> | Date | string
     updatedAt?: DateTimeFilter<"Position"> | Date | string
@@ -22514,9 +23149,13 @@ export namespace Prisma {
     name: string
     code?: string | null
     description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
     leaderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parent?: DepartmentCreateNestedOneWithoutChildrenInput
+    children?: DepartmentCreateNestedManyWithoutParentInput
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
   }
 
@@ -22525,9 +23164,13 @@ export namespace Prisma {
     name: string
     code?: string | null
     description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    parentId?: string | null
     leaderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
@@ -22676,9 +23319,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: DepartmentUpdateOneWithoutChildrenNestedInput
+    children?: DepartmentUpdateManyWithoutParentNestedInput
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
   }
 
@@ -22687,9 +23334,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
@@ -22858,9 +23509,13 @@ export namespace Prisma {
     name: string
     code?: string | null
     description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
     leaderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    parent?: DepartmentCreateNestedOneWithoutChildrenInput
+    children?: DepartmentCreateNestedManyWithoutParentInput
     positions?: PositionCreateNestedManyWithoutDepartmentInput
   }
 
@@ -22869,9 +23524,13 @@ export namespace Prisma {
     name: string
     code?: string | null
     description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    parentId?: string | null
     leaderId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
     positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
@@ -22884,6 +23543,9 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutPositionsInput
@@ -22893,6 +23555,9 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     departmentId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -23470,9 +24135,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: DepartmentUpdateOneWithoutChildrenNestedInput
+    children?: DepartmentUpdateManyWithoutParentNestedInput
     positions?: PositionUpdateManyWithoutDepartmentNestedInput
   }
 
@@ -23481,9 +24150,13 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     code?: NullableStringFieldUpdateOperationsInput | string | null
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
     leaderId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
     positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
@@ -23502,6 +24175,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutPositionsNestedInput
@@ -23511,6 +24187,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26071,6 +26750,18 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type DepartmentCreateManyParentInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    leaderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type EmployeeCreateManyDepartmentInput = {
     id?: string
     firstName: string
@@ -26123,8 +26814,53 @@ export namespace Prisma {
     id?: string
     name: string
     description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type DepartmentUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    leaderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: DepartmentUpdateManyWithoutParentNestedInput
+    employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
+    positions?: PositionUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    leaderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
+    employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+    positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateManyWithoutParentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    leaderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EmployeeUpdateWithoutDepartmentInput = {
@@ -26293,6 +27029,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUpdateManyWithoutPositionNestedInput
@@ -26302,6 +27041,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUncheckedUpdateManyWithoutPositionNestedInput
@@ -26311,6 +27053,9 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

@@ -1,29 +1,38 @@
 import { Router } from 'express';
-import { authMiddleware } from '../../shared/middlewares/auth.middleware';
+import { authMiddleware, requireRole } from '../../shared/middlewares/auth.middleware';
 import { validate } from '../../shared/middlewares/validate.middleware';
-import { departmentSchema, positionSchema } from './organization.schemas';
+import { areaSchema, subareaSchema, positionSchema } from './organization.schemas';
 import * as controller from './organization.controller';
 
 const router = Router();
 
-// Todas las rutas requieren estar logueado
 router.use(authMiddleware);
 
-// --- DEPARTAMENTOS ---
+// ── Retrocompatibilidad: candidatos/empleados llaman a /departments ─────────
 router.get('/departments', controller.getDepartments);
-router.post('/departments', validate(departmentSchema), controller.createDepartment);
-router.put('/departments/:id', validate(departmentSchema), controller.updateDepartment);
-router.delete('/departments/:id', controller.deleteDepartment);
 
+// ── ÁREAS ────────────────────────────────────────────────────────────────────
+// Lectura: cualquier usuario autenticado
+router.get('/areas',     controller.getAreas);
 
+// Escritura: solo RRHH (HR_MANAGER o COMPANY_ADMIN)
+router.post(  '/areas',     requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(areaSchema),    controller.createArea);
+router.put(   '/areas/:id', requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(areaSchema),    controller.updateArea);
+router.delete('/areas/:id', requireRole(['HR_MANAGER', 'COMPANY_ADMIN']),                          controller.deleteArea);
 
-// --- CARGOS (POSITIONS) ---
-// OJO AQUÍ: Esta es la ruta crítica para que funcione el "getPositions(deptId)" del front
-router.get('/departments/:departmentId/positions', controller.getPositions);
-// --- CARGOS ---
-router.get('/positions', controller.getPositions);
-router.post('/positions', validate(positionSchema), controller.createPosition);
-router.put('/positions/:id', validate(positionSchema), controller.updatePosition);
-router.delete('/positions/:id', controller.deletePosition);
+// ── SUBÁREAS ─────────────────────────────────────────────────────────────────
+router.get(   '/areas/:parentId/subareas', controller.getSubareas);
+router.post(  '/areas/:parentId/subareas', requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(subareaSchema), controller.createSubarea);
+
+// Editar/borrar subárea reutiliza los endpoints de área (son el mismo modelo)
+router.put(   '/areas/:id/edit',    requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(areaSchema), controller.updateArea);
+router.delete('/areas/:id/delete',  requireRole(['HR_MANAGER', 'COMPANY_ADMIN']),                       controller.deleteArea);
+
+// ── CARGOS ───────────────────────────────────────────────────────────────────
+router.get(   '/positions',                              controller.getPositions);
+router.get(   '/departments/:departmentId/positions',    controller.getPositions);
+router.post(  '/positions',     requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(positionSchema), controller.createPosition);
+router.put(   '/positions/:id', requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(positionSchema), controller.updatePosition);
+router.delete('/positions/:id', requireRole(['HR_MANAGER', 'COMPANY_ADMIN']),                           controller.deletePosition);
 
 export default router;

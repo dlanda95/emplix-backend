@@ -140,6 +140,9 @@ exports.Prisma.DepartmentScalarFieldEnum = {
   name: 'name',
   code: 'code',
   description: 'description',
+  areaType: 'areaType',
+  isActive: 'isActive',
+  parentId: 'parentId',
   leaderId: 'leaderId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -149,6 +152,9 @@ exports.Prisma.PositionScalarFieldEnum = {
   id: 'id',
   name: 'name',
   description: 'description',
+  hierarchyLevel: 'hierarchyLevel',
+  roleType: 'roleType',
+  isActive: 'isActive',
   departmentId: 'departmentId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -355,6 +361,18 @@ exports.UserRole = exports.$Enums.UserRole = {
   HR_ANALYST: 'HR_ANALYST',
   AREA_MANAGER: 'AREA_MANAGER',
   EMPLOYEE: 'EMPLOYEE'
+};
+
+exports.AreaType = exports.$Enums.AreaType = {
+  TRANSVERSAL: 'TRANSVERSAL',
+  EMISSIVE: 'EMISSIVE',
+  RECEPTIVE: 'RECEPTIVE'
+};
+
+exports.RoleType = exports.$Enums.RoleType = {
+  OPERATIONAL: 'OPERATIONAL',
+  TACTICAL: 'TACTICAL',
+  STRATEGIC: 'STRATEGIC'
 };
 
 exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
