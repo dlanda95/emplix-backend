@@ -1,9 +1,10 @@
 /**
  * Provisioning script — crea un nuevo tenant:
  *   1. Crea el schema de PostgreSQL: tenant_{slug}
- *   2. Ejecuta el DDL de las tablas de RRHH en ese schema
- *   3. Inserta el registro en la tabla platform.tenants
- *   4. Crea las TenantAuthConfig iniciales
+ *   2. Ejecuta el DDL de las tablas de RRHH en ese schema (prisma db push)
+ *   3. Crea _tenant_migrations y marca todas las migraciones existentes como aplicadas
+ *   4. Inserta el registro en la tabla platform.tenants
+ *   5. Crea las TenantAuthConfig iniciales
  *
  * Uso:
  *   ts-node src/scripts/provision-tenant.ts \
@@ -15,6 +16,7 @@
  */
 
 import 'dotenv/config';
+import * as fs from 'fs';
 import { Pool } from 'pg';
 import { execSync } from 'child_process';
 import * as path from 'path';
@@ -64,7 +66,33 @@ async function main() {
   );
   console.log(`  ✓ Tablas creadas en "${schemaName}"`);
 
-  // ── 3. Registrar en platform.tenants ─────────────────────────────────────
+  // ── 3. Marcar migraciones existentes como ya aplicadas ────────────────────
+  // prisma db push aplica el schema completo, por lo que las migraciones en
+  // prisma/migrations/tenant/ ya están reflejadas — solo registramos el tracking.
+  const migrationDir = path.resolve(__dirname, '../../prisma/migrations/tenant');
+  if (fs.existsSync(migrationDir)) {
+    const migrationFiles = fs.readdirSync(migrationDir).filter(f => f.endsWith('.sql')).sort();
+    if (migrationFiles.length > 0) {
+      const seedPool = new Pool({ connectionString: baseUrl });
+      await seedPool.query(`
+        CREATE TABLE IF NOT EXISTS "${schemaName}"."_tenant_migrations" (
+          id          SERIAL       PRIMARY KEY,
+          filename    TEXT         NOT NULL UNIQUE,
+          applied_at  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+        )
+      `);
+      for (const file of migrationFiles) {
+        await seedPool.query(
+          `INSERT INTO "${schemaName}"."_tenant_migrations" (filename) VALUES ($1) ON CONFLICT DO NOTHING`,
+          [file],
+        );
+      }
+      await seedPool.end();
+      console.log(`  ✓ Tracking de migraciones inicializado (${migrationFiles.length} marcadas como aplicadas)`);
+    }
+  }
+
+  // ── 4. Registrar en platform.tenants ─────────────────────────────────────
   const existing = await platformPrisma.tenant.findUnique({ where: { slug } });
   if (existing) {
     console.warn(`  ⚠ El tenant "${slug}" ya existe en la plataforma — omitiendo inserción.`);
@@ -80,7 +108,7 @@ async function main() {
     });
     console.log(`  ✓ Tenant registrado: ${tenant.id}`);
 
-    // ── 4. Auth configs iniciales ─────────────────────────────────────────
+    // ── 5. Auth configs iniciales ─────────────────────────────────────────
     if (enableEmail) {
       await platformPrisma.tenantAuthConfig.create({
         data: { tenantId: tenant.id, method: 'EMAIL', enabled: true },

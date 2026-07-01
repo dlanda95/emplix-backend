@@ -22,6 +22,10 @@ import onboardingRoutes from './modules/onboarding/onboarding.routes';
 
 const app: Application = express();
 
+// Azure App Service (y cualquier reverse proxy) añade X-Forwarded-For.
+// Con trust proxy, Express lee la IP real del cliente en lugar de la del proxy.
+app.set('trust proxy', 1);
+
 // ==========================================
 // 0. CONFIGURACIÓN DE LOGS (Auditoría)
 // ==========================================
@@ -41,9 +45,34 @@ app.use(morgan(':date[iso] [:tenant] [:user] :method :url :status :response-time
 // ==========================================
 // 1. MIDDLEWARES GLOBALES (Se ejecutan siempre)
 // ==========================================
-app.use(express.json()); 
-app.use(cors());         
-app.use(helmet());       
+app.use(express.json());
+
+// CORS restringido al dominio del frontend.
+// CORS_ORIGIN en Railway/Azure = "https://mi-app.azurestaticapps.net"
+// Para múltiples orígenes (ej: custom domain + preview), separar por comas.
+const allowedOrigins = (process.env.CORS_ORIGIN ?? '')
+  .split(',')
+  .map(o => o.trim())
+  .filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Permitir requests sin origen (apps móviles, curl, health checks internos)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.length === 0) {
+      // Sin CORS_ORIGIN configurado: solo en desarrollo local
+      return process.env.NODE_ENV === 'production'
+        ? callback(new Error(`CORS: origin ${origin} no permitido`))
+        : callback(null, true);
+    }
+    return allowedOrigins.includes(origin)
+      ? callback(null, true)
+      : callback(new Error(`CORS: origin ${origin} no permitido`));
+  },
+  credentials: true,
+}));
+
+app.use(helmet());
 // (Borré app.use(morgan('dev')) para evitar logs duplicados)
 
 // ==========================================
@@ -74,12 +103,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/organization', organizationRoutes);
 app.use('/api/requests', requestsRoutes);
 app.use('/api/attendance', attendanceRoutes);
-app.use('/api/employees', (req, _res, next) => {
-  if (req.method === 'POST' && req.path.includes('documents')) {
-    console.log('[APP] POST employees/documents intercepted — path:', req.path, 'content-type:', req.headers['content-type']);
-  }
-  next();
-}, employeesRoutes);
+app.use('/api/employees', employeesRoutes);
 app.use('/api/kudos', kudosRoutes);
 
 app.use('/api/labor',      laborRoutes);

@@ -4,11 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
     "dev": "ts-node src/server.ts",
     "dev:seed": "ts-node prisma/dev-seed.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:generate": "prisma generate && prisma generate --schema=prisma/tenant.prisma",
     "db:migrate:platform": "prisma migrate dev --name",
+    "db:migrate:tenants": "ts-node src/scripts/migrate-tenants.ts",
+    "db:migrate:tenants:dry": "ts-node src/scripts/migrate-tenants.ts --dry-run",
     "db:provision": "ts-node src/scripts/provision-tenant.ts"
   },
   "prisma": {

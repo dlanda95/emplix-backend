@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { CandidatesService } from './candidates.service';
+import { ok } from '../../shared/utils/response';
 
 const service = new CandidatesService();
-const ok = (res: Response, data: unknown) => res.json({ success: true, data });
 
 export const createCandidate = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try { ok(res, await service.createCandidate(req.body, req.tenantPrisma!)); }

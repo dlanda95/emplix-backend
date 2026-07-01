@@ -11,7 +11,6 @@ export const getMyDocuments = async (req: Request, res: Response, next: NextFunc
 };
 
 export const uploadMyDocument = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  console.log('[CTRL uploadMyDocument] hit — file:%s type:%s label:%s', req.file?.originalname, req.body.type, req.body.label);
   try {
     if (!req.file)      { badRequest(res, 'Falta el archivo');           return; }
     if (!req.body.type) { badRequest(res, 'Falta el tipo de documento'); return; }

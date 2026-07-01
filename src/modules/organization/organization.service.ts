@@ -203,13 +203,19 @@ export class OrganizationService {
 
   // ── Helpers para candidatos/empleados (retrocompatibilidad) ─────────────────
 
-  /** Devuelve áreas activas con sus cargos para selectores de RRHH */
+  /** Devuelve áreas activas (top-level) con subáreas y cargos para selectores de RRHH */
   async getDepartments(db: PrismaClient) {
     return db.department.findMany({
-      where: { isActive: true },
+      where: { parentId: null, isActive: true },
       include: {
-        _count:    { select: { employees: true, positions: true } },
-        positions: { where: { isActive: true }, select: { id: true, name: true } },
+        children: {
+          where: { isActive: true },
+          include: {
+            positions: { where: { isActive: true }, select: { id: true, name: true }, orderBy: { name: 'asc' } },
+          },
+          orderBy: { name: 'asc' },
+        },
+        positions: { where: { isActive: true }, select: { id: true, name: true }, orderBy: { name: 'asc' } },
       },
       orderBy: { name: 'asc' },
     });

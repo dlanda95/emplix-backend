@@ -1,0 +1,57 @@
+name: Deploy — Production (Azure)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # ── 1. Migraciones primero ────────────────────────────────────────────────────
+  migrate:
+    name: DB Migrations (PROD)
+    runs-on: ubuntu-latest
+    environment: production   # aprobación manual si lo configuras en GitHub Settings
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Platform migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+
+      - name: Tenant schema migrations
+        run: npm run db:migrate:tenants
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+
+  # ── 2. Deploy backend → Azure App Service ────────────────────────────────────
+  deploy:
+    name: Deploy Backend (App Service PROD)
+    runs-on: ubuntu-latest
+    needs: migrate
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME_PROD }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PROD }}
+          package: .

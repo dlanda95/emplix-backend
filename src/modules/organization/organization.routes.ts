@@ -24,10 +24,6 @@ router.delete('/areas/:id', requireRole(['HR_MANAGER', 'COMPANY_ADMIN']),       
 router.get(   '/areas/:parentId/subareas', controller.getSubareas);
 router.post(  '/areas/:parentId/subareas', requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(subareaSchema), controller.createSubarea);
 
-// Editar/borrar subárea reutiliza los endpoints de área (son el mismo modelo)
-router.put(   '/areas/:id/edit',    requireRole(['HR_MANAGER', 'COMPANY_ADMIN']), validate(areaSchema), controller.updateArea);
-router.delete('/areas/:id/delete',  requireRole(['HR_MANAGER', 'COMPANY_ADMIN']),                       controller.deleteArea);
-
 // ── CARGOS ───────────────────────────────────────────────────────────────────
 router.get(   '/positions',                              controller.getPositions);
 router.get(   '/departments/:departmentId/positions',    controller.getPositions);
