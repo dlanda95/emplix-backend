@@ -20,7 +20,7 @@ import * as fs from 'fs';
 import { Pool } from 'pg';
 import { execSync } from 'child_process';
 import * as path from 'path';
-import platformPrisma from '../config/platform-prisma';
+import { PrismaClient } from '../generated/platform-client';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map(a => {
@@ -97,42 +97,47 @@ async function main() {
   }
 
   // ── 4. Registrar en platform.tenants ─────────────────────────────────────
-  const existing = await platformPrisma.tenant.findUnique({ where: { slug } });
-  if (existing) {
-    console.warn(`  ⚠ El tenant "${slug}" ya existe en la plataforma — omitiendo inserción.`);
-  } else {
-    const tenant = await platformPrisma.tenant.create({
-      data: {
-        slug,
-        name,
-        schemaName,
-        plan: 'STARTER',
-        status: 'ACTIVE',
-      },
-    });
-    console.log(`  ✓ Tenant registrado: ${tenant.id}`);
-
-    // ── 5. Auth configs iniciales ─────────────────────────────────────────
-    if (enableEmail) {
-      await platformPrisma.tenantAuthConfig.create({
-        data: { tenantId: tenant.id, method: 'EMAIL', enabled: true },
+  // Usar URL explícita para evitar que dotenv sobreescriba la variable de entorno
+  const platformDb = new PrismaClient({ datasources: { db: { url: baseUrl } } });
+  try {
+    const existing = await platformDb.tenant.findUnique({ where: { slug } });
+    if (existing) {
+      console.warn(`  ⚠ El tenant "${slug}" ya existe en la plataforma — omitiendo inserción.`);
+    } else {
+      const tenant = await platformDb.tenant.create({
+        data: {
+          slug,
+          name,
+          schemaName,
+          plan: 'STARTER',
+          status: 'ACTIVE',
+        },
       });
-      console.log('  ✓ Auth EMAIL habilitado');
-    }
+      console.log(`  ✓ Tenant registrado: ${tenant.id}`);
 
-    if (enableMicrosoft) {
-      if (!azureTenantId) {
-        console.warn('  ⚠ --azure-tenant-id requerido para habilitar MICROSOFT. Omitiendo.');
-      } else {
-        await platformPrisma.tenantAuthConfig.create({
-          data: { tenantId: tenant.id, method: 'MICROSOFT', enabled: true, azureTenantId },
+      // ── 5. Auth configs iniciales ───────────────────────────────────────
+      if (enableEmail) {
+        await platformDb.tenantAuthConfig.create({
+          data: { tenantId: tenant.id, method: 'EMAIL', enabled: true },
         });
-        console.log(`  ✓ Auth MICROSOFT habilitado (Azure Tenant: ${azureTenantId})`);
+        console.log('  ✓ Auth EMAIL habilitado');
+      }
+
+      if (enableMicrosoft) {
+        if (!azureTenantId) {
+          console.warn('  ⚠ --azure-tenant-id requerido para habilitar MICROSOFT. Omitiendo.');
+        } else {
+          await platformDb.tenantAuthConfig.create({
+            data: { tenantId: tenant.id, method: 'MICROSOFT', enabled: true, azureTenantId },
+          });
+          console.log(`  ✓ Auth MICROSOFT habilitado (Azure Tenant: ${azureTenantId})`);
+        }
       }
     }
+  } finally {
+    await platformDb.$disconnect();
   }
 
-  await platformPrisma.$disconnect();
   console.log(`\nTenant "${slug}" provisionado correctamente.`);
 }
 
