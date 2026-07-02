@@ -97,8 +97,9 @@ async function main() {
   }
 
   // ── 4. Registrar en platform.tenants ─────────────────────────────────────
-  // Usar URL explícita para evitar que dotenv sobreescriba la variable de entorno
-  const platformDb = new PrismaClient({ datasources: { db: { url: baseUrl } } });
+  // Forzar schema=public explícitamente para que Prisma use el search_path correcto
+  const platformUrl = baseUrl.includes('?') ? `${baseUrl}&schema=public` : `${baseUrl}?schema=public`;
+  const platformDb = new PrismaClient({ datasources: { db: { url: platformUrl } } });
   try {
     const existing = await platformDb.tenant.findUnique({ where: { slug } });
     if (existing) {
