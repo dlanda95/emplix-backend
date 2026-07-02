@@ -20,7 +20,6 @@ import * as fs from 'fs';
 import { Pool } from 'pg';
 import { execSync } from 'child_process';
 import * as path from 'path';
-import { PrismaClient } from '../generated/platform-client';
 
 const args = Object.fromEntries(
   process.argv.slice(2).map(a => {
@@ -43,6 +42,7 @@ async function main() {
 
   const schemaName = `tenant_${slug.replace(/-/g, '_')}`;
   console.log(`Provisionando tenant: ${slug} → schema: ${schemaName}`);
+  console.log(`  [DEBUG] DATABASE_URL host: ${process.env.DATABASE_URL?.match(/@([^/]+)\//)?.[1] ?? 'NO ENCONTRADO'}`);
 
   // ── 1. Crear schema de PostgreSQL ─────────────────────────────────────────
   // Eliminar ?schema=... correctamente: si era el primer parámetro queda un &
@@ -96,31 +96,36 @@ async function main() {
     }
   }
 
-  // ── 4. Registrar en platform.tenants ─────────────────────────────────────
-  // Forzar schema=public explícitamente para que Prisma use el search_path correcto
-  const platformUrl = baseUrl.includes('?') ? `${baseUrl}&schema=public` : `${baseUrl}?schema=public`;
-  const platformDb = new PrismaClient({ datasources: { db: { url: platformUrl } } });
+  // ── 4. Registrar en platform.tenants (raw SQL para garantizar la URL correcta) ───
+  const platformPool = new Pool({ connectionString: baseUrl });
   try {
-    const existing = await platformDb.tenant.findUnique({ where: { slug } });
-    if (existing) {
+    // Verificar si la tabla tenants existe
+    const tableCheck = await platformPool.query(
+      `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tenants'`
+    );
+    console.log(`  [DEBUG] Tabla 'tenants' encontrada: ${tableCheck.rows.length > 0}`);
+
+    const existingRows = await platformPool.query(`SELECT id FROM tenants WHERE slug = $1`, [slug]);
+    if (existingRows.rows.length > 0) {
       console.warn(`  ⚠ El tenant "${slug}" ya existe en la plataforma — omitiendo inserción.`);
     } else {
-      const tenant = await platformDb.tenant.create({
-        data: {
-          slug,
-          name,
-          schemaName,
-          plan: 'STARTER',
-          status: 'ACTIVE',
-        },
-      });
-      console.log(`  ✓ Tenant registrado: ${tenant.id}`);
+      const tenantId = crypto.randomUUID();
+      const now = new Date().toISOString();
+      await platformPool.query(
+        `INSERT INTO tenants (id, slug, name, "schemaName", plan, status, settings, "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, 'STARTER', 'ACTIVE', '{}', $5, $5)`,
+        [tenantId, slug, name, schemaName, now],
+      );
+      console.log(`  ✓ Tenant registrado: ${tenantId}`);
 
       // ── 5. Auth configs iniciales ───────────────────────────────────────
       if (enableEmail) {
-        await platformDb.tenantAuthConfig.create({
-          data: { tenantId: tenant.id, method: 'EMAIL', enabled: true },
-        });
+        const authId1 = crypto.randomUUID();
+        await platformPool.query(
+          `INSERT INTO tenant_auth_configs (id, "tenantId", method, enabled, "createdAt", "updatedAt")
+           VALUES ($1, $2, 'EMAIL', true, $3, $3)`,
+          [authId1, tenantId, now],
+        );
         console.log('  ✓ Auth EMAIL habilitado');
       }
 
@@ -128,15 +133,18 @@ async function main() {
         if (!azureTenantId) {
           console.warn('  ⚠ --azure-tenant-id requerido para habilitar MICROSOFT. Omitiendo.');
         } else {
-          await platformDb.tenantAuthConfig.create({
-            data: { tenantId: tenant.id, method: 'MICROSOFT', enabled: true, azureTenantId },
-          });
+          const authId2 = crypto.randomUUID();
+          await platformPool.query(
+            `INSERT INTO tenant_auth_configs (id, "tenantId", method, enabled, "azureTenantId", "createdAt", "updatedAt")
+             VALUES ($1, $2, 'MICROSOFT', true, $3, $4, $4)`,
+            [authId2, tenantId, azureTenantId, now],
+          );
           console.log(`  ✓ Auth MICROSOFT habilitado (Azure Tenant: ${azureTenantId})`);
         }
       }
     }
   } finally {
-    await platformDb.$disconnect();
+    await platformPool.end();
   }
 
   console.log(`\nTenant "${slug}" provisionado correctamente.`);
