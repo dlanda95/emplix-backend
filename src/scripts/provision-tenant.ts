@@ -49,20 +49,6 @@ async function main() {
     .replace(/[?&]schema=[^&]*/, '')
     .replace(/^([^?]*)&/, '$1?');
 
-  // ── 0. Diagnóstico: ver qué tablas existen en producción ──────────────────
-  const diagPool = new Pool({ connectionString: baseUrl });
-  try {
-    const diag = await diagPool.query(
-      `SELECT table_schema, table_name FROM information_schema.tables
-       WHERE table_type = 'BASE TABLE' AND table_schema NOT IN ('pg_catalog','information_schema')
-       ORDER BY table_schema, table_name`
-    );
-    console.log(`  [DEBUG] Tablas en BD (${diag.rows.length} total):`);
-    diag.rows.forEach(r => console.log(`    - ${r.table_schema}.${r.table_name}`));
-  } finally {
-    await diagPool.end();
-  }
-
   // ── 1. Crear schema de PostgreSQL ─────────────────────────────────────────
   const pool = new Pool({ connectionString: baseUrl });
 
@@ -122,12 +108,6 @@ async function main() {
   // ── 4. Registrar en platform.tenants (raw SQL para garantizar la URL correcta) ───
   const platformPool = new Pool({ connectionString: baseUrl });
   try {
-    // Verificar si la tabla tenants existe
-    const tableCheck = await platformPool.query(
-      `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tenants'`
-    );
-    console.log(`  [DEBUG] Tabla 'tenants' encontrada: ${tableCheck.rows.length > 0}`);
-
     const existingRows = await platformPool.query(`SELECT id FROM tenants WHERE slug = $1`, [slug]);
     if (existingRows.rows.length > 0) {
       console.warn(`  ⚠ El tenant "${slug}" ya existe en la plataforma — omitiendo inserción.`);
