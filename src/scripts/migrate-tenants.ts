@@ -103,7 +103,9 @@ async function main(): Promise<void> {
 
   console.log(`\nTenants a procesar: ${tenants.length}${dryRun ? '  (dry-run — no se aplicará nada)' : ''}`);
 
-  const baseUrl = process.env.DATABASE_URL.replace(/[?&]schema=[^&]*/, '');
+  const baseUrl = process.env.DATABASE_URL
+    .replace(/[?&]schema=[^&]*/, '')
+    .replace(/^([^?]*)&/, '$1?');
   const pool = new Pool({ connectionString: baseUrl });
   let hasError = false;
 

@@ -45,7 +45,11 @@ async function main() {
   console.log(`Provisionando tenant: ${slug} → schema: ${schemaName}`);
 
   // ── 1. Crear schema de PostgreSQL ─────────────────────────────────────────
-  const baseUrl = process.env.DATABASE_URL!.replace(/[?&]schema=[^&]*/, '');
+  // Eliminar ?schema=... correctamente: si era el primer parámetro queda un &
+  // huérfano que hay que convertir en ? para que la URL sea válida.
+  const baseUrl = process.env.DATABASE_URL!
+    .replace(/[?&]schema=[^&]*/, '')
+    .replace(/^([^?]*)&/, '$1?');
   const pool = new Pool({ connectionString: baseUrl });
 
   try {
