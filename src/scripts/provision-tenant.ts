@@ -73,7 +73,7 @@ async function main() {
   // ── 3. Marcar migraciones existentes como ya aplicadas ────────────────────
   // prisma db push aplica el schema completo, por lo que las migraciones en
   // prisma/migrations/tenant/ ya están reflejadas — solo registramos el tracking.
-  const migrationDir = path.resolve(__dirname, '../../prisma/migrations/tenant');
+  const migrationDir = path.resolve(__dirname, '../../prisma/tenant-migrations');
   if (fs.existsSync(migrationDir)) {
     const migrationFiles = fs.readdirSync(migrationDir).filter(f => f.endsWith('.sql')).sort();
     if (migrationFiles.length > 0) {

@@ -17,7 +17,7 @@ import * as path from 'path';
 import { Pool, PoolClient } from 'pg';
 import platformPrisma from '../config/platform-prisma';
 
-const MIGRATION_DIR = path.resolve(__dirname, '../../prisma/migrations/tenant');
+const MIGRATION_DIR = path.resolve(__dirname, '../../prisma/tenant-migrations');
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
