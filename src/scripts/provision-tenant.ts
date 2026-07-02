@@ -42,14 +42,28 @@ async function main() {
 
   const schemaName = `tenant_${slug.replace(/-/g, '_')}`;
   console.log(`Provisionando tenant: ${slug} → schema: ${schemaName}`);
-  console.log(`  [DEBUG] DATABASE_URL host: ${process.env.DATABASE_URL?.match(/@([^/]+)\//)?.[1] ?? 'NO ENCONTRADO'}`);
 
-  // ── 1. Crear schema de PostgreSQL ─────────────────────────────────────────
   // Eliminar ?schema=... correctamente: si era el primer parámetro queda un &
   // huérfano que hay que convertir en ? para que la URL sea válida.
   const baseUrl = process.env.DATABASE_URL!
     .replace(/[?&]schema=[^&]*/, '')
     .replace(/^([^?]*)&/, '$1?');
+
+  // ── 0. Diagnóstico: ver qué tablas existen en producción ──────────────────
+  const diagPool = new Pool({ connectionString: baseUrl });
+  try {
+    const diag = await diagPool.query(
+      `SELECT table_schema, table_name FROM information_schema.tables
+       WHERE table_type = 'BASE TABLE' AND table_schema NOT IN ('pg_catalog','information_schema')
+       ORDER BY table_schema, table_name`
+    );
+    console.log(`  [DEBUG] Tablas en BD (${diag.rows.length} total):`);
+    diag.rows.forEach(r => console.log(`    - ${r.table_schema}.${r.table_name}`));
+  } finally {
+    await diagPool.end();
+  }
+
+  // ── 1. Crear schema de PostgreSQL ─────────────────────────────────────────
   const pool = new Pool({ connectionString: baseUrl });
 
   try {
@@ -60,10 +74,19 @@ async function main() {
   }
 
   // ── 2. Ejecutar DDL del tenant (prisma db push) ───────────────────────────
-  const tenantUrl = `${baseUrl}?schema=${schemaName}`;
+  const platformUrl = baseUrl.includes('?') ? `${baseUrl}&schema=public` : `${baseUrl}?schema=public`;
+  const tenantUrl   = baseUrl.includes('?') ? `${baseUrl}&schema=${schemaName}` : `${baseUrl}?schema=${schemaName}`;
   const schemaFile = path.resolve(__dirname, '../../prisma/tenant.prisma');
 
-  // Pasar la URL como env var (no en el string del shell) para evitar problemas con caracteres especiales
+  // Push plataforma (tablas tenants + tenant_auth_configs en public) con URL explícita
+  const platformSchemaFile = path.resolve(__dirname, '../../prisma/schema.prisma');
+  execSync(
+    `npx prisma db push --schema="${platformSchemaFile}" --accept-data-loss --skip-generate`,
+    { stdio: 'inherit', env: { ...process.env, DATABASE_URL: platformUrl } },
+  );
+  console.log(`  ✓ Schema de plataforma sincronizado`);
+
+  // Push tenant (tablas RRHH en schema del tenant) con URL explícita
   execSync(
     `npx prisma db push --schema="${schemaFile}" --accept-data-loss --skip-generate`,
     { stdio: 'inherit', env: { ...process.env, DATABASE_URL: tenantUrl } },
