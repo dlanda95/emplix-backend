@@ -182,6 +182,10 @@ const config = {
         "fromEnvVar": null,
         "value": "darwin-arm64",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -199,6 +203,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -207,8 +212,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// ── Platform Schema ────────────────────────────────────────────────────────────\n// Tablas de la plataforma multi-tenant (Tenants + Auth Config).\n// Viven en el schema \"public\" de PostgreSQL.\n// Después de cambiar este archivo: prisma migrate dev\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/platform-client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// ── Enums ─────────────────────────────────────────────────────────────────────\n\nenum Plan {\n  STARTER\n  PROFESSIONAL\n  ENTERPRISE\n}\n\nenum TenantStatus {\n  ACTIVE\n  SUSPENDED\n  CANCELLED\n}\n\nenum AuthMethod {\n  EMAIL\n  MICROSOFT\n  GOOGLE\n}\n\n// ── Tenant ────────────────────────────────────────────────────────────────────\n\nmodel Tenant {\n  id           String       @id @default(uuid())\n  slug         String       @unique\n  name         String\n  schemaName   String       @unique // Nombre del schema PostgreSQL: \"tenant_acme_corp\"\n  plan         Plan         @default(STARTER)\n  status       TenantStatus @default(ACTIVE)\n  logoUrl      String?\n  primaryColor String?\n  settings     Json         @default(\"{}\")\n  createdAt    DateTime     @default(now())\n  updatedAt    DateTime     @updatedAt\n\n  authConfigs TenantAuthConfig[]\n\n  @@map(\"tenants\")\n}\n\n// ── Auth Config ───────────────────────────────────────────────────────────────\n\nmodel TenantAuthConfig {\n  id            String     @id @default(uuid())\n  tenantId      String\n  method        AuthMethod\n  enabled       Boolean    @default(true)\n  azureTenantId String? // Solo MICROSOFT: tenant ID del Azure AD del cliente\n  createdAt     DateTime   @default(now())\n  updatedAt     DateTime   @updatedAt\n\n  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)\n\n  @@unique([tenantId, method])\n  @@map(\"tenant_auth_configs\")\n}\n",
-  "inlineSchemaHash": "cba7583874779ae39e0be023f27540219d264e8180ab7deffe35c4e69e2ca446",
+  "inlineSchema": "// ── Platform Schema ────────────────────────────────────────────────────────────\n// Tablas de la plataforma multi-tenant (Tenants + Auth Config).\n// Viven en el schema \"public\" de PostgreSQL.\n// Después de cambiar este archivo: prisma migrate dev\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  output        = \"../src/generated/platform-client\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// ── Enums ─────────────────────────────────────────────────────────────────────\n\nenum Plan {\n  STARTER\n  PROFESSIONAL\n  ENTERPRISE\n}\n\nenum TenantStatus {\n  ACTIVE\n  SUSPENDED\n  CANCELLED\n}\n\nenum AuthMethod {\n  EMAIL\n  MICROSOFT\n  GOOGLE\n}\n\n// ── Tenant ────────────────────────────────────────────────────────────────────\n\nmodel Tenant {\n  id           String       @id @default(uuid())\n  slug         String       @unique\n  name         String\n  schemaName   String       @unique // Nombre del schema PostgreSQL: \"tenant_acme_corp\"\n  plan         Plan         @default(STARTER)\n  status       TenantStatus @default(ACTIVE)\n  logoUrl      String?\n  primaryColor String?\n  settings     Json         @default(\"{}\")\n  createdAt    DateTime     @default(now())\n  updatedAt    DateTime     @updatedAt\n\n  authConfigs TenantAuthConfig[]\n\n  @@map(\"tenants\")\n}\n\n// ── Auth Config ───────────────────────────────────────────────────────────────\n\nmodel TenantAuthConfig {\n  id            String     @id @default(uuid())\n  tenantId      String\n  method        AuthMethod\n  enabled       Boolean    @default(true)\n  azureTenantId String? // Solo MICROSOFT: tenant ID del Azure AD del cliente\n  createdAt     DateTime   @default(now())\n  updatedAt     DateTime   @updatedAt\n\n  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)\n\n  @@unique([tenantId, method])\n  @@map(\"tenant_auth_configs\")\n}\n",
+  "inlineSchemaHash": "fa26cdf7512f9df766d62df9b361a1d20735582eecc4a0aa06ef1da88d86a43f",
   "copyEngine": true
 }
 config.dirname = '/'
