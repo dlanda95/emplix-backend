@@ -4,8 +4,9 @@
 // Después de cambiar este archivo: prisma migrate dev
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/platform-client"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/platform-client"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {

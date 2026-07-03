@@ -6,8 +6,9 @@
 // Para obtener el DDL:     prisma migrate diff --from-empty --to-schema-datamodel prisma/tenant.prisma --script
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/tenant-client"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/tenant-client"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
