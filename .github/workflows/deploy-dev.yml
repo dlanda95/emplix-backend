@@ -19,8 +19,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Platform migrations
-        run: npx prisma migrate deploy
+      - name: Platform schema sync
+        run: npx prisma db push --accept-data-loss
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
 
