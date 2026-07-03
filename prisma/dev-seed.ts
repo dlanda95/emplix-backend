@@ -88,6 +88,14 @@ const TENANT_DATA: Record<string, TenantSeedConfig> = {
       { email: 'mario.com@conexa.com',  firstName: 'Mario',    lastName: 'Flores',  role: 'EMPLOYEE',   dept: 'Comercial',        position: 'Ejecutivo Comercial', salary: 3200, daysHired: 180 },
     ],
   },
+  expertiatravel: {
+    admin: { email: 'admin@expertiatravel.com', firstName: 'Admin', lastName: 'Expertia', password: 'Admin123!' },
+    employees: [
+      { email: 'rrhh@expertiatravel.com',    firstName: 'Recursos',  lastName: 'Humanos',  role: 'HR_MANAGER',  dept: 'Recursos Humanos', position: 'Especialista RH',     salary: 5000, daysHired: 365 },
+      { email: 'comercial@expertiatravel.com',firstName: 'Ejecutivo', lastName: 'Comercial',role: 'EMPLOYEE',    dept: 'Comercial',        position: 'Ejecutivo Comercial', salary: 3500, daysHired: 180 },
+      { email: 'tec@expertiatravel.com',      firstName: 'Analista',  lastName: 'Tech',     role: 'EMPLOYEE',    dept: 'Tecnología',       position: 'Analista Senior',     salary: 4000, daysHired: 240 },
+    ],
+  },
 };
 
 // ─── Seed para un tenant ──────────────────────────────────────────────────────
@@ -99,7 +107,7 @@ async function seedTenant(slug: string, schemaName: string, config: TenantSeedCo
   const deptMap: Record<string, string> = {};
   for (const d of DEPARTMENTS) {
     const dept = await db.department.upsert({
-      where: { name: d.name },
+      where: { code: d.code },
       update: {},
       create: { name: d.name, code: d.code, description: d.description },
     });
@@ -169,13 +177,13 @@ async function seedTenant(slug: string, schemaName: string, config: TenantSeedCo
 
   // Asignar leader al depto RH
   await db.department.update({
-    where: { name: 'Recursos Humanos' },
+    where: { code: 'RH' },
     data: { leaderId: adminEmployee.id },
   });
 
   // 6. Empleados de ejemplo
   for (const emp of config.employees) {
-    const hash = await argon2.hash(emp.password ?? 'Emp123!');
+    const hash = await argon2.hash('Emp123!');
     const user = await db.user.upsert({
       where: { email: emp.email },
       update: {},

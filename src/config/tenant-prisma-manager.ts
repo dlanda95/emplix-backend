@@ -24,8 +24,10 @@ class TenantPrismaManager {
     const baseUrl = process.env.DATABASE_URL;
     if (!baseUrl) throw new Error('La variable de entorno DATABASE_URL no está definida.');
 
-    // Eliminar cualquier ?schema= existente y agregar el del tenant
-    const cleanUrl  = baseUrl.replace(/[?&]schema=[^&]*/g, '');
+    // Eliminar ?schema= existente (dos pasos para evitar & huérfano si era el primer param)
+    const cleanUrl  = baseUrl
+      .replace(/[?&]schema=[^&]*/, '')
+      .replace(/^([^?]*)&/, '$1?');
     const separator = cleanUrl.includes('?') ? '&' : '?';
     const tenantUrl = `${cleanUrl}${separator}schema=${schemaName}`;
 
