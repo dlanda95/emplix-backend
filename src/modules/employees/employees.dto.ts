@@ -25,16 +25,22 @@ export interface TimelineEventDto {
 }
 
 export interface CreateEmployeeDto {
-  email:         string;
-  firstName:     string;
-  lastName:      string;
-  documentId?:   string;
-  hireDate:      string | Date;
-  role?:         UserRole;
-  birthDate?:    string | Date;
-  departmentId?: string;
-  positionId?:   string;
-  supervisorId?: string;
+  email:            string;
+  firstName:        string;
+  lastName:         string;
+  documentId?:      string;
+  hireDate:         string | Date;
+  role?:            UserRole;
+  birthDate?:       string | Date;
+  departmentId?:    string;
+  positionId?:      string;
+  supervisorId?:    string;
+  // Datos laborales opcionales en creación directa
+  contractTypeId?:  string;
+  workShiftId?:     string;
+  salary?:          number;
+  // Si es false, crea solo la ficha sin cuenta de usuario
+  grantAccess?:     boolean;
 }
 
 export interface AssignAdminDataDto {

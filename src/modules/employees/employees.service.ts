@@ -15,9 +15,6 @@ export class EmployeesService {
 
   // ── Crear Empleado ──────────────────────────────────────────────────────────
   async createEmployee(data: CreateEmployeeDto, _tenantSlug: string, db: PrismaClient) {
-    const existingEmail = await db.user.findUnique({ where: { email: data.email } });
-    if (existingEmail) throw new AppError('El correo ya está registrado', 409);
-
     if (data.documentId) {
       const existingDoc = await db.employee.findUnique({ where: { documentId: data.documentId } });
       if (existingDoc) throw new AppError('El documento de identidad ya existe', 409);
@@ -27,50 +24,66 @@ export class EmployeesService {
     if (data.positionId)   await this.validateExists('position',   data.positionId,   db);
     if (data.supervisorId) await this.validateExists('employee',   data.supervisorId,  db);
 
-    const defaultContract = await db.contractType.findFirst();
-    const defaultShift    = await db.workShift.findFirst();
-    if (!defaultContract || !defaultShift) {
+    const contractType = data.contractTypeId
+      ? await db.contractType.findUnique({ where: { id: data.contractTypeId } })
+      : await db.contractType.findFirst();
+    const workShift = data.workShiftId
+      ? await db.workShift.findUnique({ where: { id: data.workShiftId } })
+      : await db.workShift.findFirst();
+
+    if (!contractType || !workShift) {
       throw new AppError('Configura al menos un Tipo de Contrato y un Turno antes de crear empleados.', 500);
     }
 
-    const tempPassword  = `${data.firstName.charAt(0)}${data.lastName}123!`.trim();
-    const passwordHash  = await argon2.hash(tempPassword);
+    const grantAccess = data.grantAccess !== false;
+
+    if (grantAccess) {
+      const existingEmail = await db.user.findUnique({ where: { email: data.email } });
+      if (existingEmail) throw new AppError('El correo ya está registrado', 409);
+    }
+
+    const tempPassword = `${data.firstName.charAt(0)}${data.lastName}123!`.trim();
 
     return db.$transaction(async (tx) => {
-      const newUser = await tx.user.create({
-        data: {
-          email: data.email,
-          passwordHash,
-          role: data.role ?? 'EMPLOYEE',
-          isActive: true,
-        },
-      });
+      let userId: string | undefined;
+
+      if (grantAccess) {
+        const passwordHash = await argon2.hash(tempPassword);
+        const newUser = await tx.user.create({
+          data: { email: data.email, passwordHash, role: data.role ?? 'EMPLOYEE', isActive: true },
+        });
+        userId = newUser.id;
+      }
 
       const newEmployee = await tx.employee.create({
         data: {
-          userId:      newUser.id,
-          firstName:   data.firstName,
-          lastName:    data.lastName,
-          documentId:  data.documentId,
-          hireDate:    new Date(data.hireDate),
-          birthDate:   data.birthDate ? new Date(data.birthDate) : null,
-          status:      'ACTIVE',
+          userId,
+          firstName:    data.firstName,
+          lastName:     data.lastName,
+          documentId:   data.documentId,
+          hireDate:     new Date(data.hireDate),
+          birthDate:    data.birthDate ? new Date(data.birthDate) : null,
+          status:       'ACTIVE',
           departmentId: data.departmentId,
           positionId:   data.positionId,
           supervisorId: data.supervisorId,
           laborData: {
             create: {
-              contractTypeId: defaultContract.id,
-              workShiftId:    defaultShift.id,
+              contractTypeId: contractType.id,
+              workShiftId:    workShift.id,
               hierarchyLevel: 'OPERATIVO',
               startDate:      new Date(data.hireDate),
-              salary:         0,
+              salary:         data.salary ?? 0,
             },
           },
         },
       });
 
-      return { user: newUser, employee: newEmployee, tempPassword };
+      return {
+        employee:    newEmployee,
+        grantAccess,
+        ...(grantAccess && { email: data.email, tempPassword }),
+      };
     });
   }
 
