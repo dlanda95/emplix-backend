@@ -14,6 +14,11 @@ export const createSystemUser = async (req: Request, res: Response, next: NextFu
   catch (e) { next(e); }
 };
 
+export const updateUserType = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try { ok(res, await service.updateUserType(req.params.id, req.body, req.tenantPrisma!)); }
+  catch (e) { next(e); }
+};
+
 export const updateRole = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try { ok(res, await service.updateRole(req.params.id, req.body, req.tenantPrisma!)); }
   catch (e) { next(e); }

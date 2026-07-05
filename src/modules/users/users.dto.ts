@@ -1,11 +1,15 @@
 import { UserRole } from '../../generated/tenant-client';
 
 export interface CreateSystemUserDto {
-  firstName:  string;
-  lastName:   string;
-  email:      string;
-  role:       UserRole;
-  password:   string;
+  firstName:        string;
+  lastName:         string;
+  email:            string;
+  systemUserTypeId: string;
+  password:         string;
+}
+
+export interface UpdateUserTypeDto {
+  systemUserTypeId: string;
 }
 
 export interface UpdateUserRoleDto {

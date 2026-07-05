@@ -154,7 +154,47 @@ async function seedTenant(slug: string, schemaName: string, config: TenantSeedCo
   }
   console.log(`  🕐  ${Object.keys(shiftMap).length} turnos`);
 
-  // 5. Admin user
+  // 5. Tipos de usuario de sistema (catálogo base)
+  const SYSTEM_USER_TYPES = [
+    {
+      slug: 'admin', name: 'Administrador', color: '#7c3aed',
+      description: 'Acceso completo a todas las funciones del sistema',
+      isSystem: true,
+      permissions: {
+        canRead: true, canCreate: true, canEdit: true, canDelete: true,
+        canApprove: true, canManageConfig: true, canManageUsers: true,
+      },
+    },
+    {
+      slug: 'reader', name: 'Lector', color: '#0ea5e9',
+      description: 'Solo lectura — puede visualizar todo pero no realizar cambios',
+      isSystem: true,
+      permissions: {
+        canRead: true, canCreate: false, canEdit: false, canDelete: false,
+        canApprove: false, canManageConfig: false, canManageUsers: false,
+      },
+    },
+    {
+      slug: 'support', name: 'Soporte', color: '#f59e0b',
+      description: 'Puede ver configuración, editar básico y aprobar solicitudes',
+      isSystem: true,
+      permissions: {
+        canRead: true, canCreate: false, canEdit: true, canDelete: false,
+        canApprove: true, canManageConfig: true, canManageUsers: false,
+      },
+    },
+  ];
+
+  for (const t of SYSTEM_USER_TYPES) {
+    await db.systemUserType.upsert({
+      where: { slug: t.slug },
+      update: { permissions: t.permissions, color: t.color, description: t.description },
+      create: t,
+    });
+  }
+  console.log(`  🔐  ${SYSTEM_USER_TYPES.length} tipos de usuario de sistema`);
+
+  // 6. Admin user
   const adminHash = await argon2.hash(config.admin.password);
   const adminUser = await db.user.upsert({
     where: { email: config.admin.email },

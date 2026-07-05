@@ -96,6 +96,25 @@ enum FamilyRelationship {
   OTHER
 }
 
+// ── System User Types (catalog) ───────────────────────────────────────────────
+
+model SystemUserType {
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  description String?
+  permissions Json     @default("{}")
+  color       String   @default("#6B7280")
+  isSystem    Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+
+  @@map("system_user_types")
+}
+
 // ── Users ─────────────────────────────────────────────────────────────────────
 
 model User {
@@ -109,6 +128,9 @@ model User {
   lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+
+  systemUserTypeId String?
+  systemUserType   SystemUserType? @relation(fields: [systemUserTypeId], references: [id])
 
   employee Employee?
   requests Request[]

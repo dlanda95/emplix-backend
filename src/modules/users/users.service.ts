@@ -1,7 +1,7 @@
 import * as argon2 from 'argon2';
 import { PrismaClient } from '../../generated/tenant-client';
 import { AppError } from '../../shared/middlewares/error.middleware';
-import { CreateSystemUserDto, UpdateUserRoleDto } from './users.dto';
+import { CreateSystemUserDto, UpdateUserRoleDto, UpdateUserTypeDto } from './users.dto';
 
 const STORAGE_ACCOUNT = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const avatarUrl = (path: string) =>
@@ -13,6 +13,7 @@ export class UsersService {
     const users = await db.user.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
+        systemUserType: { select: { id: true, name: true, slug: true, color: true, permissions: true } },
         employee: {
           select: {
             id: true, firstName: true, lastName: true,
@@ -27,11 +28,13 @@ export class UsersService {
     return users.map(u => {
       const emp = u.employee;
       return {
-        id:        u.id,
-        email:     u.email,
-        role:      u.role,
-        isActive:  u.isActive,
-        createdAt: u.createdAt,
+        id:             u.id,
+        email:          u.email,
+        role:           u.role,
+        isActive:       u.isActive,
+        createdAt:      u.createdAt,
+        isSystemUser:   !emp,
+        systemUserType: u.systemUserType,
         employee: emp ? {
           id:         emp.id,
           firstName:  emp.firstName,
@@ -48,16 +51,41 @@ export class UsersService {
     const existing = await db.user.findUnique({ where: { email: data.email } });
     if (existing) throw new AppError('El correo ya está registrado en este tenant', 409);
 
+    const typeRecord = await db.systemUserType.findUnique({ where: { id: data.systemUserTypeId } });
+    if (!typeRecord) throw new AppError('Tipo de usuario no encontrado', 404);
+    if (!typeRecord.isActive) throw new AppError('El tipo de usuario está inactivo', 400);
+
     const passwordHash = await argon2.hash(data.password);
 
     return db.user.create({
       data: {
-        email:        data.email,
+        email:            data.email,
         passwordHash,
-        role:         data.role,
-        isActive:     true,
+        role:             'EMPLOYEE',
+        systemUserTypeId: data.systemUserTypeId,
+        isActive:         true,
       },
-      select: { id: true, email: true, role: true, isActive: true, createdAt: true },
+      select: {
+        id: true, email: true, role: true, isActive: true, createdAt: true,
+        systemUserType: { select: { id: true, name: true, slug: true, color: true } },
+      },
+    });
+  }
+
+  async updateUserType(userId: string, data: UpdateUserTypeDto, db: PrismaClient) {
+    const user = await db.user.findUnique({ where: { id: userId } });
+    if (!user) throw new AppError('Usuario no encontrado', 404);
+
+    const typeRecord = await db.systemUserType.findUnique({ where: { id: data.systemUserTypeId } });
+    if (!typeRecord) throw new AppError('Tipo de usuario no encontrado', 404);
+
+    return db.user.update({
+      where: { id: userId },
+      data:  { systemUserTypeId: data.systemUserTypeId },
+      select: {
+        id: true, email: true, role: true, isActive: true,
+        systemUserType: { select: { id: true, name: true, slug: true, color: true } },
+      },
     });
   }
 

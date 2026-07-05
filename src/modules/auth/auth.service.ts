@@ -66,6 +66,7 @@ export class AuthService {
         firstName:       user.employee?.firstName       ?? 'Usuario',
         lastName:        user.employee?.lastName        ?? 'Sistema',
         tenantSlug,
+        isSystemUser:    !user.employee,
         employeeStatus:  user.employee?.status          ?? null,
         onboardingStatus:user.employee?.onboardingStatus ?? null,
       },
