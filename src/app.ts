@@ -19,8 +19,10 @@ import familyRoutes     from './modules/family/family.routes';
 import educationRoutes  from './modules/education/education.routes';
 import candidatesRoutes from './modules/candidates/candidates.routes';
 import onboardingRoutes from './modules/onboarding/onboarding.routes';
-import usersRoutes      from './modules/users/users.routes';
-import systemConfigRoutes from './modules/system-config/system-config.routes';
+import usersRoutes        from './modules/users/users.routes';
+import systemConfigRoutes  from './modules/system-config/system-config.routes';
+import dashboardRoutes     from './modules/dashboard/dashboard.routes';
+import domainsRoutes       from './modules/config/domains/domains.routes';
 
 const app: Application = express();
 
@@ -115,6 +117,8 @@ app.use('/api/candidates', candidatesRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/users',         usersRoutes);
 app.use('/api/system-config', systemConfigRoutes);
+app.use('/api/dashboard',     dashboardRoutes);
+app.use('/api/config/domains', domainsRoutes);
 
 // ==========================================
 // 6. MANEJO DE ERRORES (Siempre al final)

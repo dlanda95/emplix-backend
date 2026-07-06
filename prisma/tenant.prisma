@@ -124,6 +124,8 @@ model User {
   provider     Provider  @default(LOCAL)
   providerId   String?
   role         UserRole  @default(EMPLOYEE)
+  firstName    String?
+  lastName     String?
   isActive     Boolean   @default(true)
   lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())
@@ -445,4 +447,18 @@ model FamilyMember {
 
   @@index([employeeId])
   @@map("family_members")
+}
+
+// ── Dominios corporativos ─────────────────────────────────────────────────────
+
+model TenantDomain {
+  id        String   @id @default(cuid())
+  domain    String   @unique
+  label     String?           // Nombre amigable, ej: "Condor Travel"
+  isPrimary Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tenant_domains")
 }

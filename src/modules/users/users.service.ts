@@ -31,6 +31,8 @@ export class UsersService {
         id:             u.id,
         email:          u.email,
         role:           u.role,
+        firstName:      u.firstName,
+        lastName:       u.lastName,
         isActive:       u.isActive,
         createdAt:      u.createdAt,
         isSystemUser:   !emp,
@@ -55,18 +57,29 @@ export class UsersService {
     if (!typeRecord) throw new AppError('Tipo de usuario no encontrado', 404);
     if (!typeRecord.isActive) throw new AppError('El tipo de usuario está inactivo', 400);
 
+    const perms = typeRecord.permissions as any;
+    // Todos los usuarios de sistema necesitan mínimo HR_ANALYST para acceder al panel admin.
+    // Los permisos del tipo controlan lo que pueden HACER; el rol controla el acceso al API.
+    const role =
+      perms?.canManageUsers  ? 'COMPANY_ADMIN' :
+      perms?.canManageConfig ? 'HR_MANAGER'    :
+      'HR_ANALYST';
+
     const passwordHash = await argon2.hash(data.password);
 
     return db.user.create({
       data: {
         email:            data.email,
         passwordHash,
-        role:             'EMPLOYEE',
+        role,
+        firstName:        data.firstName,
+        lastName:         data.lastName,
         systemUserTypeId: data.systemUserTypeId,
         isActive:         true,
       },
       select: {
-        id: true, email: true, role: true, isActive: true, createdAt: true,
+        id: true, email: true, role: true, firstName: true, lastName: true,
+        isActive: true, createdAt: true,
         systemUserType: { select: { id: true, name: true, slug: true, color: true } },
       },
     });
@@ -78,13 +91,21 @@ export class UsersService {
 
     const typeRecord = await db.systemUserType.findUnique({ where: { id: data.systemUserTypeId } });
     if (!typeRecord) throw new AppError('Tipo de usuario no encontrado', 404);
+    if (!typeRecord.isActive) throw new AppError('El tipo de usuario está inactivo', 400);
+
+    const perms = typeRecord.permissions as any;
+    const role =
+      perms?.canManageUsers  ? 'COMPANY_ADMIN' :
+      perms?.canManageConfig ? 'HR_MANAGER'    :
+      'HR_ANALYST';
 
     return db.user.update({
       where: { id: userId },
-      data:  { systemUserTypeId: data.systemUserTypeId },
+      data:  { systemUserTypeId: data.systemUserTypeId, role },
       select: {
-        id: true, email: true, role: true, isActive: true,
-        systemUserType: { select: { id: true, name: true, slug: true, color: true } },
+        id: true, email: true, role: true, firstName: true, lastName: true,
+        isActive: true, createdAt: true,
+        systemUserType: { select: { id: true, name: true, slug: true, color: true, permissions: true } },
       },
     });
   }

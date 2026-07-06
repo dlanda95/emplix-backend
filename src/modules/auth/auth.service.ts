@@ -46,6 +46,7 @@ export class AuthService {
         employee: {
           select: { firstName: true, lastName: true, status: true, onboardingStatus: true },
         },
+        systemUserType: { select: { id: true, name: true, slug: true, color: true, permissions: true } },
       },
     });
 
@@ -56,21 +57,37 @@ export class AuthService {
     const isValid = await argon2.verify(user.passwordHash, passwordPlain);
     if (!isValid) throw new AppError('La contraseña es incorrecta.', 401, 'WRONG_PASSWORD');
 
+    // Para system users, el rol en DB debe reflejar sus permisos actuales.
+    // Corrige silenciosamente si quedó desactualizado (ej: creado antes del fix).
+    let effectiveRole = user.role;
+    if (!user.employee && user.systemUserType) {
+      const perms = user.systemUserType.permissions as any;
+      const correctRole =
+        perms?.canManageUsers  ? 'COMPANY_ADMIN' :
+        perms?.canManageConfig ? 'HR_MANAGER'    :
+        'HR_ANALYST';
+      if (user.role !== correctRole) {
+        await db.user.update({ where: { id: user.id }, data: { role: correctRole } });
+        effectiveRole = correctRole;
+      }
+    }
+
     await db.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
 
     return {
       user: {
         id:              user.id,
         email:           user.email,
-        role:            user.role,
-        firstName:       user.employee?.firstName       ?? 'Usuario',
-        lastName:        user.employee?.lastName        ?? 'Sistema',
+        role:            effectiveRole,
+        firstName:       user.employee?.firstName ?? user.firstName ?? 'Usuario',
+        lastName:        user.employee?.lastName  ?? user.lastName  ?? 'Sistema',
         tenantSlug,
         isSystemUser:    !user.employee,
+        systemUserType:  user.systemUserType ?? null,
         employeeStatus:  user.employee?.status          ?? null,
         onboardingStatus:user.employee?.onboardingStatus ?? null,
       },
-      token: this.generateToken(user.id, user.email, user.role, tenantSlug),
+      token: this.generateToken(user.id, user.email, effectiveRole, tenantSlug),
     };
   }
 

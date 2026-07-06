@@ -1,6 +1,8 @@
-import { PrismaClient } from '../../generated/tenant-client';
+import { Prisma, PrismaClient } from '../../generated/tenant-client';
 import { AppError } from '../../shared/middlewares/error.middleware';
 import { CreateSystemUserTypeDto, UpdateSystemUserTypeDto, DEFAULT_PERMISSIONS } from './system-config.dto';
+
+const toJson = (v: object): Prisma.InputJsonValue => v as Prisma.InputJsonValue;
 
 export class SystemConfigService {
 
@@ -29,7 +31,7 @@ export class SystemConfigService {
         name:        data.name,
         slug:        data.slug,
         description: data.description,
-        permissions: data.permissions ?? DEFAULT_PERMISSIONS,
+        permissions: toJson(data.permissions ?? DEFAULT_PERMISSIONS),
         color:       data.color ?? '#6B7280',
         isSystem:    false,
       },
@@ -45,7 +47,7 @@ export class SystemConfigService {
       data: {
         ...(data.name        !== undefined && { name: data.name }),
         ...(data.description !== undefined && { description: data.description }),
-        ...(data.permissions !== undefined && { permissions: data.permissions }),
+        ...(data.permissions !== undefined && { permissions: toJson(data.permissions) }),
         ...(data.color       !== undefined && { color: data.color }),
         ...(data.isActive    !== undefined && { isActive: data.isActive }),
       },

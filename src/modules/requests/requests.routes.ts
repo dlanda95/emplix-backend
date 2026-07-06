@@ -13,10 +13,12 @@ router.post('/',        validate(createRequestSchema), controller.createRequest)
 router.get('/me',       controller.getMyRequests);
 router.get('/balance',  controller.getVacationBalance); // IMPORTANTE: antes de /:id
 
-// ── Rutas administrativas (solo RRHH y admins) ────────────────────────────────
-// GET /requests?type=PROFILE_UPDATE&status=PENDING  — todas las solicitudes con filtros opcionales
-router.get('/',             requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.getAllRequests);
-router.get('/pending',      requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.getAllPending);
-router.patch('/:id/status', requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.processRequest);
+// ── Rutas administrativas ─────────────────────────────────────────────────────
+const HR_READ  = requireRole(['COMPANY_ADMIN', 'HR_MANAGER', 'HR_ANALYST']);
+const HR_WRITE = requireRole(['COMPANY_ADMIN', 'HR_MANAGER']);
+
+router.get('/',             HR_READ,  controller.getAllRequests);
+router.get('/pending',      HR_READ,  controller.getAllPending);
+router.patch('/:id/status', HR_WRITE, controller.processRequest);
 
 export default router;

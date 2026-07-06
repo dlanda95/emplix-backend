@@ -122,6 +122,19 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
+exports.Prisma.SystemUserTypeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  permissions: 'permissions',
+  color: 'color',
+  isSystem: 'isSystem',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
@@ -129,10 +142,13 @@ exports.Prisma.UserScalarFieldEnum = {
   provider: 'provider',
   providerId: 'providerId',
   role: 'role',
+  firstName: 'firstName',
+  lastName: 'lastName',
   isActive: 'isActive',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  systemUserTypeId: 'systemUserTypeId'
 };
 
 exports.Prisma.DepartmentScalarFieldEnum = {
@@ -324,9 +340,23 @@ exports.Prisma.FamilyMemberScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TenantDomainScalarFieldEnum = {
+  id: 'id',
+  domain: 'domain',
+  label: 'label',
+  isPrimary: 'isPrimary',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.NullableJsonNullValueInput = {
@@ -339,15 +369,15 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
+};
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
 };
 exports.Provider = exports.$Enums.Provider = {
   LOCAL: 'LOCAL',
@@ -440,6 +470,7 @@ exports.FamilyRelationship = exports.$Enums.FamilyRelationship = {
 };
 
 exports.Prisma.ModelName = {
+  SystemUserType: 'SystemUserType',
   User: 'User',
   Department: 'Department',
   Position: 'Position',
@@ -452,7 +483,8 @@ exports.Prisma.ModelName = {
   Kudo: 'Kudo',
   Document: 'Document',
   Education: 'Education',
-  FamilyMember: 'FamilyMember'
+  FamilyMember: 'FamilyMember',
+  TenantDomain: 'TenantDomain'
 };
 
 /**
