@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { authMiddleware, requireRole } from '../../shared/middlewares/auth.middleware';
+import { validate } from '../../shared/middlewares/validate.middleware';
 import { upload } from '../../config/multer.config';
+import { createEmployeeSchema, updateAssignmentSchema } from './employees.schemas';
 import * as controller from './employees.controller';
 
 const router = Router();
@@ -18,8 +20,8 @@ router.get('/',            controller.getDirectory);
 router.get('/:id',         controller.getEmployeeById);
 
 // --- ESCRITURA (Solo admins) ---
-router.post('/', requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.create);
-router.patch('/:id/administrative', requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), controller.updateAssignment);
+router.post('/', requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), validate(createEmployeeSchema), controller.create);
+router.patch('/:id/administrative', requireRole(['COMPANY_ADMIN', 'HR_MANAGER']), validate(updateAssignmentSchema), controller.updateAssignment);
 
 // --- ARCHIVOS ---
 router.delete('/documents/:documentId', controller.deleteDocument);
