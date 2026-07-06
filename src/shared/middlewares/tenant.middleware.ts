@@ -7,7 +7,7 @@ export const tenantMiddleware = async (req: Request, res: Response, next: NextFu
     const headerSlug = req.headers['x-tenant-slug'] as string;
     const host = req.get('host') || '';
     const subdomainSlug = host.split('.').length > 2 ? host.split('.')[0] : undefined;
-    const slug = headerSlug || subdomainSlug;
+    const slug = (headerSlug || subdomainSlug)?.toLowerCase();
 
     if (!slug) {
       return res.status(400).json({

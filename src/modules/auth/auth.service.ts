@@ -35,13 +35,15 @@ export class AuthService {
   }
 
   async checkEmail(email: string, db: PrismaClient): Promise<boolean> {
-    const user = await db.user.findUnique({ where: { email }, select: { id: true } });
+    const normalized = email.toLowerCase().trim();
+    const user = await db.user.findUnique({ where: { email: normalized }, select: { id: true } });
     return !!user;
   }
 
   async login(email: string, passwordPlain: string, tenantSlug: string, db: PrismaClient) {
+    const normalized = email.toLowerCase().trim();
     const user = await db.user.findUnique({
-      where:   { email },
+      where:   { email: normalized },
       include: {
         employee: {
           select: { firstName: true, lastName: true, status: true, onboardingStatus: true },
@@ -92,14 +94,15 @@ export class AuthService {
   }
 
   async register(data: any, tenantSlug: string, db: PrismaClient) {
-    const existing = await db.user.findUnique({ where: { email: data.email } });
+    const email = (data.email as string).toLowerCase().trim();
+    const existing = await db.user.findUnique({ where: { email } });
     if (existing) throw new AppError('El correo ya está registrado.', 409, 'EMAIL_TAKEN');
 
     const hash = await argon2.hash(data.password);
 
     const newUser = await db.user.create({
       data: {
-        email: data.email,
+        email,
         passwordHash: hash,
         role: 'EMPLOYEE',
         employee: {
@@ -132,10 +135,12 @@ export class AuthService {
   ) {
     const payload = await this.entraService.verifyToken(microsoftToken, azureTenantId);
 
-    const email: string | undefined = payload.preferred_username ?? payload.email;
+    const rawEmail: string | undefined = payload.preferred_username ?? payload.email;
     const oid: string | undefined = payload.oid;
 
-    if (!email) throw new AppError('Token de Microsoft inválido: no contiene email.', 400, 'INVALID_MICROSOFT_TOKEN');
+    if (!rawEmail) throw new AppError('Token de Microsoft inválido: no contiene email.', 400, 'INVALID_MICROSOFT_TOKEN');
+
+    const email = rawEmail.toLowerCase().trim();
 
     const user = await db.user.findUnique({
       where: { email },
