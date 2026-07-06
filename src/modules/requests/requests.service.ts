@@ -29,6 +29,9 @@ export interface CreateRequestPayload {
 export interface RequestFilters {
   status?: RequestStatus;
   type?:   RequestType;
+  search?: string;
+  page?:   number;
+  limit?:  number;
 }
 
 export class RequestsService {
@@ -55,28 +58,50 @@ export class RequestsService {
   }
 
   async getAllRequests(db: PrismaClient, filters: RequestFilters = {}) {
-    return db.request.findMany({
-      where: {
-        ...(filters.status && { status: filters.status }),
-        ...(filters.type   && { type:   filters.type   }),
-      },
-      include: {
-        user: {
-          select: {
-            email:    true,
-            employee: {
-              select: {
-                firstName:  true,
-                lastName:   true,
-                documentId: true,
-                position:   { select: { name: true } },
-              },
+    const page  = Math.max(1, Number(filters.page)  || 1);
+    const limit = Math.min(100, Math.max(1, Number(filters.limit) || 25));
+    const skip  = (page - 1) * limit;
+
+    const where: any = {
+      ...(filters.status && { status: filters.status }),
+      ...(filters.type   && { type:   filters.type   }),
+    };
+
+    if (filters.search) {
+      const q = filters.search.trim();
+      where.user = {
+        employee: {
+          OR: [
+            { firstName: { contains: q, mode: 'insensitive' } },
+            { lastName:  { contains: q, mode: 'insensitive' } },
+            { documentId:{ contains: q, mode: 'insensitive' } },
+          ],
+        },
+      };
+    }
+
+    const include = {
+      user: {
+        select: {
+          email:    true,
+          employee: {
+            select: {
+              firstName:  true,
+              lastName:   true,
+              documentId: true,
+              position:   { select: { name: true } },
             },
           },
         },
       },
-      orderBy: { createdAt: 'desc' },
-    });
+    };
+
+    const [total, data] = await db.$transaction([
+      db.request.count({ where }),
+      db.request.findMany({ where, include, orderBy: { createdAt: 'desc' }, skip, take: limit }),
+    ]);
+
+    return { data, total, page, totalPages: Math.ceil(total / limit) };
   }
 
   async updateRequestStatus(

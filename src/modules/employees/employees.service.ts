@@ -104,20 +104,45 @@ export class EmployeesService {
     return this.transformWithAvatar(employee);
   }
 
-  async getAllEmployees(db: PrismaClient) {
-    const employees = await db.employee.findMany({
-      where: { status: 'ACTIVE' },
-      include: {
-        department: { select: { id: true, name: true, code: true } },
-        position:   { select: { id: true, name: true } },
-        supervisor: { select: { id: true, firstName: true, lastName: true } },
-        user:       { select: { email: true, role: true, isActive: true } },
-        laborData:  true,
-        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
-      },
-      orderBy: { lastName: 'asc' },
-    });
-    return employees.map(e => this.transformWithAvatar(e));
+  async getAllEmployees(
+    db: PrismaClient,
+    params: { page?: number; limit?: number; search?: string; departmentId?: string } = {},
+  ) {
+    const page  = Math.max(1, Number(params.page)  || 1);
+    const limit = Math.min(100, Math.max(1, Number(params.limit) || 25));
+    const skip  = (page - 1) * limit;
+
+    const where: any = { status: 'ACTIVE' };
+    if (params.departmentId) where.departmentId = params.departmentId;
+    if (params.search) {
+      const q = params.search.trim();
+      where.OR = [
+        { firstName: { contains: q, mode: 'insensitive' } },
+        { lastName:  { contains: q, mode: 'insensitive' } },
+        { documentId:{ contains: q, mode: 'insensitive' } },
+      ];
+    }
+
+    const include = {
+      department: { select: { id: true, name: true, code: true } },
+      position:   { select: { id: true, name: true } },
+      supervisor: { select: { id: true, firstName: true, lastName: true } },
+      user:       { select: { email: true, role: true, isActive: true } },
+      laborData:  true,
+      documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
+    };
+
+    const [total, employees] = await db.$transaction([
+      db.employee.count({ where }),
+      db.employee.findMany({ where, include, orderBy: { lastName: 'asc' }, skip, take: limit }),
+    ]);
+
+    return {
+      data:       employees.map(e => this.transformWithAvatar(e)),
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async searchEmployees(query: string, db: PrismaClient) {

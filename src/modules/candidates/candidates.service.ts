@@ -62,17 +62,38 @@ export class CandidatesService {
     });
   }
 
-  async listCandidates(db: PrismaClient) {
-    return db.employee.findMany({
-      where:   { status: 'SELECTED' },
-      include: {
-        position:   { select: { name: true } },
-        department: { select: { name: true } },
-        user:       { select: { email: true, isActive: true } },
-        documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
-      },
-      orderBy: { createdAt: 'desc' },
-    });
+  async listCandidates(
+    db: PrismaClient,
+    params: { page?: number; limit?: number; search?: string; onboardingStatus?: string } = {},
+  ) {
+    const page  = Math.max(1, Number(params.page)  || 1);
+    const limit = Math.min(100, Math.max(1, Number(params.limit) || 25));
+    const skip  = (page - 1) * limit;
+
+    const where: any = { status: 'SELECTED' };
+    if (params.onboardingStatus) where.onboardingStatus = params.onboardingStatus;
+    if (params.search) {
+      const q = params.search.trim();
+      where.OR = [
+        { firstName: { contains: q, mode: 'insensitive' } },
+        { lastName:  { contains: q, mode: 'insensitive' } },
+        { documentId:{ contains: q, mode: 'insensitive' } },
+      ];
+    }
+
+    const include = {
+      position:   { select: { name: true } },
+      department: { select: { name: true } },
+      user:       { select: { email: true, isActive: true } },
+      documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
+    };
+
+    const [total, data] = await db.$transaction([
+      db.employee.count({ where }),
+      db.employee.findMany({ where, include, orderBy: { createdAt: 'desc' }, skip, take: limit }),
+    ]);
+
+    return { data, total, page, totalPages: Math.ceil(total / limit) };
   }
 
   async getCandidate(employeeId: string, db: PrismaClient) {

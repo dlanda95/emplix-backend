@@ -46,7 +46,10 @@ export const getMyTeam = async (req: Request, res: Response, next: NextFunction)
 };
 
 export const getDirectory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try { ok(res, await service.getAllEmployees(req.tenantPrisma!)); }
+  try {
+    const { page, limit, search, departmentId } = req.query as Record<string, string>;
+    ok(res, await service.getAllEmployees(req.tenantPrisma!, { page: +page, limit: +limit, search, departmentId }));
+  }
   catch (error) { next(error); }
 };
 

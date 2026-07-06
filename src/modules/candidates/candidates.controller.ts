@@ -10,7 +10,10 @@ export const createCandidate = async (req: Request, res: Response, next: NextFun
 };
 
 export const listCandidates = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try { ok(res, await service.listCandidates(req.tenantPrisma!)); }
+  try {
+    const { page, limit, search, onboardingStatus } = req.query as Record<string, string>;
+    ok(res, await service.listCandidates(req.tenantPrisma!, { page: +page, limit: +limit, search, onboardingStatus }));
+  }
   catch (e) { next(e); }
 };
 
