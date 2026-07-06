@@ -129,7 +129,7 @@ export class EmployeesService {
       supervisor: { select: { id: true, firstName: true, lastName: true } },
       user:       { select: { email: true, role: true, isActive: true } },
       laborData:  true,
-      documents:  { where: { type: 'AVATAR' }, take: 1, orderBy: { createdAt: 'desc' }, select: { path: true } },
+      documents:  { where: { type: 'AVATAR' as const }, take: 1, orderBy: { createdAt: 'desc' as const }, select: { path: true } },
     };
 
     const [total, employees] = await db.$transaction([
