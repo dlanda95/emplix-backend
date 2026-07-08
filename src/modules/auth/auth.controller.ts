@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthService } from './auth.service';
 import { ok, created, badRequest } from '../../shared/utils/response';
-import { activeProvider, sendMail } from '../../shared/services/mailer.service';
 
 const authService = new AuthService();
 
@@ -76,28 +75,6 @@ export const getMe = async (req: Request, res: Response, next: NextFunction): Pr
     const profile = await authService.getMyProfile(req.user.id, req.tenantPrisma!);
     ok(res, profile);
   } catch (error) { next(error); }
-};
-
-/** Solo disponible en desarrollo — verifica que el proveedor de email funciona */
-export const testMailConfig = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    if (process.env.NODE_ENV === 'production') {
-      res.status(403).json({ code: 'FORBIDDEN', message: 'No disponible en producción.' });
-      return;
-    }
-    const { to } = req.body;
-    if (!to) { badRequest(res, 'Parámetro "to" requerido'); return; }
-
-    await sendMail({
-      to,
-      subject: '✅ Emplix — Test de configuración de email',
-      html: `<p>Si ves este mensaje, el proveedor <strong>${activeProvider}</strong> está configurado correctamente.</p>`,
-    });
-
-    ok(res, { provider: activeProvider, message: `Email enviado vía ${activeProvider}` });
-  } catch (error: any) {
-    next(error);
-  }
 };
 
 export const forgotPassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {

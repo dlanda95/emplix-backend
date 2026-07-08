@@ -205,11 +205,11 @@ export class AuthService {
     });
 
     const resetUrl = `${FRONTEND_URL}/auth/reset-password?token=${rawToken}&tenant=${tenantSlug}`;
-    await sendMail({
+    sendMail({
       to:      user.email,
       subject: 'Recupera tu contraseña — Emplix',
       html:    buildPasswordResetEmail(resetUrl, RESET_TOKEN_EXPIRY_MINUTES),
-    });
+    }).catch((err) => console.error('[mailer] Error enviando reset email:', err?.message ?? err));
   }
 
   async verifyResetToken(rawToken: string, db: PrismaClient): Promise<boolean> {

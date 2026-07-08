@@ -2,7 +2,7 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import {
   login, register, checkEmailExists, getMe, microsoftLogin, verifyTenant,
-  forgotPassword, verifyResetToken, resetPassword, testMailConfig,
+  forgotPassword, verifyResetToken, resetPassword,
 } from './auth.controller';
 import { authMiddleware } from '../../shared/middlewares/auth.middleware';
 import { validate } from '../../shared/middlewares/validate.middleware';
@@ -33,9 +33,6 @@ router.post('/check-email', checkEmailExists);
 router.post('/forgot-password',     passwordResetLimiter, forgotPassword);
 router.get('/verify-reset-token',   passwordResetLimiter, verifyResetToken);
 router.post('/reset-password',      passwordResetLimiter, resetPassword);
-
-// Solo desarrollo — verifica configuración del proveedor de email
-router.post('/test-mail', testMailConfig);
 
 router.get('/me', authMiddleware, getMe);
 
