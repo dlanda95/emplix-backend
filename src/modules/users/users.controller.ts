@@ -5,7 +5,7 @@ import { ok, created } from '../../shared/utils/response';
 const service = new UsersService();
 
 export const listUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try { ok(res, await service.listUsers(req.tenantPrisma!)); }
+  try { ok(res, await service.listUsers(req.tenantPrisma!, req.query['systemOnly'] === 'true')); }
   catch (e) { next(e); }
 };
 

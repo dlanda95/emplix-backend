@@ -134,10 +134,24 @@ model User {
   systemUserTypeId String?
   systemUserType   SystemUserType? @relation(fields: [systemUserTypeId], references: [id])
 
-  employee Employee?
-  requests Request[]
+  employee            Employee?
+  requests            Request[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("password_reset_tokens")
 }
 
 // ── Organization ──────────────────────────────────────────────────────────────

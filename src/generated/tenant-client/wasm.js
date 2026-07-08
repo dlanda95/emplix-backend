@@ -151,6 +151,14 @@ exports.Prisma.UserScalarFieldEnum = {
   systemUserTypeId: 'systemUserTypeId'
 };
 
+exports.Prisma.PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  tokenHash: 'tokenHash',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.DepartmentScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -472,6 +480,7 @@ exports.FamilyRelationship = exports.$Enums.FamilyRelationship = {
 exports.Prisma.ModelName = {
   SystemUserType: 'SystemUserType',
   User: 'User',
+  PasswordResetToken: 'PasswordResetToken',
   Department: 'Department',
   Position: 'Position',
   ContractType: 'ContractType',

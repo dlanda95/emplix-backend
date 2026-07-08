@@ -23,6 +23,7 @@ import usersRoutes        from './modules/users/users.routes';
 import systemConfigRoutes  from './modules/system-config/system-config.routes';
 import dashboardRoutes     from './modules/dashboard/dashboard.routes';
 import domainsRoutes       from './modules/config/domains/domains.routes';
+import authMethodsRoutes   from './modules/config/auth-methods/auth-methods.routes';
 
 const app: Application = express();
 
@@ -118,7 +119,8 @@ app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/users',         usersRoutes);
 app.use('/api/system-config', systemConfigRoutes);
 app.use('/api/dashboard',     dashboardRoutes);
-app.use('/api/config/domains', domainsRoutes);
+app.use('/api/config/domains',       domainsRoutes);
+app.use('/api/config/auth-methods',  authMethodsRoutes);
 
 // ==========================================
 // 6. MANEJO DE ERRORES (Siempre al final)

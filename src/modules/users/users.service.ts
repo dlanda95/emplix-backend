@@ -9,8 +9,9 @@ const avatarUrl = (path: string) =>
 
 export class UsersService {
 
-  async listUsers(db: PrismaClient) {
+  async listUsers(db: PrismaClient, systemOnly = false) {
     const users = await db.user.findMany({
+      where: systemOnly ? { employee: null } : {},
       orderBy: { createdAt: 'desc' },
       include: {
         systemUserType: { select: { id: true, name: true, slug: true, color: true, permissions: true } },

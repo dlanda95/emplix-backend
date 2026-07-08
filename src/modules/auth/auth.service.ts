@@ -1,8 +1,13 @@
 import * as argon2 from 'argon2';
+import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '../../generated/tenant-client';
 import { EntraService } from './entra/entra.services';
 import { AppError } from '../../shared/middlewares/error.middleware';
+import { sendMail, buildPasswordResetEmail } from '../../shared/services/mailer.service';
+
+const RESET_TOKEN_EXPIRY_MINUTES = 15;
+const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:4200';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secreto_temporal';
 
@@ -173,6 +178,71 @@ export class AuthService {
       },
       token: this.generateToken(user.id, user.email, user.role, tenantSlug),
     };
+  }
+
+  // ── Password reset ────────────────────────────────────────────────────────
+
+  async forgotPassword(email: string, tenantSlug: string, db: PrismaClient): Promise<void> {
+    const normalized = email.toLowerCase().trim();
+    const user = await db.user.findUnique({
+      where:  { email: normalized },
+      select: { id: true, email: true, isActive: true, passwordHash: true },
+    });
+
+    // Respuesta genérica siempre — nunca revelar si el email existe (anti-enumeration)
+    if (!user || !user.isActive || !user.passwordHash) return;
+
+    // Generar token criptográfico seguro
+    const rawToken  = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expiresAt = new Date(Date.now() + RESET_TOKEN_EXPIRY_MINUTES * 60 * 1000);
+
+    // Eliminar tokens previos del mismo usuario (evitar acumulación)
+    await db.passwordResetToken.deleteMany({ where: { userId: user.id } });
+
+    await db.passwordResetToken.create({
+      data: { userId: user.id, tokenHash, expiresAt },
+    });
+
+    const resetUrl = `${FRONTEND_URL}/auth/reset-password?token=${rawToken}&tenant=${tenantSlug}`;
+    await sendMail({
+      to:      user.email,
+      subject: 'Recupera tu contraseña — Emplix',
+      html:    buildPasswordResetEmail(resetUrl, RESET_TOKEN_EXPIRY_MINUTES),
+    });
+  }
+
+  async verifyResetToken(rawToken: string, db: PrismaClient): Promise<boolean> {
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const record = await db.passwordResetToken.findUnique({ where: { tokenHash } });
+    if (!record) return false;
+    if (record.expiresAt < new Date()) {
+      await db.passwordResetToken.delete({ where: { tokenHash } });
+      return false;
+    }
+    return true;
+  }
+
+  async resetPassword(rawToken: string, newPassword: string, db: PrismaClient): Promise<void> {
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const record = await db.passwordResetToken.findUnique({
+      where:   { tokenHash },
+      include: { user: { select: { id: true, isActive: true } } },
+    });
+
+    if (!record)                         throw new AppError('El enlace de recuperación no es válido.',  400, 'INVALID_RESET_TOKEN');
+    if (record.expiresAt < new Date())   throw new AppError('El enlace de recuperación ha expirado. Solicita uno nuevo.', 400, 'EXPIRED_RESET_TOKEN');
+    if (!record.user.isActive)           throw new AppError('Esta cuenta está desactivada.',            403, 'USER_INACTIVE');
+
+    const passwordHash = await argon2.hash(newPassword);
+
+    await db.$transaction([
+      db.user.update({
+        where: { id: record.userId },
+        data:  { passwordHash, provider: 'LOCAL' },
+      }),
+      db.passwordResetToken.deleteMany({ where: { userId: record.userId } }),
+    ]);
   }
 
   private generateToken(id: string, email: string, role: string, tenantSlug: string): string {
