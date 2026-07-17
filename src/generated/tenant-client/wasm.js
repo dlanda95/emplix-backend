@@ -203,6 +203,29 @@ exports.Prisma.WorkShiftScalarFieldEnum = {
   allowsOvertime: 'allowsOvertime'
 };
 
+exports.Prisma.SelectionProcessScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  openedAt: 'openedAt',
+  closedAt: 'closedAt',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  departmentId: 'departmentId',
+  positionId: 'positionId'
+};
+
+exports.Prisma.SelectionProcessApproverScalarFieldEnum = {
+  id: 'id',
+  selectionProcessId: 'selectionProcessId',
+  employeeId: 'employeeId',
+  order: 'order',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.EmployeeScalarFieldEnum = {
   id: 'id',
   firstName: 'firstName',
@@ -248,6 +271,20 @@ exports.Prisma.EmployeeScalarFieldEnum = {
   departmentId: 'departmentId',
   positionId: 'positionId',
   supervisorId: 'supervisorId',
+  selectionProcessId: 'selectionProcessId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CandidateApprovalScalarFieldEnum = {
+  id: 'id',
+  selectionProcessId: 'selectionProcessId',
+  candidateId: 'candidateId',
+  approverId: 'approverId',
+  approverType: 'approverType',
+  status: 'status',
+  comment: 'comment',
+  decidedAt: 'decidedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -348,6 +385,35 @@ exports.Prisma.FamilyMemberScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.HRCandidateAnalysisScalarFieldEnum = {
+  id: 'id',
+  selectionProcessId: 'selectionProcessId',
+  candidateId: 'candidateId',
+  professionalSummary: 'professionalSummary',
+  strengths: 'strengths',
+  improvementAreas: 'improvementAreas',
+  interviewResults: 'interviewResults',
+  competencyEvaluation: 'competencyEvaluation',
+  identifiedRisks: 'identifiedRisks',
+  recommendation: 'recommendation',
+  recommendationNotes: 'recommendationNotes',
+  createdById: 'createdById',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.HRAnalysisDocumentScalarFieldEnum = {
+  id: 'id',
+  analysisId: 'analysisId',
+  name: 'name',
+  originalName: 'originalName',
+  mimeType: 'mimeType',
+  size: 'size',
+  path: 'path',
+  uploadedById: 'uploadedById',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.TenantDomainScalarFieldEnum = {
   id: 'id',
   domain: 'domain',
@@ -411,6 +477,12 @@ exports.RoleType = exports.$Enums.RoleType = {
   OPERATIONAL: 'OPERATIONAL',
   TACTICAL: 'TACTICAL',
   STRATEGIC: 'STRATEGIC'
+};
+
+exports.SelectionProcessStatus = exports.$Enums.SelectionProcessStatus = {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
@@ -477,6 +549,13 @@ exports.FamilyRelationship = exports.$Enums.FamilyRelationship = {
   OTHER: 'OTHER'
 };
 
+exports.HRRecommendation = exports.$Enums.HRRecommendation = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  CONDITIONALLY_APPROVED: 'CONDITIONALLY_APPROVED',
+  REJECTED: 'REJECTED'
+};
+
 exports.Prisma.ModelName = {
   SystemUserType: 'SystemUserType',
   User: 'User',
@@ -485,7 +564,10 @@ exports.Prisma.ModelName = {
   Position: 'Position',
   ContractType: 'ContractType',
   WorkShift: 'WorkShift',
+  SelectionProcess: 'SelectionProcess',
+  SelectionProcessApprover: 'SelectionProcessApprover',
   Employee: 'Employee',
+  CandidateApproval: 'CandidateApproval',
   EmployeeLaborData: 'EmployeeLaborData',
   Attendance: 'Attendance',
   Request: 'Request',
@@ -493,6 +575,8 @@ exports.Prisma.ModelName = {
   Document: 'Document',
   Education: 'Education',
   FamilyMember: 'FamilyMember',
+  HRCandidateAnalysis: 'HRCandidateAnalysis',
+  HRAnalysisDocument: 'HRAnalysisDocument',
   TenantDomain: 'TenantDomain'
 };
 

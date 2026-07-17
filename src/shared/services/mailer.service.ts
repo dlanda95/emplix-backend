@@ -154,6 +154,97 @@ export async function sendMail(opts: SendMailOptions): Promise<void> {
 
 // ── Templates ─────────────────────────────────────────────────────────────────
 
+// ── Parámetros para el email de bienvenida de candidatos ─────────────────────
+export interface CandidateWelcomeEmailParams {
+  candidateName: string;
+  username:      string;
+  password:      string;
+  loginUrl:      string;
+}
+
+export function buildCandidateWelcomeEmail(p: CandidateWelcomeEmailParams): string {
+  const year = new Date().getFullYear();
+  return `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+
+          <tr>
+            <td style="background:#7c1d1d;padding:28px 32px;">
+              <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;">⚡ Emplix</p>
+              <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.75);">Plataforma de Gestión de RRHH</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:36px 32px;">
+              <h1 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#111827;">
+                Bienvenido/a, ${p.candidateName}
+              </h1>
+              <p style="margin:0 0 24px;font-size:15px;color:#4b5563;line-height:1.6;">
+                Recursos Humanos ha generado sus credenciales de acceso a la plataforma
+                de reclutamiento. A continuación encontrará sus datos de ingreso.
+              </p>
+
+              <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:20px 24px;margin-bottom:24px;">
+                <p style="margin:0 0 16px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.06em;">
+                  Credenciales de acceso
+                </p>
+
+                <div style="margin-bottom:14px;">
+                  <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Usuario</p>
+                  <p style="margin:0;font-size:20px;font-weight:700;color:#111827;font-family:'Courier New',Courier,monospace;letter-spacing:0.06em;">
+                    ${p.username}
+                  </p>
+                </div>
+
+                <div style="border-top:1px solid #e5e7eb;padding-top:14px;">
+                  <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Contraseña temporal</p>
+                  <p style="margin:0;font-size:20px;font-weight:700;color:#7c1d1d;font-family:'Courier New',Courier,monospace;letter-spacing:0.1em;">
+                    ${p.password}
+                  </p>
+                </div>
+              </div>
+
+              <div style="text-align:center;margin:0 0 24px;">
+                <a href="${p.loginUrl}"
+                   style="display:inline-block;background:#7c1d1d;color:#ffffff;text-decoration:none;font-size:15px;font-weight:600;padding:14px 32px;border-radius:8px;">
+                  Ingresar a la plataforma
+                </a>
+              </div>
+
+              <div style="background:#fef9c3;border:1px solid #fde047;border-radius:6px;padding:12px 16px;">
+                <p style="margin:0;font-size:13px;color:#713f12;line-height:1.5;">
+                  🔒 Por seguridad, le recomendamos cambiar su contraseña luego del primer ingreso.
+                </p>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="background:#f9fafb;padding:20px 32px;border-top:1px solid #f0f0f0;">
+              <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">
+                © ${year} Emplix HR · Correo generado automáticamente, no respondas a este mensaje.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 export function buildPasswordResetEmail(resetUrl: string, expiresInMinutes = 15): string {
   return `
 <!DOCTYPE html>

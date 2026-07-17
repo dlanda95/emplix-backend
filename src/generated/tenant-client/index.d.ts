@@ -49,10 +49,25 @@ export type ContractType = $Result.DefaultSelection<Prisma.$ContractTypePayload>
  */
 export type WorkShift = $Result.DefaultSelection<Prisma.$WorkShiftPayload>
 /**
+ * Model SelectionProcess
+ * 
+ */
+export type SelectionProcess = $Result.DefaultSelection<Prisma.$SelectionProcessPayload>
+/**
+ * Model SelectionProcessApprover
+ * 
+ */
+export type SelectionProcessApprover = $Result.DefaultSelection<Prisma.$SelectionProcessApproverPayload>
+/**
  * Model Employee
  * 
  */
 export type Employee = $Result.DefaultSelection<Prisma.$EmployeePayload>
+/**
+ * Model CandidateApproval
+ * 
+ */
+export type CandidateApproval = $Result.DefaultSelection<Prisma.$CandidateApprovalPayload>
 /**
  * Model EmployeeLaborData
  * 
@@ -88,6 +103,16 @@ export type Education = $Result.DefaultSelection<Prisma.$EducationPayload>
  * 
  */
 export type FamilyMember = $Result.DefaultSelection<Prisma.$FamilyMemberPayload>
+/**
+ * Model HRCandidateAnalysis
+ * 
+ */
+export type HRCandidateAnalysis = $Result.DefaultSelection<Prisma.$HRCandidateAnalysisPayload>
+/**
+ * Model HRAnalysisDocument
+ * 
+ */
+export type HRAnalysisDocument = $Result.DefaultSelection<Prisma.$HRAnalysisDocumentPayload>
 /**
  * Model TenantDomain
  * 
@@ -134,6 +159,15 @@ export const RoleType: {
 };
 
 export type RoleType = (typeof RoleType)[keyof typeof RoleType]
+
+
+export const SelectionProcessStatus: {
+  OPEN: 'OPEN',
+  CLOSED: 'CLOSED',
+  CANCELLED: 'CANCELLED'
+};
+
+export type SelectionProcessStatus = (typeof SelectionProcessStatus)[keyof typeof SelectionProcessStatus]
 
 
 export const EmployeeStatus: {
@@ -220,6 +254,16 @@ export const FamilyRelationship: {
 
 export type FamilyRelationship = (typeof FamilyRelationship)[keyof typeof FamilyRelationship]
 
+
+export const HRRecommendation: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  CONDITIONALLY_APPROVED: 'CONDITIONALLY_APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type HRRecommendation = (typeof HRRecommendation)[keyof typeof HRRecommendation]
+
 }
 
 export type Provider = $Enums.Provider
@@ -237,6 +281,10 @@ export const AreaType: typeof $Enums.AreaType
 export type RoleType = $Enums.RoleType
 
 export const RoleType: typeof $Enums.RoleType
+
+export type SelectionProcessStatus = $Enums.SelectionProcessStatus
+
+export const SelectionProcessStatus: typeof $Enums.SelectionProcessStatus
 
 export type EmployeeStatus = $Enums.EmployeeStatus
 
@@ -265,6 +313,10 @@ export const DocumentType: typeof $Enums.DocumentType
 export type FamilyRelationship = $Enums.FamilyRelationship
 
 export const FamilyRelationship: typeof $Enums.FamilyRelationship
+
+export type HRRecommendation = $Enums.HRRecommendation
+
+export const HRRecommendation: typeof $Enums.HRRecommendation
 
 /**
  * ##  Prisma Client ʲˢ
@@ -460,6 +512,26 @@ export class PrismaClient<
   get workShift(): Prisma.WorkShiftDelegate<ExtArgs>;
 
   /**
+   * `prisma.selectionProcess`: Exposes CRUD operations for the **SelectionProcess** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SelectionProcesses
+    * const selectionProcesses = await prisma.selectionProcess.findMany()
+    * ```
+    */
+  get selectionProcess(): Prisma.SelectionProcessDelegate<ExtArgs>;
+
+  /**
+   * `prisma.selectionProcessApprover`: Exposes CRUD operations for the **SelectionProcessApprover** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SelectionProcessApprovers
+    * const selectionProcessApprovers = await prisma.selectionProcessApprover.findMany()
+    * ```
+    */
+  get selectionProcessApprover(): Prisma.SelectionProcessApproverDelegate<ExtArgs>;
+
+  /**
    * `prisma.employee`: Exposes CRUD operations for the **Employee** model.
     * Example usage:
     * ```ts
@@ -468,6 +540,16 @@ export class PrismaClient<
     * ```
     */
   get employee(): Prisma.EmployeeDelegate<ExtArgs>;
+
+  /**
+   * `prisma.candidateApproval`: Exposes CRUD operations for the **CandidateApproval** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CandidateApprovals
+    * const candidateApprovals = await prisma.candidateApproval.findMany()
+    * ```
+    */
+  get candidateApproval(): Prisma.CandidateApprovalDelegate<ExtArgs>;
 
   /**
    * `prisma.employeeLaborData`: Exposes CRUD operations for the **EmployeeLaborData** model.
@@ -538,6 +620,26 @@ export class PrismaClient<
     * ```
     */
   get familyMember(): Prisma.FamilyMemberDelegate<ExtArgs>;
+
+  /**
+   * `prisma.hRCandidateAnalysis`: Exposes CRUD operations for the **HRCandidateAnalysis** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HRCandidateAnalyses
+    * const hRCandidateAnalyses = await prisma.hRCandidateAnalysis.findMany()
+    * ```
+    */
+  get hRCandidateAnalysis(): Prisma.HRCandidateAnalysisDelegate<ExtArgs>;
+
+  /**
+   * `prisma.hRAnalysisDocument`: Exposes CRUD operations for the **HRAnalysisDocument** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HRAnalysisDocuments
+    * const hRAnalysisDocuments = await prisma.hRAnalysisDocument.findMany()
+    * ```
+    */
+  get hRAnalysisDocument(): Prisma.HRAnalysisDocumentDelegate<ExtArgs>;
 
   /**
    * `prisma.tenantDomain`: Exposes CRUD operations for the **TenantDomain** model.
@@ -996,7 +1098,10 @@ export namespace Prisma {
     Position: 'Position',
     ContractType: 'ContractType',
     WorkShift: 'WorkShift',
+    SelectionProcess: 'SelectionProcess',
+    SelectionProcessApprover: 'SelectionProcessApprover',
     Employee: 'Employee',
+    CandidateApproval: 'CandidateApproval',
     EmployeeLaborData: 'EmployeeLaborData',
     Attendance: 'Attendance',
     Request: 'Request',
@@ -1004,6 +1109,8 @@ export namespace Prisma {
     Document: 'Document',
     Education: 'Education',
     FamilyMember: 'FamilyMember',
+    HRCandidateAnalysis: 'HRCandidateAnalysis',
+    HRAnalysisDocument: 'HRAnalysisDocument',
     TenantDomain: 'TenantDomain'
   };
 
@@ -1020,7 +1127,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "systemUserType" | "user" | "passwordResetToken" | "department" | "position" | "contractType" | "workShift" | "employee" | "employeeLaborData" | "attendance" | "request" | "kudo" | "document" | "education" | "familyMember" | "tenantDomain"
+      modelProps: "systemUserType" | "user" | "passwordResetToken" | "department" | "position" | "contractType" | "workShift" | "selectionProcess" | "selectionProcessApprover" | "employee" | "candidateApproval" | "employeeLaborData" | "attendance" | "request" | "kudo" | "document" | "education" | "familyMember" | "hRCandidateAnalysis" | "hRAnalysisDocument" | "tenantDomain"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1514,6 +1621,146 @@ export namespace Prisma {
           }
         }
       }
+      SelectionProcess: {
+        payload: Prisma.$SelectionProcessPayload<ExtArgs>
+        fields: Prisma.SelectionProcessFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SelectionProcessFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SelectionProcessFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>
+          }
+          findFirst: {
+            args: Prisma.SelectionProcessFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SelectionProcessFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>
+          }
+          findMany: {
+            args: Prisma.SelectionProcessFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>[]
+          }
+          create: {
+            args: Prisma.SelectionProcessCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>
+          }
+          createMany: {
+            args: Prisma.SelectionProcessCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SelectionProcessCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>[]
+          }
+          delete: {
+            args: Prisma.SelectionProcessDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>
+          }
+          update: {
+            args: Prisma.SelectionProcessUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>
+          }
+          deleteMany: {
+            args: Prisma.SelectionProcessDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SelectionProcessUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SelectionProcessUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessPayload>
+          }
+          aggregate: {
+            args: Prisma.SelectionProcessAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSelectionProcess>
+          }
+          groupBy: {
+            args: Prisma.SelectionProcessGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SelectionProcessGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SelectionProcessCountArgs<ExtArgs>
+            result: $Utils.Optional<SelectionProcessCountAggregateOutputType> | number
+          }
+        }
+      }
+      SelectionProcessApprover: {
+        payload: Prisma.$SelectionProcessApproverPayload<ExtArgs>
+        fields: Prisma.SelectionProcessApproverFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SelectionProcessApproverFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SelectionProcessApproverFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>
+          }
+          findFirst: {
+            args: Prisma.SelectionProcessApproverFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SelectionProcessApproverFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>
+          }
+          findMany: {
+            args: Prisma.SelectionProcessApproverFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>[]
+          }
+          create: {
+            args: Prisma.SelectionProcessApproverCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>
+          }
+          createMany: {
+            args: Prisma.SelectionProcessApproverCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SelectionProcessApproverCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>[]
+          }
+          delete: {
+            args: Prisma.SelectionProcessApproverDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>
+          }
+          update: {
+            args: Prisma.SelectionProcessApproverUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>
+          }
+          deleteMany: {
+            args: Prisma.SelectionProcessApproverDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SelectionProcessApproverUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.SelectionProcessApproverUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SelectionProcessApproverPayload>
+          }
+          aggregate: {
+            args: Prisma.SelectionProcessApproverAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSelectionProcessApprover>
+          }
+          groupBy: {
+            args: Prisma.SelectionProcessApproverGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SelectionProcessApproverGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SelectionProcessApproverCountArgs<ExtArgs>
+            result: $Utils.Optional<SelectionProcessApproverCountAggregateOutputType> | number
+          }
+        }
+      }
       Employee: {
         payload: Prisma.$EmployeePayload<ExtArgs>
         fields: Prisma.EmployeeFieldRefs
@@ -1581,6 +1828,76 @@ export namespace Prisma {
           count: {
             args: Prisma.EmployeeCountArgs<ExtArgs>
             result: $Utils.Optional<EmployeeCountAggregateOutputType> | number
+          }
+        }
+      }
+      CandidateApproval: {
+        payload: Prisma.$CandidateApprovalPayload<ExtArgs>
+        fields: Prisma.CandidateApprovalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CandidateApprovalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CandidateApprovalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>
+          }
+          findFirst: {
+            args: Prisma.CandidateApprovalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CandidateApprovalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>
+          }
+          findMany: {
+            args: Prisma.CandidateApprovalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>[]
+          }
+          create: {
+            args: Prisma.CandidateApprovalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>
+          }
+          createMany: {
+            args: Prisma.CandidateApprovalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CandidateApprovalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>[]
+          }
+          delete: {
+            args: Prisma.CandidateApprovalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>
+          }
+          update: {
+            args: Prisma.CandidateApprovalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>
+          }
+          deleteMany: {
+            args: Prisma.CandidateApprovalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CandidateApprovalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.CandidateApprovalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CandidateApprovalPayload>
+          }
+          aggregate: {
+            args: Prisma.CandidateApprovalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCandidateApproval>
+          }
+          groupBy: {
+            args: Prisma.CandidateApprovalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CandidateApprovalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CandidateApprovalCountArgs<ExtArgs>
+            result: $Utils.Optional<CandidateApprovalCountAggregateOutputType> | number
           }
         }
       }
@@ -2074,6 +2391,146 @@ export namespace Prisma {
           }
         }
       }
+      HRCandidateAnalysis: {
+        payload: Prisma.$HRCandidateAnalysisPayload<ExtArgs>
+        fields: Prisma.HRCandidateAnalysisFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HRCandidateAnalysisFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HRCandidateAnalysisFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>
+          }
+          findFirst: {
+            args: Prisma.HRCandidateAnalysisFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HRCandidateAnalysisFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>
+          }
+          findMany: {
+            args: Prisma.HRCandidateAnalysisFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>[]
+          }
+          create: {
+            args: Prisma.HRCandidateAnalysisCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>
+          }
+          createMany: {
+            args: Prisma.HRCandidateAnalysisCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HRCandidateAnalysisCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>[]
+          }
+          delete: {
+            args: Prisma.HRCandidateAnalysisDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>
+          }
+          update: {
+            args: Prisma.HRCandidateAnalysisUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>
+          }
+          deleteMany: {
+            args: Prisma.HRCandidateAnalysisDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HRCandidateAnalysisUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.HRCandidateAnalysisUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRCandidateAnalysisPayload>
+          }
+          aggregate: {
+            args: Prisma.HRCandidateAnalysisAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHRCandidateAnalysis>
+          }
+          groupBy: {
+            args: Prisma.HRCandidateAnalysisGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HRCandidateAnalysisGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HRCandidateAnalysisCountArgs<ExtArgs>
+            result: $Utils.Optional<HRCandidateAnalysisCountAggregateOutputType> | number
+          }
+        }
+      }
+      HRAnalysisDocument: {
+        payload: Prisma.$HRAnalysisDocumentPayload<ExtArgs>
+        fields: Prisma.HRAnalysisDocumentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.HRAnalysisDocumentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.HRAnalysisDocumentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>
+          }
+          findFirst: {
+            args: Prisma.HRAnalysisDocumentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.HRAnalysisDocumentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>
+          }
+          findMany: {
+            args: Prisma.HRAnalysisDocumentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>[]
+          }
+          create: {
+            args: Prisma.HRAnalysisDocumentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>
+          }
+          createMany: {
+            args: Prisma.HRAnalysisDocumentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.HRAnalysisDocumentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>[]
+          }
+          delete: {
+            args: Prisma.HRAnalysisDocumentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>
+          }
+          update: {
+            args: Prisma.HRAnalysisDocumentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>
+          }
+          deleteMany: {
+            args: Prisma.HRAnalysisDocumentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.HRAnalysisDocumentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.HRAnalysisDocumentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$HRAnalysisDocumentPayload>
+          }
+          aggregate: {
+            args: Prisma.HRAnalysisDocumentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateHRAnalysisDocument>
+          }
+          groupBy: {
+            args: Prisma.HRAnalysisDocumentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<HRAnalysisDocumentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.HRAnalysisDocumentCountArgs<ExtArgs>
+            result: $Utils.Optional<HRAnalysisDocumentCountAggregateOutputType> | number
+          }
+        }
+      }
       TenantDomain: {
         payload: Prisma.$TenantDomainPayload<ExtArgs>
         fields: Prisma.TenantDomainFieldRefs
@@ -2379,12 +2836,14 @@ export namespace Prisma {
     children: number
     employees: number
     positions: number
+    selectionProcesses: number
   }
 
   export type DepartmentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     children?: boolean | DepartmentCountOutputTypeCountChildrenArgs
     employees?: boolean | DepartmentCountOutputTypeCountEmployeesArgs
     positions?: boolean | DepartmentCountOutputTypeCountPositionsArgs
+    selectionProcesses?: boolean | DepartmentCountOutputTypeCountSelectionProcessesArgs
   }
 
   // Custom InputTypes
@@ -2419,6 +2878,13 @@ export namespace Prisma {
     where?: PositionWhereInput
   }
 
+  /**
+   * DepartmentCountOutputType without action
+   */
+  export type DepartmentCountOutputTypeCountSelectionProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SelectionProcessWhereInput
+  }
+
 
   /**
    * Count Type PositionCountOutputType
@@ -2426,10 +2892,12 @@ export namespace Prisma {
 
   export type PositionCountOutputType = {
     employees: number
+    selectionProcesses: number
   }
 
   export type PositionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     employees?: boolean | PositionCountOutputTypeCountEmployeesArgs
+    selectionProcesses?: boolean | PositionCountOutputTypeCountSelectionProcessesArgs
   }
 
   // Custom InputTypes
@@ -2448,6 +2916,13 @@ export namespace Prisma {
    */
   export type PositionCountOutputTypeCountEmployeesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: EmployeeWhereInput
+  }
+
+  /**
+   * PositionCountOutputType without action
+   */
+  export type PositionCountOutputTypeCountSelectionProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SelectionProcessWhereInput
   }
 
 
@@ -2514,6 +2989,64 @@ export namespace Prisma {
 
 
   /**
+   * Count Type SelectionProcessCountOutputType
+   */
+
+  export type SelectionProcessCountOutputType = {
+    candidates: number
+    approvers: number
+    candidateApprovals: number
+    hrAnalyses: number
+  }
+
+  export type SelectionProcessCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    candidates?: boolean | SelectionProcessCountOutputTypeCountCandidatesArgs
+    approvers?: boolean | SelectionProcessCountOutputTypeCountApproversArgs
+    candidateApprovals?: boolean | SelectionProcessCountOutputTypeCountCandidateApprovalsArgs
+    hrAnalyses?: boolean | SelectionProcessCountOutputTypeCountHrAnalysesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * SelectionProcessCountOutputType without action
+   */
+  export type SelectionProcessCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessCountOutputType
+     */
+    select?: SelectionProcessCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * SelectionProcessCountOutputType without action
+   */
+  export type SelectionProcessCountOutputTypeCountCandidatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EmployeeWhereInput
+  }
+
+  /**
+   * SelectionProcessCountOutputType without action
+   */
+  export type SelectionProcessCountOutputTypeCountApproversArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SelectionProcessApproverWhereInput
+  }
+
+  /**
+   * SelectionProcessCountOutputType without action
+   */
+  export type SelectionProcessCountOutputTypeCountCandidateApprovalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CandidateApprovalWhereInput
+  }
+
+  /**
+   * SelectionProcessCountOutputType without action
+   */
+  export type SelectionProcessCountOutputTypeCountHrAnalysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HRCandidateAnalysisWhereInput
+  }
+
+
+  /**
    * Count Type EmployeeCountOutputType
    */
 
@@ -2526,6 +3059,9 @@ export namespace Prisma {
     educations: number
     sentKudos: number
     receivedKudos: number
+    approvals: number
+    receivedApprovals: number
+    hrAnalyses: number
   }
 
   export type EmployeeCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2537,6 +3073,9 @@ export namespace Prisma {
     educations?: boolean | EmployeeCountOutputTypeCountEducationsArgs
     sentKudos?: boolean | EmployeeCountOutputTypeCountSentKudosArgs
     receivedKudos?: boolean | EmployeeCountOutputTypeCountReceivedKudosArgs
+    approvals?: boolean | EmployeeCountOutputTypeCountApprovalsArgs
+    receivedApprovals?: boolean | EmployeeCountOutputTypeCountReceivedApprovalsArgs
+    hrAnalyses?: boolean | EmployeeCountOutputTypeCountHrAnalysesArgs
   }
 
   // Custom InputTypes
@@ -2604,6 +3143,58 @@ export namespace Prisma {
    */
   export type EmployeeCountOutputTypeCountReceivedKudosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: KudoWhereInput
+  }
+
+  /**
+   * EmployeeCountOutputType without action
+   */
+  export type EmployeeCountOutputTypeCountApprovalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SelectionProcessApproverWhereInput
+  }
+
+  /**
+   * EmployeeCountOutputType without action
+   */
+  export type EmployeeCountOutputTypeCountReceivedApprovalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CandidateApprovalWhereInput
+  }
+
+  /**
+   * EmployeeCountOutputType without action
+   */
+  export type EmployeeCountOutputTypeCountHrAnalysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HRCandidateAnalysisWhereInput
+  }
+
+
+  /**
+   * Count Type HRCandidateAnalysisCountOutputType
+   */
+
+  export type HRCandidateAnalysisCountOutputType = {
+    documents: number
+  }
+
+  export type HRCandidateAnalysisCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    documents?: boolean | HRCandidateAnalysisCountOutputTypeCountDocumentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * HRCandidateAnalysisCountOutputType without action
+   */
+  export type HRCandidateAnalysisCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysisCountOutputType
+     */
+    select?: HRCandidateAnalysisCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * HRCandidateAnalysisCountOutputType without action
+   */
+  export type HRCandidateAnalysisCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HRAnalysisDocumentWhereInput
   }
 
 
@@ -5869,6 +6460,7 @@ export namespace Prisma {
     children?: boolean | Department$childrenArgs<ExtArgs>
     employees?: boolean | Department$employeesArgs<ExtArgs>
     positions?: boolean | Department$positionsArgs<ExtArgs>
+    selectionProcesses?: boolean | Department$selectionProcessesArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["department"]>
 
@@ -5904,6 +6496,7 @@ export namespace Prisma {
     children?: boolean | Department$childrenArgs<ExtArgs>
     employees?: boolean | Department$employeesArgs<ExtArgs>
     positions?: boolean | Department$positionsArgs<ExtArgs>
+    selectionProcesses?: boolean | Department$selectionProcessesArgs<ExtArgs>
     _count?: boolean | DepartmentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DepartmentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5917,6 +6510,7 @@ export namespace Prisma {
       children: Prisma.$DepartmentPayload<ExtArgs>[]
       employees: Prisma.$EmployeePayload<ExtArgs>[]
       positions: Prisma.$PositionPayload<ExtArgs>[]
+      selectionProcesses: Prisma.$SelectionProcessPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6297,6 +6891,7 @@ export namespace Prisma {
     children<T extends Department$childrenArgs<ExtArgs> = {}>(args?: Subset<T, Department$childrenArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findMany"> | Null>
     employees<T extends Department$employeesArgs<ExtArgs> = {}>(args?: Subset<T, Department$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany"> | Null>
     positions<T extends Department$positionsArgs<ExtArgs> = {}>(args?: Subset<T, Department$positionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findMany"> | Null>
+    selectionProcesses<T extends Department$selectionProcessesArgs<ExtArgs> = {}>(args?: Subset<T, Department$selectionProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6729,6 +7324,26 @@ export namespace Prisma {
   }
 
   /**
+   * Department.selectionProcesses
+   */
+  export type Department$selectionProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    where?: SelectionProcessWhereInput
+    orderBy?: SelectionProcessOrderByWithRelationInput | SelectionProcessOrderByWithRelationInput[]
+    cursor?: SelectionProcessWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SelectionProcessScalarFieldEnum | SelectionProcessScalarFieldEnum[]
+  }
+
+  /**
    * Department without action
    */
   export type DepartmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6975,6 +7590,7 @@ export namespace Prisma {
     updatedAt?: boolean
     department?: boolean | Position$departmentArgs<ExtArgs>
     employees?: boolean | Position$employeesArgs<ExtArgs>
+    selectionProcesses?: boolean | Position$selectionProcessesArgs<ExtArgs>
     _count?: boolean | PositionCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["position"]>
 
@@ -7006,6 +7622,7 @@ export namespace Prisma {
   export type PositionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     department?: boolean | Position$departmentArgs<ExtArgs>
     employees?: boolean | Position$employeesArgs<ExtArgs>
+    selectionProcesses?: boolean | Position$selectionProcessesArgs<ExtArgs>
     _count?: boolean | PositionCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PositionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7017,6 +7634,7 @@ export namespace Prisma {
     objects: {
       department: Prisma.$DepartmentPayload<ExtArgs> | null
       employees: Prisma.$EmployeePayload<ExtArgs>[]
+      selectionProcesses: Prisma.$SelectionProcessPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -7394,6 +8012,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     department<T extends Position$departmentArgs<ExtArgs> = {}>(args?: Subset<T, Position$departmentArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     employees<T extends Position$employeesArgs<ExtArgs> = {}>(args?: Subset<T, Position$employeesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany"> | Null>
+    selectionProcesses<T extends Position$selectionProcessesArgs<ExtArgs> = {}>(args?: Subset<T, Position$selectionProcessesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7782,6 +8401,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: EmployeeScalarFieldEnum | EmployeeScalarFieldEnum[]
+  }
+
+  /**
+   * Position.selectionProcesses
+   */
+  export type Position$selectionProcessesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    where?: SelectionProcessWhereInput
+    orderBy?: SelectionProcessOrderByWithRelationInput | SelectionProcessOrderByWithRelationInput[]
+    cursor?: SelectionProcessWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SelectionProcessScalarFieldEnum | SelectionProcessScalarFieldEnum[]
   }
 
   /**
@@ -9770,6 +10409,2130 @@ export namespace Prisma {
 
 
   /**
+   * Model SelectionProcess
+   */
+
+  export type AggregateSelectionProcess = {
+    _count: SelectionProcessCountAggregateOutputType | null
+    _min: SelectionProcessMinAggregateOutputType | null
+    _max: SelectionProcessMaxAggregateOutputType | null
+  }
+
+  export type SelectionProcessMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.SelectionProcessStatus | null
+    openedAt: Date | null
+    closedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    departmentId: string | null
+    positionId: string | null
+  }
+
+  export type SelectionProcessMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.SelectionProcessStatus | null
+    openedAt: Date | null
+    closedAt: Date | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    departmentId: string | null
+    positionId: string | null
+  }
+
+  export type SelectionProcessCountAggregateOutputType = {
+    id: number
+    code: number
+    name: number
+    description: number
+    status: number
+    openedAt: number
+    closedAt: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    departmentId: number
+    positionId: number
+    _all: number
+  }
+
+
+  export type SelectionProcessMinAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    status?: true
+    openedAt?: true
+    closedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    departmentId?: true
+    positionId?: true
+  }
+
+  export type SelectionProcessMaxAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    status?: true
+    openedAt?: true
+    closedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    departmentId?: true
+    positionId?: true
+  }
+
+  export type SelectionProcessCountAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    description?: true
+    status?: true
+    openedAt?: true
+    closedAt?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    departmentId?: true
+    positionId?: true
+    _all?: true
+  }
+
+  export type SelectionProcessAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SelectionProcess to aggregate.
+     */
+    where?: SelectionProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcesses to fetch.
+     */
+    orderBy?: SelectionProcessOrderByWithRelationInput | SelectionProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SelectionProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcesses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SelectionProcesses
+    **/
+    _count?: true | SelectionProcessCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SelectionProcessMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SelectionProcessMaxAggregateInputType
+  }
+
+  export type GetSelectionProcessAggregateType<T extends SelectionProcessAggregateArgs> = {
+        [P in keyof T & keyof AggregateSelectionProcess]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSelectionProcess[P]>
+      : GetScalarType<T[P], AggregateSelectionProcess[P]>
+  }
+
+
+
+
+  export type SelectionProcessGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SelectionProcessWhereInput
+    orderBy?: SelectionProcessOrderByWithAggregationInput | SelectionProcessOrderByWithAggregationInput[]
+    by: SelectionProcessScalarFieldEnum[] | SelectionProcessScalarFieldEnum
+    having?: SelectionProcessScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SelectionProcessCountAggregateInputType | true
+    _min?: SelectionProcessMinAggregateInputType
+    _max?: SelectionProcessMaxAggregateInputType
+  }
+
+  export type SelectionProcessGroupByOutputType = {
+    id: string
+    code: string
+    name: string
+    description: string | null
+    status: $Enums.SelectionProcessStatus
+    openedAt: Date
+    closedAt: Date | null
+    createdById: string | null
+    createdAt: Date
+    updatedAt: Date
+    departmentId: string | null
+    positionId: string | null
+    _count: SelectionProcessCountAggregateOutputType | null
+    _min: SelectionProcessMinAggregateOutputType | null
+    _max: SelectionProcessMaxAggregateOutputType | null
+  }
+
+  type GetSelectionProcessGroupByPayload<T extends SelectionProcessGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SelectionProcessGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SelectionProcessGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SelectionProcessGroupByOutputType[P]>
+            : GetScalarType<T[P], SelectionProcessGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SelectionProcessSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    openedAt?: boolean
+    closedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    departmentId?: boolean
+    positionId?: boolean
+    department?: boolean | SelectionProcess$departmentArgs<ExtArgs>
+    position?: boolean | SelectionProcess$positionArgs<ExtArgs>
+    candidates?: boolean | SelectionProcess$candidatesArgs<ExtArgs>
+    approvers?: boolean | SelectionProcess$approversArgs<ExtArgs>
+    candidateApprovals?: boolean | SelectionProcess$candidateApprovalsArgs<ExtArgs>
+    hrAnalyses?: boolean | SelectionProcess$hrAnalysesArgs<ExtArgs>
+    _count?: boolean | SelectionProcessCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["selectionProcess"]>
+
+  export type SelectionProcessSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    openedAt?: boolean
+    closedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    departmentId?: boolean
+    positionId?: boolean
+    department?: boolean | SelectionProcess$departmentArgs<ExtArgs>
+    position?: boolean | SelectionProcess$positionArgs<ExtArgs>
+  }, ExtArgs["result"]["selectionProcess"]>
+
+  export type SelectionProcessSelectScalar = {
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    openedAt?: boolean
+    closedAt?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    departmentId?: boolean
+    positionId?: boolean
+  }
+
+  export type SelectionProcessInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | SelectionProcess$departmentArgs<ExtArgs>
+    position?: boolean | SelectionProcess$positionArgs<ExtArgs>
+    candidates?: boolean | SelectionProcess$candidatesArgs<ExtArgs>
+    approvers?: boolean | SelectionProcess$approversArgs<ExtArgs>
+    candidateApprovals?: boolean | SelectionProcess$candidateApprovalsArgs<ExtArgs>
+    hrAnalyses?: boolean | SelectionProcess$hrAnalysesArgs<ExtArgs>
+    _count?: boolean | SelectionProcessCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type SelectionProcessIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    department?: boolean | SelectionProcess$departmentArgs<ExtArgs>
+    position?: boolean | SelectionProcess$positionArgs<ExtArgs>
+  }
+
+  export type $SelectionProcessPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SelectionProcess"
+    objects: {
+      department: Prisma.$DepartmentPayload<ExtArgs> | null
+      position: Prisma.$PositionPayload<ExtArgs> | null
+      candidates: Prisma.$EmployeePayload<ExtArgs>[]
+      approvers: Prisma.$SelectionProcessApproverPayload<ExtArgs>[]
+      candidateApprovals: Prisma.$CandidateApprovalPayload<ExtArgs>[]
+      hrAnalyses: Prisma.$HRCandidateAnalysisPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      name: string
+      description: string | null
+      status: $Enums.SelectionProcessStatus
+      openedAt: Date
+      closedAt: Date | null
+      createdById: string | null
+      createdAt: Date
+      updatedAt: Date
+      departmentId: string | null
+      positionId: string | null
+    }, ExtArgs["result"]["selectionProcess"]>
+    composites: {}
+  }
+
+  type SelectionProcessGetPayload<S extends boolean | null | undefined | SelectionProcessDefaultArgs> = $Result.GetResult<Prisma.$SelectionProcessPayload, S>
+
+  type SelectionProcessCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SelectionProcessFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SelectionProcessCountAggregateInputType | true
+    }
+
+  export interface SelectionProcessDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SelectionProcess'], meta: { name: 'SelectionProcess' } }
+    /**
+     * Find zero or one SelectionProcess that matches the filter.
+     * @param {SelectionProcessFindUniqueArgs} args - Arguments to find a SelectionProcess
+     * @example
+     * // Get one SelectionProcess
+     * const selectionProcess = await prisma.selectionProcess.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SelectionProcessFindUniqueArgs>(args: SelectSubset<T, SelectionProcessFindUniqueArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SelectionProcess that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SelectionProcessFindUniqueOrThrowArgs} args - Arguments to find a SelectionProcess
+     * @example
+     * // Get one SelectionProcess
+     * const selectionProcess = await prisma.selectionProcess.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SelectionProcessFindUniqueOrThrowArgs>(args: SelectSubset<T, SelectionProcessFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SelectionProcess that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessFindFirstArgs} args - Arguments to find a SelectionProcess
+     * @example
+     * // Get one SelectionProcess
+     * const selectionProcess = await prisma.selectionProcess.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SelectionProcessFindFirstArgs>(args?: SelectSubset<T, SelectionProcessFindFirstArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SelectionProcess that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessFindFirstOrThrowArgs} args - Arguments to find a SelectionProcess
+     * @example
+     * // Get one SelectionProcess
+     * const selectionProcess = await prisma.selectionProcess.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SelectionProcessFindFirstOrThrowArgs>(args?: SelectSubset<T, SelectionProcessFindFirstOrThrowArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SelectionProcesses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SelectionProcesses
+     * const selectionProcesses = await prisma.selectionProcess.findMany()
+     * 
+     * // Get first 10 SelectionProcesses
+     * const selectionProcesses = await prisma.selectionProcess.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const selectionProcessWithIdOnly = await prisma.selectionProcess.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SelectionProcessFindManyArgs>(args?: SelectSubset<T, SelectionProcessFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SelectionProcess.
+     * @param {SelectionProcessCreateArgs} args - Arguments to create a SelectionProcess.
+     * @example
+     * // Create one SelectionProcess
+     * const SelectionProcess = await prisma.selectionProcess.create({
+     *   data: {
+     *     // ... data to create a SelectionProcess
+     *   }
+     * })
+     * 
+     */
+    create<T extends SelectionProcessCreateArgs>(args: SelectSubset<T, SelectionProcessCreateArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SelectionProcesses.
+     * @param {SelectionProcessCreateManyArgs} args - Arguments to create many SelectionProcesses.
+     * @example
+     * // Create many SelectionProcesses
+     * const selectionProcess = await prisma.selectionProcess.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SelectionProcessCreateManyArgs>(args?: SelectSubset<T, SelectionProcessCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SelectionProcesses and returns the data saved in the database.
+     * @param {SelectionProcessCreateManyAndReturnArgs} args - Arguments to create many SelectionProcesses.
+     * @example
+     * // Create many SelectionProcesses
+     * const selectionProcess = await prisma.selectionProcess.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SelectionProcesses and only return the `id`
+     * const selectionProcessWithIdOnly = await prisma.selectionProcess.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SelectionProcessCreateManyAndReturnArgs>(args?: SelectSubset<T, SelectionProcessCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SelectionProcess.
+     * @param {SelectionProcessDeleteArgs} args - Arguments to delete one SelectionProcess.
+     * @example
+     * // Delete one SelectionProcess
+     * const SelectionProcess = await prisma.selectionProcess.delete({
+     *   where: {
+     *     // ... filter to delete one SelectionProcess
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SelectionProcessDeleteArgs>(args: SelectSubset<T, SelectionProcessDeleteArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SelectionProcess.
+     * @param {SelectionProcessUpdateArgs} args - Arguments to update one SelectionProcess.
+     * @example
+     * // Update one SelectionProcess
+     * const selectionProcess = await prisma.selectionProcess.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SelectionProcessUpdateArgs>(args: SelectSubset<T, SelectionProcessUpdateArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SelectionProcesses.
+     * @param {SelectionProcessDeleteManyArgs} args - Arguments to filter SelectionProcesses to delete.
+     * @example
+     * // Delete a few SelectionProcesses
+     * const { count } = await prisma.selectionProcess.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SelectionProcessDeleteManyArgs>(args?: SelectSubset<T, SelectionProcessDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SelectionProcesses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SelectionProcesses
+     * const selectionProcess = await prisma.selectionProcess.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SelectionProcessUpdateManyArgs>(args: SelectSubset<T, SelectionProcessUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SelectionProcess.
+     * @param {SelectionProcessUpsertArgs} args - Arguments to update or create a SelectionProcess.
+     * @example
+     * // Update or create a SelectionProcess
+     * const selectionProcess = await prisma.selectionProcess.upsert({
+     *   create: {
+     *     // ... data to create a SelectionProcess
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SelectionProcess we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SelectionProcessUpsertArgs>(args: SelectSubset<T, SelectionProcessUpsertArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SelectionProcesses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessCountArgs} args - Arguments to filter SelectionProcesses to count.
+     * @example
+     * // Count the number of SelectionProcesses
+     * const count = await prisma.selectionProcess.count({
+     *   where: {
+     *     // ... the filter for the SelectionProcesses we want to count
+     *   }
+     * })
+    **/
+    count<T extends SelectionProcessCountArgs>(
+      args?: Subset<T, SelectionProcessCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SelectionProcessCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SelectionProcess.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SelectionProcessAggregateArgs>(args: Subset<T, SelectionProcessAggregateArgs>): Prisma.PrismaPromise<GetSelectionProcessAggregateType<T>>
+
+    /**
+     * Group by SelectionProcess.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SelectionProcessGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SelectionProcessGroupByArgs['orderBy'] }
+        : { orderBy?: SelectionProcessGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SelectionProcessGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSelectionProcessGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SelectionProcess model
+   */
+  readonly fields: SelectionProcessFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SelectionProcess.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SelectionProcessClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    department<T extends SelectionProcess$departmentArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcess$departmentArgs<ExtArgs>>): Prisma__DepartmentClient<$Result.GetResult<Prisma.$DepartmentPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    position<T extends SelectionProcess$positionArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcess$positionArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    candidates<T extends SelectionProcess$candidatesArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcess$candidatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany"> | Null>
+    approvers<T extends SelectionProcess$approversArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcess$approversArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "findMany"> | Null>
+    candidateApprovals<T extends SelectionProcess$candidateApprovalsArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcess$candidateApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "findMany"> | Null>
+    hrAnalyses<T extends SelectionProcess$hrAnalysesArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcess$hrAnalysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SelectionProcess model
+   */ 
+  interface SelectionProcessFieldRefs {
+    readonly id: FieldRef<"SelectionProcess", 'String'>
+    readonly code: FieldRef<"SelectionProcess", 'String'>
+    readonly name: FieldRef<"SelectionProcess", 'String'>
+    readonly description: FieldRef<"SelectionProcess", 'String'>
+    readonly status: FieldRef<"SelectionProcess", 'SelectionProcessStatus'>
+    readonly openedAt: FieldRef<"SelectionProcess", 'DateTime'>
+    readonly closedAt: FieldRef<"SelectionProcess", 'DateTime'>
+    readonly createdById: FieldRef<"SelectionProcess", 'String'>
+    readonly createdAt: FieldRef<"SelectionProcess", 'DateTime'>
+    readonly updatedAt: FieldRef<"SelectionProcess", 'DateTime'>
+    readonly departmentId: FieldRef<"SelectionProcess", 'String'>
+    readonly positionId: FieldRef<"SelectionProcess", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SelectionProcess findUnique
+   */
+  export type SelectionProcessFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcess to fetch.
+     */
+    where: SelectionProcessWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcess findUniqueOrThrow
+   */
+  export type SelectionProcessFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcess to fetch.
+     */
+    where: SelectionProcessWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcess findFirst
+   */
+  export type SelectionProcessFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcess to fetch.
+     */
+    where?: SelectionProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcesses to fetch.
+     */
+    orderBy?: SelectionProcessOrderByWithRelationInput | SelectionProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SelectionProcesses.
+     */
+    cursor?: SelectionProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcesses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SelectionProcesses.
+     */
+    distinct?: SelectionProcessScalarFieldEnum | SelectionProcessScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcess findFirstOrThrow
+   */
+  export type SelectionProcessFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcess to fetch.
+     */
+    where?: SelectionProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcesses to fetch.
+     */
+    orderBy?: SelectionProcessOrderByWithRelationInput | SelectionProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SelectionProcesses.
+     */
+    cursor?: SelectionProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcesses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SelectionProcesses.
+     */
+    distinct?: SelectionProcessScalarFieldEnum | SelectionProcessScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcess findMany
+   */
+  export type SelectionProcessFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcesses to fetch.
+     */
+    where?: SelectionProcessWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcesses to fetch.
+     */
+    orderBy?: SelectionProcessOrderByWithRelationInput | SelectionProcessOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SelectionProcesses.
+     */
+    cursor?: SelectionProcessWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcesses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcesses.
+     */
+    skip?: number
+    distinct?: SelectionProcessScalarFieldEnum | SelectionProcessScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcess create
+   */
+  export type SelectionProcessCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SelectionProcess.
+     */
+    data: XOR<SelectionProcessCreateInput, SelectionProcessUncheckedCreateInput>
+  }
+
+  /**
+   * SelectionProcess createMany
+   */
+  export type SelectionProcessCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SelectionProcesses.
+     */
+    data: SelectionProcessCreateManyInput | SelectionProcessCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SelectionProcess createManyAndReturn
+   */
+  export type SelectionProcessCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SelectionProcesses.
+     */
+    data: SelectionProcessCreateManyInput | SelectionProcessCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SelectionProcess update
+   */
+  export type SelectionProcessUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SelectionProcess.
+     */
+    data: XOR<SelectionProcessUpdateInput, SelectionProcessUncheckedUpdateInput>
+    /**
+     * Choose, which SelectionProcess to update.
+     */
+    where: SelectionProcessWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcess updateMany
+   */
+  export type SelectionProcessUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SelectionProcesses.
+     */
+    data: XOR<SelectionProcessUpdateManyMutationInput, SelectionProcessUncheckedUpdateManyInput>
+    /**
+     * Filter which SelectionProcesses to update
+     */
+    where?: SelectionProcessWhereInput
+  }
+
+  /**
+   * SelectionProcess upsert
+   */
+  export type SelectionProcessUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SelectionProcess to update in case it exists.
+     */
+    where: SelectionProcessWhereUniqueInput
+    /**
+     * In case the SelectionProcess found by the `where` argument doesn't exist, create a new SelectionProcess with this data.
+     */
+    create: XOR<SelectionProcessCreateInput, SelectionProcessUncheckedCreateInput>
+    /**
+     * In case the SelectionProcess was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SelectionProcessUpdateInput, SelectionProcessUncheckedUpdateInput>
+  }
+
+  /**
+   * SelectionProcess delete
+   */
+  export type SelectionProcessDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    /**
+     * Filter which SelectionProcess to delete.
+     */
+    where: SelectionProcessWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcess deleteMany
+   */
+  export type SelectionProcessDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SelectionProcesses to delete
+     */
+    where?: SelectionProcessWhereInput
+  }
+
+  /**
+   * SelectionProcess.department
+   */
+  export type SelectionProcess$departmentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Department
+     */
+    select?: DepartmentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DepartmentInclude<ExtArgs> | null
+    where?: DepartmentWhereInput
+  }
+
+  /**
+   * SelectionProcess.position
+   */
+  export type SelectionProcess$positionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Position
+     */
+    select?: PositionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PositionInclude<ExtArgs> | null
+    where?: PositionWhereInput
+  }
+
+  /**
+   * SelectionProcess.candidates
+   */
+  export type SelectionProcess$candidatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Employee
+     */
+    select?: EmployeeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EmployeeInclude<ExtArgs> | null
+    where?: EmployeeWhereInput
+    orderBy?: EmployeeOrderByWithRelationInput | EmployeeOrderByWithRelationInput[]
+    cursor?: EmployeeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EmployeeScalarFieldEnum | EmployeeScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcess.approvers
+   */
+  export type SelectionProcess$approversArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    where?: SelectionProcessApproverWhereInput
+    orderBy?: SelectionProcessApproverOrderByWithRelationInput | SelectionProcessApproverOrderByWithRelationInput[]
+    cursor?: SelectionProcessApproverWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SelectionProcessApproverScalarFieldEnum | SelectionProcessApproverScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcess.candidateApprovals
+   */
+  export type SelectionProcess$candidateApprovalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    where?: CandidateApprovalWhereInput
+    orderBy?: CandidateApprovalOrderByWithRelationInput | CandidateApprovalOrderByWithRelationInput[]
+    cursor?: CandidateApprovalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CandidateApprovalScalarFieldEnum | CandidateApprovalScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcess.hrAnalyses
+   */
+  export type SelectionProcess$hrAnalysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    where?: HRCandidateAnalysisWhereInput
+    orderBy?: HRCandidateAnalysisOrderByWithRelationInput | HRCandidateAnalysisOrderByWithRelationInput[]
+    cursor?: HRCandidateAnalysisWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: HRCandidateAnalysisScalarFieldEnum | HRCandidateAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcess without action
+   */
+  export type SelectionProcessDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SelectionProcessApprover
+   */
+
+  export type AggregateSelectionProcessApprover = {
+    _count: SelectionProcessApproverCountAggregateOutputType | null
+    _avg: SelectionProcessApproverAvgAggregateOutputType | null
+    _sum: SelectionProcessApproverSumAggregateOutputType | null
+    _min: SelectionProcessApproverMinAggregateOutputType | null
+    _max: SelectionProcessApproverMaxAggregateOutputType | null
+  }
+
+  export type SelectionProcessApproverAvgAggregateOutputType = {
+    order: number | null
+  }
+
+  export type SelectionProcessApproverSumAggregateOutputType = {
+    order: number | null
+  }
+
+  export type SelectionProcessApproverMinAggregateOutputType = {
+    id: string | null
+    selectionProcessId: string | null
+    employeeId: string | null
+    order: number | null
+    createdAt: Date | null
+  }
+
+  export type SelectionProcessApproverMaxAggregateOutputType = {
+    id: string | null
+    selectionProcessId: string | null
+    employeeId: string | null
+    order: number | null
+    createdAt: Date | null
+  }
+
+  export type SelectionProcessApproverCountAggregateOutputType = {
+    id: number
+    selectionProcessId: number
+    employeeId: number
+    order: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type SelectionProcessApproverAvgAggregateInputType = {
+    order?: true
+  }
+
+  export type SelectionProcessApproverSumAggregateInputType = {
+    order?: true
+  }
+
+  export type SelectionProcessApproverMinAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    employeeId?: true
+    order?: true
+    createdAt?: true
+  }
+
+  export type SelectionProcessApproverMaxAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    employeeId?: true
+    order?: true
+    createdAt?: true
+  }
+
+  export type SelectionProcessApproverCountAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    employeeId?: true
+    order?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type SelectionProcessApproverAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SelectionProcessApprover to aggregate.
+     */
+    where?: SelectionProcessApproverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcessApprovers to fetch.
+     */
+    orderBy?: SelectionProcessApproverOrderByWithRelationInput | SelectionProcessApproverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SelectionProcessApproverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcessApprovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcessApprovers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SelectionProcessApprovers
+    **/
+    _count?: true | SelectionProcessApproverCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SelectionProcessApproverAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SelectionProcessApproverSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SelectionProcessApproverMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SelectionProcessApproverMaxAggregateInputType
+  }
+
+  export type GetSelectionProcessApproverAggregateType<T extends SelectionProcessApproverAggregateArgs> = {
+        [P in keyof T & keyof AggregateSelectionProcessApprover]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSelectionProcessApprover[P]>
+      : GetScalarType<T[P], AggregateSelectionProcessApprover[P]>
+  }
+
+
+
+
+  export type SelectionProcessApproverGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SelectionProcessApproverWhereInput
+    orderBy?: SelectionProcessApproverOrderByWithAggregationInput | SelectionProcessApproverOrderByWithAggregationInput[]
+    by: SelectionProcessApproverScalarFieldEnum[] | SelectionProcessApproverScalarFieldEnum
+    having?: SelectionProcessApproverScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SelectionProcessApproverCountAggregateInputType | true
+    _avg?: SelectionProcessApproverAvgAggregateInputType
+    _sum?: SelectionProcessApproverSumAggregateInputType
+    _min?: SelectionProcessApproverMinAggregateInputType
+    _max?: SelectionProcessApproverMaxAggregateInputType
+  }
+
+  export type SelectionProcessApproverGroupByOutputType = {
+    id: string
+    selectionProcessId: string
+    employeeId: string
+    order: number
+    createdAt: Date
+    _count: SelectionProcessApproverCountAggregateOutputType | null
+    _avg: SelectionProcessApproverAvgAggregateOutputType | null
+    _sum: SelectionProcessApproverSumAggregateOutputType | null
+    _min: SelectionProcessApproverMinAggregateOutputType | null
+    _max: SelectionProcessApproverMaxAggregateOutputType | null
+  }
+
+  type GetSelectionProcessApproverGroupByPayload<T extends SelectionProcessApproverGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SelectionProcessApproverGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SelectionProcessApproverGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SelectionProcessApproverGroupByOutputType[P]>
+            : GetScalarType<T[P], SelectionProcessApproverGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SelectionProcessApproverSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    selectionProcessId?: boolean
+    employeeId?: boolean
+    order?: boolean
+    createdAt?: boolean
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["selectionProcessApprover"]>
+
+  export type SelectionProcessApproverSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    selectionProcessId?: boolean
+    employeeId?: boolean
+    order?: boolean
+    createdAt?: boolean
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["selectionProcessApprover"]>
+
+  export type SelectionProcessApproverSelectScalar = {
+    id?: boolean
+    selectionProcessId?: boolean
+    employeeId?: boolean
+    order?: boolean
+    createdAt?: boolean
+  }
+
+  export type SelectionProcessApproverInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+  export type SelectionProcessApproverIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    employee?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+
+  export type $SelectionProcessApproverPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SelectionProcessApprover"
+    objects: {
+      selectionProcess: Prisma.$SelectionProcessPayload<ExtArgs>
+      employee: Prisma.$EmployeePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      selectionProcessId: string
+      employeeId: string
+      order: number
+      createdAt: Date
+    }, ExtArgs["result"]["selectionProcessApprover"]>
+    composites: {}
+  }
+
+  type SelectionProcessApproverGetPayload<S extends boolean | null | undefined | SelectionProcessApproverDefaultArgs> = $Result.GetResult<Prisma.$SelectionProcessApproverPayload, S>
+
+  type SelectionProcessApproverCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SelectionProcessApproverFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: SelectionProcessApproverCountAggregateInputType | true
+    }
+
+  export interface SelectionProcessApproverDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SelectionProcessApprover'], meta: { name: 'SelectionProcessApprover' } }
+    /**
+     * Find zero or one SelectionProcessApprover that matches the filter.
+     * @param {SelectionProcessApproverFindUniqueArgs} args - Arguments to find a SelectionProcessApprover
+     * @example
+     * // Get one SelectionProcessApprover
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SelectionProcessApproverFindUniqueArgs>(args: SelectSubset<T, SelectionProcessApproverFindUniqueArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one SelectionProcessApprover that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {SelectionProcessApproverFindUniqueOrThrowArgs} args - Arguments to find a SelectionProcessApprover
+     * @example
+     * // Get one SelectionProcessApprover
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SelectionProcessApproverFindUniqueOrThrowArgs>(args: SelectSubset<T, SelectionProcessApproverFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first SelectionProcessApprover that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessApproverFindFirstArgs} args - Arguments to find a SelectionProcessApprover
+     * @example
+     * // Get one SelectionProcessApprover
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SelectionProcessApproverFindFirstArgs>(args?: SelectSubset<T, SelectionProcessApproverFindFirstArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first SelectionProcessApprover that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessApproverFindFirstOrThrowArgs} args - Arguments to find a SelectionProcessApprover
+     * @example
+     * // Get one SelectionProcessApprover
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SelectionProcessApproverFindFirstOrThrowArgs>(args?: SelectSubset<T, SelectionProcessApproverFindFirstOrThrowArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more SelectionProcessApprovers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessApproverFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SelectionProcessApprovers
+     * const selectionProcessApprovers = await prisma.selectionProcessApprover.findMany()
+     * 
+     * // Get first 10 SelectionProcessApprovers
+     * const selectionProcessApprovers = await prisma.selectionProcessApprover.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const selectionProcessApproverWithIdOnly = await prisma.selectionProcessApprover.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SelectionProcessApproverFindManyArgs>(args?: SelectSubset<T, SelectionProcessApproverFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a SelectionProcessApprover.
+     * @param {SelectionProcessApproverCreateArgs} args - Arguments to create a SelectionProcessApprover.
+     * @example
+     * // Create one SelectionProcessApprover
+     * const SelectionProcessApprover = await prisma.selectionProcessApprover.create({
+     *   data: {
+     *     // ... data to create a SelectionProcessApprover
+     *   }
+     * })
+     * 
+     */
+    create<T extends SelectionProcessApproverCreateArgs>(args: SelectSubset<T, SelectionProcessApproverCreateArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many SelectionProcessApprovers.
+     * @param {SelectionProcessApproverCreateManyArgs} args - Arguments to create many SelectionProcessApprovers.
+     * @example
+     * // Create many SelectionProcessApprovers
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SelectionProcessApproverCreateManyArgs>(args?: SelectSubset<T, SelectionProcessApproverCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SelectionProcessApprovers and returns the data saved in the database.
+     * @param {SelectionProcessApproverCreateManyAndReturnArgs} args - Arguments to create many SelectionProcessApprovers.
+     * @example
+     * // Create many SelectionProcessApprovers
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SelectionProcessApprovers and only return the `id`
+     * const selectionProcessApproverWithIdOnly = await prisma.selectionProcessApprover.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SelectionProcessApproverCreateManyAndReturnArgs>(args?: SelectSubset<T, SelectionProcessApproverCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a SelectionProcessApprover.
+     * @param {SelectionProcessApproverDeleteArgs} args - Arguments to delete one SelectionProcessApprover.
+     * @example
+     * // Delete one SelectionProcessApprover
+     * const SelectionProcessApprover = await prisma.selectionProcessApprover.delete({
+     *   where: {
+     *     // ... filter to delete one SelectionProcessApprover
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SelectionProcessApproverDeleteArgs>(args: SelectSubset<T, SelectionProcessApproverDeleteArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one SelectionProcessApprover.
+     * @param {SelectionProcessApproverUpdateArgs} args - Arguments to update one SelectionProcessApprover.
+     * @example
+     * // Update one SelectionProcessApprover
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SelectionProcessApproverUpdateArgs>(args: SelectSubset<T, SelectionProcessApproverUpdateArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more SelectionProcessApprovers.
+     * @param {SelectionProcessApproverDeleteManyArgs} args - Arguments to filter SelectionProcessApprovers to delete.
+     * @example
+     * // Delete a few SelectionProcessApprovers
+     * const { count } = await prisma.selectionProcessApprover.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SelectionProcessApproverDeleteManyArgs>(args?: SelectSubset<T, SelectionProcessApproverDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SelectionProcessApprovers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessApproverUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SelectionProcessApprovers
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SelectionProcessApproverUpdateManyArgs>(args: SelectSubset<T, SelectionProcessApproverUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SelectionProcessApprover.
+     * @param {SelectionProcessApproverUpsertArgs} args - Arguments to update or create a SelectionProcessApprover.
+     * @example
+     * // Update or create a SelectionProcessApprover
+     * const selectionProcessApprover = await prisma.selectionProcessApprover.upsert({
+     *   create: {
+     *     // ... data to create a SelectionProcessApprover
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SelectionProcessApprover we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SelectionProcessApproverUpsertArgs>(args: SelectSubset<T, SelectionProcessApproverUpsertArgs<ExtArgs>>): Prisma__SelectionProcessApproverClient<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of SelectionProcessApprovers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessApproverCountArgs} args - Arguments to filter SelectionProcessApprovers to count.
+     * @example
+     * // Count the number of SelectionProcessApprovers
+     * const count = await prisma.selectionProcessApprover.count({
+     *   where: {
+     *     // ... the filter for the SelectionProcessApprovers we want to count
+     *   }
+     * })
+    **/
+    count<T extends SelectionProcessApproverCountArgs>(
+      args?: Subset<T, SelectionProcessApproverCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SelectionProcessApproverCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SelectionProcessApprover.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessApproverAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SelectionProcessApproverAggregateArgs>(args: Subset<T, SelectionProcessApproverAggregateArgs>): Prisma.PrismaPromise<GetSelectionProcessApproverAggregateType<T>>
+
+    /**
+     * Group by SelectionProcessApprover.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SelectionProcessApproverGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SelectionProcessApproverGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SelectionProcessApproverGroupByArgs['orderBy'] }
+        : { orderBy?: SelectionProcessApproverGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SelectionProcessApproverGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSelectionProcessApproverGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SelectionProcessApprover model
+   */
+  readonly fields: SelectionProcessApproverFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SelectionProcessApprover.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SelectionProcessApproverClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    selectionProcess<T extends SelectionProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcessDefaultArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    employee<T extends EmployeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EmployeeDefaultArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SelectionProcessApprover model
+   */ 
+  interface SelectionProcessApproverFieldRefs {
+    readonly id: FieldRef<"SelectionProcessApprover", 'String'>
+    readonly selectionProcessId: FieldRef<"SelectionProcessApprover", 'String'>
+    readonly employeeId: FieldRef<"SelectionProcessApprover", 'String'>
+    readonly order: FieldRef<"SelectionProcessApprover", 'Int'>
+    readonly createdAt: FieldRef<"SelectionProcessApprover", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SelectionProcessApprover findUnique
+   */
+  export type SelectionProcessApproverFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcessApprover to fetch.
+     */
+    where: SelectionProcessApproverWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcessApprover findUniqueOrThrow
+   */
+  export type SelectionProcessApproverFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcessApprover to fetch.
+     */
+    where: SelectionProcessApproverWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcessApprover findFirst
+   */
+  export type SelectionProcessApproverFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcessApprover to fetch.
+     */
+    where?: SelectionProcessApproverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcessApprovers to fetch.
+     */
+    orderBy?: SelectionProcessApproverOrderByWithRelationInput | SelectionProcessApproverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SelectionProcessApprovers.
+     */
+    cursor?: SelectionProcessApproverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcessApprovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcessApprovers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SelectionProcessApprovers.
+     */
+    distinct?: SelectionProcessApproverScalarFieldEnum | SelectionProcessApproverScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcessApprover findFirstOrThrow
+   */
+  export type SelectionProcessApproverFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcessApprover to fetch.
+     */
+    where?: SelectionProcessApproverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcessApprovers to fetch.
+     */
+    orderBy?: SelectionProcessApproverOrderByWithRelationInput | SelectionProcessApproverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SelectionProcessApprovers.
+     */
+    cursor?: SelectionProcessApproverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcessApprovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcessApprovers.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SelectionProcessApprovers.
+     */
+    distinct?: SelectionProcessApproverScalarFieldEnum | SelectionProcessApproverScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcessApprover findMany
+   */
+  export type SelectionProcessApproverFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * Filter, which SelectionProcessApprovers to fetch.
+     */
+    where?: SelectionProcessApproverWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SelectionProcessApprovers to fetch.
+     */
+    orderBy?: SelectionProcessApproverOrderByWithRelationInput | SelectionProcessApproverOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SelectionProcessApprovers.
+     */
+    cursor?: SelectionProcessApproverWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SelectionProcessApprovers from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SelectionProcessApprovers.
+     */
+    skip?: number
+    distinct?: SelectionProcessApproverScalarFieldEnum | SelectionProcessApproverScalarFieldEnum[]
+  }
+
+  /**
+   * SelectionProcessApprover create
+   */
+  export type SelectionProcessApproverCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SelectionProcessApprover.
+     */
+    data: XOR<SelectionProcessApproverCreateInput, SelectionProcessApproverUncheckedCreateInput>
+  }
+
+  /**
+   * SelectionProcessApprover createMany
+   */
+  export type SelectionProcessApproverCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SelectionProcessApprovers.
+     */
+    data: SelectionProcessApproverCreateManyInput | SelectionProcessApproverCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SelectionProcessApprover createManyAndReturn
+   */
+  export type SelectionProcessApproverCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many SelectionProcessApprovers.
+     */
+    data: SelectionProcessApproverCreateManyInput | SelectionProcessApproverCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SelectionProcessApprover update
+   */
+  export type SelectionProcessApproverUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SelectionProcessApprover.
+     */
+    data: XOR<SelectionProcessApproverUpdateInput, SelectionProcessApproverUncheckedUpdateInput>
+    /**
+     * Choose, which SelectionProcessApprover to update.
+     */
+    where: SelectionProcessApproverWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcessApprover updateMany
+   */
+  export type SelectionProcessApproverUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SelectionProcessApprovers.
+     */
+    data: XOR<SelectionProcessApproverUpdateManyMutationInput, SelectionProcessApproverUncheckedUpdateManyInput>
+    /**
+     * Filter which SelectionProcessApprovers to update
+     */
+    where?: SelectionProcessApproverWhereInput
+  }
+
+  /**
+   * SelectionProcessApprover upsert
+   */
+  export type SelectionProcessApproverUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SelectionProcessApprover to update in case it exists.
+     */
+    where: SelectionProcessApproverWhereUniqueInput
+    /**
+     * In case the SelectionProcessApprover found by the `where` argument doesn't exist, create a new SelectionProcessApprover with this data.
+     */
+    create: XOR<SelectionProcessApproverCreateInput, SelectionProcessApproverUncheckedCreateInput>
+    /**
+     * In case the SelectionProcessApprover was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SelectionProcessApproverUpdateInput, SelectionProcessApproverUncheckedUpdateInput>
+  }
+
+  /**
+   * SelectionProcessApprover delete
+   */
+  export type SelectionProcessApproverDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    /**
+     * Filter which SelectionProcessApprover to delete.
+     */
+    where: SelectionProcessApproverWhereUniqueInput
+  }
+
+  /**
+   * SelectionProcessApprover deleteMany
+   */
+  export type SelectionProcessApproverDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SelectionProcessApprovers to delete
+     */
+    where?: SelectionProcessApproverWhereInput
+  }
+
+  /**
+   * SelectionProcessApprover without action
+   */
+  export type SelectionProcessApproverDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model Employee
    */
 
@@ -9824,6 +12587,7 @@ export namespace Prisma {
     departmentId: string | null
     positionId: string | null
     supervisorId: string | null
+    selectionProcessId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9873,6 +12637,7 @@ export namespace Prisma {
     departmentId: string | null
     positionId: string | null
     supervisorId: string | null
+    selectionProcessId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9922,6 +12687,7 @@ export namespace Prisma {
     departmentId: number
     positionId: number
     supervisorId: number
+    selectionProcessId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -9973,6 +12739,7 @@ export namespace Prisma {
     departmentId?: true
     positionId?: true
     supervisorId?: true
+    selectionProcessId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10022,6 +12789,7 @@ export namespace Prisma {
     departmentId?: true
     positionId?: true
     supervisorId?: true
+    selectionProcessId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10071,6 +12839,7 @@ export namespace Prisma {
     departmentId?: true
     positionId?: true
     supervisorId?: true
+    selectionProcessId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10193,6 +12962,7 @@ export namespace Prisma {
     departmentId: string | null
     positionId: string | null
     supervisorId: string | null
+    selectionProcessId: string | null
     createdAt: Date
     updatedAt: Date
     _count: EmployeeCountAggregateOutputType | null
@@ -10259,6 +13029,7 @@ export namespace Prisma {
     departmentId?: boolean
     positionId?: boolean
     supervisorId?: boolean
+    selectionProcessId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Employee$userArgs<ExtArgs>
@@ -10266,6 +13037,7 @@ export namespace Prisma {
     position?: boolean | Employee$positionArgs<ExtArgs>
     supervisor?: boolean | Employee$supervisorArgs<ExtArgs>
     subordinates?: boolean | Employee$subordinatesArgs<ExtArgs>
+    selectionProcess?: boolean | Employee$selectionProcessArgs<ExtArgs>
     laborData?: boolean | Employee$laborDataArgs<ExtArgs>
     attendances?: boolean | Employee$attendancesArgs<ExtArgs>
     documents?: boolean | Employee$documentsArgs<ExtArgs>
@@ -10274,6 +13046,9 @@ export namespace Prisma {
     educations?: boolean | Employee$educationsArgs<ExtArgs>
     sentKudos?: boolean | Employee$sentKudosArgs<ExtArgs>
     receivedKudos?: boolean | Employee$receivedKudosArgs<ExtArgs>
+    approvals?: boolean | Employee$approvalsArgs<ExtArgs>
+    receivedApprovals?: boolean | Employee$receivedApprovalsArgs<ExtArgs>
+    hrAnalyses?: boolean | Employee$hrAnalysesArgs<ExtArgs>
     _count?: boolean | EmployeeCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["employee"]>
 
@@ -10322,12 +13097,14 @@ export namespace Prisma {
     departmentId?: boolean
     positionId?: boolean
     supervisorId?: boolean
+    selectionProcessId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Employee$userArgs<ExtArgs>
     department?: boolean | Employee$departmentArgs<ExtArgs>
     position?: boolean | Employee$positionArgs<ExtArgs>
     supervisor?: boolean | Employee$supervisorArgs<ExtArgs>
+    selectionProcess?: boolean | Employee$selectionProcessArgs<ExtArgs>
   }, ExtArgs["result"]["employee"]>
 
   export type EmployeeSelectScalar = {
@@ -10375,6 +13152,7 @@ export namespace Prisma {
     departmentId?: boolean
     positionId?: boolean
     supervisorId?: boolean
+    selectionProcessId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -10385,6 +13163,7 @@ export namespace Prisma {
     position?: boolean | Employee$positionArgs<ExtArgs>
     supervisor?: boolean | Employee$supervisorArgs<ExtArgs>
     subordinates?: boolean | Employee$subordinatesArgs<ExtArgs>
+    selectionProcess?: boolean | Employee$selectionProcessArgs<ExtArgs>
     laborData?: boolean | Employee$laborDataArgs<ExtArgs>
     attendances?: boolean | Employee$attendancesArgs<ExtArgs>
     documents?: boolean | Employee$documentsArgs<ExtArgs>
@@ -10393,6 +13172,9 @@ export namespace Prisma {
     educations?: boolean | Employee$educationsArgs<ExtArgs>
     sentKudos?: boolean | Employee$sentKudosArgs<ExtArgs>
     receivedKudos?: boolean | Employee$receivedKudosArgs<ExtArgs>
+    approvals?: boolean | Employee$approvalsArgs<ExtArgs>
+    receivedApprovals?: boolean | Employee$receivedApprovalsArgs<ExtArgs>
+    hrAnalyses?: boolean | Employee$hrAnalysesArgs<ExtArgs>
     _count?: boolean | EmployeeCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type EmployeeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10400,6 +13182,7 @@ export namespace Prisma {
     department?: boolean | Employee$departmentArgs<ExtArgs>
     position?: boolean | Employee$positionArgs<ExtArgs>
     supervisor?: boolean | Employee$supervisorArgs<ExtArgs>
+    selectionProcess?: boolean | Employee$selectionProcessArgs<ExtArgs>
   }
 
   export type $EmployeePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -10410,6 +13193,7 @@ export namespace Prisma {
       position: Prisma.$PositionPayload<ExtArgs> | null
       supervisor: Prisma.$EmployeePayload<ExtArgs> | null
       subordinates: Prisma.$EmployeePayload<ExtArgs>[]
+      selectionProcess: Prisma.$SelectionProcessPayload<ExtArgs> | null
       laborData: Prisma.$EmployeeLaborDataPayload<ExtArgs> | null
       attendances: Prisma.$AttendancePayload<ExtArgs>[]
       documents: Prisma.$DocumentPayload<ExtArgs>[]
@@ -10418,6 +13202,9 @@ export namespace Prisma {
       educations: Prisma.$EducationPayload<ExtArgs>[]
       sentKudos: Prisma.$KudoPayload<ExtArgs>[]
       receivedKudos: Prisma.$KudoPayload<ExtArgs>[]
+      approvals: Prisma.$SelectionProcessApproverPayload<ExtArgs>[]
+      receivedApprovals: Prisma.$CandidateApprovalPayload<ExtArgs>[]
+      hrAnalyses: Prisma.$HRCandidateAnalysisPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -10464,6 +13251,7 @@ export namespace Prisma {
       departmentId: string | null
       positionId: string | null
       supervisorId: string | null
+      selectionProcessId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["employee"]>
@@ -10835,6 +13623,7 @@ export namespace Prisma {
     position<T extends Employee$positionArgs<ExtArgs> = {}>(args?: Subset<T, Employee$positionArgs<ExtArgs>>): Prisma__PositionClient<$Result.GetResult<Prisma.$PositionPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     supervisor<T extends Employee$supervisorArgs<ExtArgs> = {}>(args?: Subset<T, Employee$supervisorArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     subordinates<T extends Employee$subordinatesArgs<ExtArgs> = {}>(args?: Subset<T, Employee$subordinatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findMany"> | Null>
+    selectionProcess<T extends Employee$selectionProcessArgs<ExtArgs> = {}>(args?: Subset<T, Employee$selectionProcessArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     laborData<T extends Employee$laborDataArgs<ExtArgs> = {}>(args?: Subset<T, Employee$laborDataArgs<ExtArgs>>): Prisma__EmployeeLaborDataClient<$Result.GetResult<Prisma.$EmployeeLaborDataPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     attendances<T extends Employee$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, Employee$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany"> | Null>
     documents<T extends Employee$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany"> | Null>
@@ -10843,6 +13632,9 @@ export namespace Prisma {
     educations<T extends Employee$educationsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$educationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationPayload<ExtArgs>, T, "findMany"> | Null>
     sentKudos<T extends Employee$sentKudosArgs<ExtArgs> = {}>(args?: Subset<T, Employee$sentKudosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$KudoPayload<ExtArgs>, T, "findMany"> | Null>
     receivedKudos<T extends Employee$receivedKudosArgs<ExtArgs> = {}>(args?: Subset<T, Employee$receivedKudosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$KudoPayload<ExtArgs>, T, "findMany"> | Null>
+    approvals<T extends Employee$approvalsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$approvalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SelectionProcessApproverPayload<ExtArgs>, T, "findMany"> | Null>
+    receivedApprovals<T extends Employee$receivedApprovalsArgs<ExtArgs> = {}>(args?: Subset<T, Employee$receivedApprovalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "findMany"> | Null>
+    hrAnalyses<T extends Employee$hrAnalysesArgs<ExtArgs> = {}>(args?: Subset<T, Employee$hrAnalysesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -10916,6 +13708,7 @@ export namespace Prisma {
     readonly departmentId: FieldRef<"Employee", 'String'>
     readonly positionId: FieldRef<"Employee", 'String'>
     readonly supervisorId: FieldRef<"Employee", 'String'>
+    readonly selectionProcessId: FieldRef<"Employee", 'String'>
     readonly createdAt: FieldRef<"Employee", 'DateTime'>
     readonly updatedAt: FieldRef<"Employee", 'DateTime'>
   }
@@ -11316,6 +14109,21 @@ export namespace Prisma {
   }
 
   /**
+   * Employee.selectionProcess
+   */
+  export type Employee$selectionProcessArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcess
+     */
+    select?: SelectionProcessSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessInclude<ExtArgs> | null
+    where?: SelectionProcessWhereInput
+  }
+
+  /**
    * Employee.laborData
    */
   export type Employee$laborDataArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11471,6 +14279,66 @@ export namespace Prisma {
   }
 
   /**
+   * Employee.approvals
+   */
+  export type Employee$approvalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SelectionProcessApprover
+     */
+    select?: SelectionProcessApproverSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SelectionProcessApproverInclude<ExtArgs> | null
+    where?: SelectionProcessApproverWhereInput
+    orderBy?: SelectionProcessApproverOrderByWithRelationInput | SelectionProcessApproverOrderByWithRelationInput[]
+    cursor?: SelectionProcessApproverWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SelectionProcessApproverScalarFieldEnum | SelectionProcessApproverScalarFieldEnum[]
+  }
+
+  /**
+   * Employee.receivedApprovals
+   */
+  export type Employee$receivedApprovalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    where?: CandidateApprovalWhereInput
+    orderBy?: CandidateApprovalOrderByWithRelationInput | CandidateApprovalOrderByWithRelationInput[]
+    cursor?: CandidateApprovalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: CandidateApprovalScalarFieldEnum | CandidateApprovalScalarFieldEnum[]
+  }
+
+  /**
+   * Employee.hrAnalyses
+   */
+  export type Employee$hrAnalysesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    where?: HRCandidateAnalysisWhereInput
+    orderBy?: HRCandidateAnalysisOrderByWithRelationInput | HRCandidateAnalysisOrderByWithRelationInput[]
+    cursor?: HRCandidateAnalysisWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: HRCandidateAnalysisScalarFieldEnum | HRCandidateAnalysisScalarFieldEnum[]
+  }
+
+  /**
    * Employee without action
    */
   export type EmployeeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11482,6 +14350,1005 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: EmployeeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CandidateApproval
+   */
+
+  export type AggregateCandidateApproval = {
+    _count: CandidateApprovalCountAggregateOutputType | null
+    _min: CandidateApprovalMinAggregateOutputType | null
+    _max: CandidateApprovalMaxAggregateOutputType | null
+  }
+
+  export type CandidateApprovalMinAggregateOutputType = {
+    id: string | null
+    selectionProcessId: string | null
+    candidateId: string | null
+    approverId: string | null
+    approverType: string | null
+    status: string | null
+    comment: string | null
+    decidedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CandidateApprovalMaxAggregateOutputType = {
+    id: string | null
+    selectionProcessId: string | null
+    candidateId: string | null
+    approverId: string | null
+    approverType: string | null
+    status: string | null
+    comment: string | null
+    decidedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CandidateApprovalCountAggregateOutputType = {
+    id: number
+    selectionProcessId: number
+    candidateId: number
+    approverId: number
+    approverType: number
+    status: number
+    comment: number
+    decidedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CandidateApprovalMinAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    candidateId?: true
+    approverId?: true
+    approverType?: true
+    status?: true
+    comment?: true
+    decidedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CandidateApprovalMaxAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    candidateId?: true
+    approverId?: true
+    approverType?: true
+    status?: true
+    comment?: true
+    decidedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CandidateApprovalCountAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    candidateId?: true
+    approverId?: true
+    approverType?: true
+    status?: true
+    comment?: true
+    decidedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CandidateApprovalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CandidateApproval to aggregate.
+     */
+    where?: CandidateApprovalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CandidateApprovals to fetch.
+     */
+    orderBy?: CandidateApprovalOrderByWithRelationInput | CandidateApprovalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CandidateApprovalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CandidateApprovals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CandidateApprovals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CandidateApprovals
+    **/
+    _count?: true | CandidateApprovalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CandidateApprovalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CandidateApprovalMaxAggregateInputType
+  }
+
+  export type GetCandidateApprovalAggregateType<T extends CandidateApprovalAggregateArgs> = {
+        [P in keyof T & keyof AggregateCandidateApproval]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCandidateApproval[P]>
+      : GetScalarType<T[P], AggregateCandidateApproval[P]>
+  }
+
+
+
+
+  export type CandidateApprovalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CandidateApprovalWhereInput
+    orderBy?: CandidateApprovalOrderByWithAggregationInput | CandidateApprovalOrderByWithAggregationInput[]
+    by: CandidateApprovalScalarFieldEnum[] | CandidateApprovalScalarFieldEnum
+    having?: CandidateApprovalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CandidateApprovalCountAggregateInputType | true
+    _min?: CandidateApprovalMinAggregateInputType
+    _max?: CandidateApprovalMaxAggregateInputType
+  }
+
+  export type CandidateApprovalGroupByOutputType = {
+    id: string
+    selectionProcessId: string
+    candidateId: string
+    approverId: string
+    approverType: string
+    status: string
+    comment: string | null
+    decidedAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CandidateApprovalCountAggregateOutputType | null
+    _min: CandidateApprovalMinAggregateOutputType | null
+    _max: CandidateApprovalMaxAggregateOutputType | null
+  }
+
+  type GetCandidateApprovalGroupByPayload<T extends CandidateApprovalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CandidateApprovalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CandidateApprovalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CandidateApprovalGroupByOutputType[P]>
+            : GetScalarType<T[P], CandidateApprovalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CandidateApprovalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    selectionProcessId?: boolean
+    candidateId?: boolean
+    approverId?: boolean
+    approverType?: boolean
+    status?: boolean
+    comment?: boolean
+    decidedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["candidateApproval"]>
+
+  export type CandidateApprovalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    selectionProcessId?: boolean
+    candidateId?: boolean
+    approverId?: boolean
+    approverType?: boolean
+    status?: boolean
+    comment?: boolean
+    decidedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["candidateApproval"]>
+
+  export type CandidateApprovalSelectScalar = {
+    id?: boolean
+    selectionProcessId?: boolean
+    candidateId?: boolean
+    approverId?: boolean
+    approverType?: boolean
+    status?: boolean
+    comment?: boolean
+    decidedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CandidateApprovalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+  export type CandidateApprovalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+
+  export type $CandidateApprovalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CandidateApproval"
+    objects: {
+      selectionProcess: Prisma.$SelectionProcessPayload<ExtArgs>
+      candidate: Prisma.$EmployeePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      selectionProcessId: string
+      candidateId: string
+      approverId: string
+      approverType: string
+      status: string
+      comment: string | null
+      decidedAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["candidateApproval"]>
+    composites: {}
+  }
+
+  type CandidateApprovalGetPayload<S extends boolean | null | undefined | CandidateApprovalDefaultArgs> = $Result.GetResult<Prisma.$CandidateApprovalPayload, S>
+
+  type CandidateApprovalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<CandidateApprovalFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: CandidateApprovalCountAggregateInputType | true
+    }
+
+  export interface CandidateApprovalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CandidateApproval'], meta: { name: 'CandidateApproval' } }
+    /**
+     * Find zero or one CandidateApproval that matches the filter.
+     * @param {CandidateApprovalFindUniqueArgs} args - Arguments to find a CandidateApproval
+     * @example
+     * // Get one CandidateApproval
+     * const candidateApproval = await prisma.candidateApproval.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CandidateApprovalFindUniqueArgs>(args: SelectSubset<T, CandidateApprovalFindUniqueArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one CandidateApproval that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {CandidateApprovalFindUniqueOrThrowArgs} args - Arguments to find a CandidateApproval
+     * @example
+     * // Get one CandidateApproval
+     * const candidateApproval = await prisma.candidateApproval.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CandidateApprovalFindUniqueOrThrowArgs>(args: SelectSubset<T, CandidateApprovalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first CandidateApproval that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CandidateApprovalFindFirstArgs} args - Arguments to find a CandidateApproval
+     * @example
+     * // Get one CandidateApproval
+     * const candidateApproval = await prisma.candidateApproval.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CandidateApprovalFindFirstArgs>(args?: SelectSubset<T, CandidateApprovalFindFirstArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first CandidateApproval that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CandidateApprovalFindFirstOrThrowArgs} args - Arguments to find a CandidateApproval
+     * @example
+     * // Get one CandidateApproval
+     * const candidateApproval = await prisma.candidateApproval.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CandidateApprovalFindFirstOrThrowArgs>(args?: SelectSubset<T, CandidateApprovalFindFirstOrThrowArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more CandidateApprovals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CandidateApprovalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CandidateApprovals
+     * const candidateApprovals = await prisma.candidateApproval.findMany()
+     * 
+     * // Get first 10 CandidateApprovals
+     * const candidateApprovals = await prisma.candidateApproval.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const candidateApprovalWithIdOnly = await prisma.candidateApproval.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CandidateApprovalFindManyArgs>(args?: SelectSubset<T, CandidateApprovalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a CandidateApproval.
+     * @param {CandidateApprovalCreateArgs} args - Arguments to create a CandidateApproval.
+     * @example
+     * // Create one CandidateApproval
+     * const CandidateApproval = await prisma.candidateApproval.create({
+     *   data: {
+     *     // ... data to create a CandidateApproval
+     *   }
+     * })
+     * 
+     */
+    create<T extends CandidateApprovalCreateArgs>(args: SelectSubset<T, CandidateApprovalCreateArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many CandidateApprovals.
+     * @param {CandidateApprovalCreateManyArgs} args - Arguments to create many CandidateApprovals.
+     * @example
+     * // Create many CandidateApprovals
+     * const candidateApproval = await prisma.candidateApproval.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CandidateApprovalCreateManyArgs>(args?: SelectSubset<T, CandidateApprovalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CandidateApprovals and returns the data saved in the database.
+     * @param {CandidateApprovalCreateManyAndReturnArgs} args - Arguments to create many CandidateApprovals.
+     * @example
+     * // Create many CandidateApprovals
+     * const candidateApproval = await prisma.candidateApproval.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CandidateApprovals and only return the `id`
+     * const candidateApprovalWithIdOnly = await prisma.candidateApproval.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CandidateApprovalCreateManyAndReturnArgs>(args?: SelectSubset<T, CandidateApprovalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a CandidateApproval.
+     * @param {CandidateApprovalDeleteArgs} args - Arguments to delete one CandidateApproval.
+     * @example
+     * // Delete one CandidateApproval
+     * const CandidateApproval = await prisma.candidateApproval.delete({
+     *   where: {
+     *     // ... filter to delete one CandidateApproval
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CandidateApprovalDeleteArgs>(args: SelectSubset<T, CandidateApprovalDeleteArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one CandidateApproval.
+     * @param {CandidateApprovalUpdateArgs} args - Arguments to update one CandidateApproval.
+     * @example
+     * // Update one CandidateApproval
+     * const candidateApproval = await prisma.candidateApproval.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CandidateApprovalUpdateArgs>(args: SelectSubset<T, CandidateApprovalUpdateArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more CandidateApprovals.
+     * @param {CandidateApprovalDeleteManyArgs} args - Arguments to filter CandidateApprovals to delete.
+     * @example
+     * // Delete a few CandidateApprovals
+     * const { count } = await prisma.candidateApproval.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CandidateApprovalDeleteManyArgs>(args?: SelectSubset<T, CandidateApprovalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CandidateApprovals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CandidateApprovalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CandidateApprovals
+     * const candidateApproval = await prisma.candidateApproval.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CandidateApprovalUpdateManyArgs>(args: SelectSubset<T, CandidateApprovalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CandidateApproval.
+     * @param {CandidateApprovalUpsertArgs} args - Arguments to update or create a CandidateApproval.
+     * @example
+     * // Update or create a CandidateApproval
+     * const candidateApproval = await prisma.candidateApproval.upsert({
+     *   create: {
+     *     // ... data to create a CandidateApproval
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CandidateApproval we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CandidateApprovalUpsertArgs>(args: SelectSubset<T, CandidateApprovalUpsertArgs<ExtArgs>>): Prisma__CandidateApprovalClient<$Result.GetResult<Prisma.$CandidateApprovalPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of CandidateApprovals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CandidateApprovalCountArgs} args - Arguments to filter CandidateApprovals to count.
+     * @example
+     * // Count the number of CandidateApprovals
+     * const count = await prisma.candidateApproval.count({
+     *   where: {
+     *     // ... the filter for the CandidateApprovals we want to count
+     *   }
+     * })
+    **/
+    count<T extends CandidateApprovalCountArgs>(
+      args?: Subset<T, CandidateApprovalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CandidateApprovalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CandidateApproval.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CandidateApprovalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CandidateApprovalAggregateArgs>(args: Subset<T, CandidateApprovalAggregateArgs>): Prisma.PrismaPromise<GetCandidateApprovalAggregateType<T>>
+
+    /**
+     * Group by CandidateApproval.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CandidateApprovalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CandidateApprovalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CandidateApprovalGroupByArgs['orderBy'] }
+        : { orderBy?: CandidateApprovalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CandidateApprovalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCandidateApprovalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CandidateApproval model
+   */
+  readonly fields: CandidateApprovalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CandidateApproval.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CandidateApprovalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    selectionProcess<T extends SelectionProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcessDefaultArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    candidate<T extends EmployeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EmployeeDefaultArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CandidateApproval model
+   */ 
+  interface CandidateApprovalFieldRefs {
+    readonly id: FieldRef<"CandidateApproval", 'String'>
+    readonly selectionProcessId: FieldRef<"CandidateApproval", 'String'>
+    readonly candidateId: FieldRef<"CandidateApproval", 'String'>
+    readonly approverId: FieldRef<"CandidateApproval", 'String'>
+    readonly approverType: FieldRef<"CandidateApproval", 'String'>
+    readonly status: FieldRef<"CandidateApproval", 'String'>
+    readonly comment: FieldRef<"CandidateApproval", 'String'>
+    readonly decidedAt: FieldRef<"CandidateApproval", 'DateTime'>
+    readonly createdAt: FieldRef<"CandidateApproval", 'DateTime'>
+    readonly updatedAt: FieldRef<"CandidateApproval", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CandidateApproval findUnique
+   */
+  export type CandidateApprovalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * Filter, which CandidateApproval to fetch.
+     */
+    where: CandidateApprovalWhereUniqueInput
+  }
+
+  /**
+   * CandidateApproval findUniqueOrThrow
+   */
+  export type CandidateApprovalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * Filter, which CandidateApproval to fetch.
+     */
+    where: CandidateApprovalWhereUniqueInput
+  }
+
+  /**
+   * CandidateApproval findFirst
+   */
+  export type CandidateApprovalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * Filter, which CandidateApproval to fetch.
+     */
+    where?: CandidateApprovalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CandidateApprovals to fetch.
+     */
+    orderBy?: CandidateApprovalOrderByWithRelationInput | CandidateApprovalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CandidateApprovals.
+     */
+    cursor?: CandidateApprovalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CandidateApprovals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CandidateApprovals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CandidateApprovals.
+     */
+    distinct?: CandidateApprovalScalarFieldEnum | CandidateApprovalScalarFieldEnum[]
+  }
+
+  /**
+   * CandidateApproval findFirstOrThrow
+   */
+  export type CandidateApprovalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * Filter, which CandidateApproval to fetch.
+     */
+    where?: CandidateApprovalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CandidateApprovals to fetch.
+     */
+    orderBy?: CandidateApprovalOrderByWithRelationInput | CandidateApprovalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CandidateApprovals.
+     */
+    cursor?: CandidateApprovalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CandidateApprovals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CandidateApprovals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CandidateApprovals.
+     */
+    distinct?: CandidateApprovalScalarFieldEnum | CandidateApprovalScalarFieldEnum[]
+  }
+
+  /**
+   * CandidateApproval findMany
+   */
+  export type CandidateApprovalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * Filter, which CandidateApprovals to fetch.
+     */
+    where?: CandidateApprovalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CandidateApprovals to fetch.
+     */
+    orderBy?: CandidateApprovalOrderByWithRelationInput | CandidateApprovalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CandidateApprovals.
+     */
+    cursor?: CandidateApprovalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CandidateApprovals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CandidateApprovals.
+     */
+    skip?: number
+    distinct?: CandidateApprovalScalarFieldEnum | CandidateApprovalScalarFieldEnum[]
+  }
+
+  /**
+   * CandidateApproval create
+   */
+  export type CandidateApprovalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CandidateApproval.
+     */
+    data: XOR<CandidateApprovalCreateInput, CandidateApprovalUncheckedCreateInput>
+  }
+
+  /**
+   * CandidateApproval createMany
+   */
+  export type CandidateApprovalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CandidateApprovals.
+     */
+    data: CandidateApprovalCreateManyInput | CandidateApprovalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CandidateApproval createManyAndReturn
+   */
+  export type CandidateApprovalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many CandidateApprovals.
+     */
+    data: CandidateApprovalCreateManyInput | CandidateApprovalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CandidateApproval update
+   */
+  export type CandidateApprovalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CandidateApproval.
+     */
+    data: XOR<CandidateApprovalUpdateInput, CandidateApprovalUncheckedUpdateInput>
+    /**
+     * Choose, which CandidateApproval to update.
+     */
+    where: CandidateApprovalWhereUniqueInput
+  }
+
+  /**
+   * CandidateApproval updateMany
+   */
+  export type CandidateApprovalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CandidateApprovals.
+     */
+    data: XOR<CandidateApprovalUpdateManyMutationInput, CandidateApprovalUncheckedUpdateManyInput>
+    /**
+     * Filter which CandidateApprovals to update
+     */
+    where?: CandidateApprovalWhereInput
+  }
+
+  /**
+   * CandidateApproval upsert
+   */
+  export type CandidateApprovalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CandidateApproval to update in case it exists.
+     */
+    where: CandidateApprovalWhereUniqueInput
+    /**
+     * In case the CandidateApproval found by the `where` argument doesn't exist, create a new CandidateApproval with this data.
+     */
+    create: XOR<CandidateApprovalCreateInput, CandidateApprovalUncheckedCreateInput>
+    /**
+     * In case the CandidateApproval was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CandidateApprovalUpdateInput, CandidateApprovalUncheckedUpdateInput>
+  }
+
+  /**
+   * CandidateApproval delete
+   */
+  export type CandidateApprovalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
+    /**
+     * Filter which CandidateApproval to delete.
+     */
+    where: CandidateApprovalWhereUniqueInput
+  }
+
+  /**
+   * CandidateApproval deleteMany
+   */
+  export type CandidateApprovalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CandidateApprovals to delete
+     */
+    where?: CandidateApprovalWhereInput
+  }
+
+  /**
+   * CandidateApproval without action
+   */
+  export type CandidateApprovalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CandidateApproval
+     */
+    select?: CandidateApprovalSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CandidateApprovalInclude<ExtArgs> | null
   }
 
 
@@ -18672,6 +22539,2094 @@ export namespace Prisma {
 
 
   /**
+   * Model HRCandidateAnalysis
+   */
+
+  export type AggregateHRCandidateAnalysis = {
+    _count: HRCandidateAnalysisCountAggregateOutputType | null
+    _min: HRCandidateAnalysisMinAggregateOutputType | null
+    _max: HRCandidateAnalysisMaxAggregateOutputType | null
+  }
+
+  export type HRCandidateAnalysisMinAggregateOutputType = {
+    id: string | null
+    selectionProcessId: string | null
+    candidateId: string | null
+    professionalSummary: string | null
+    strengths: string | null
+    improvementAreas: string | null
+    interviewResults: string | null
+    competencyEvaluation: string | null
+    identifiedRisks: string | null
+    recommendation: $Enums.HRRecommendation | null
+    recommendationNotes: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type HRCandidateAnalysisMaxAggregateOutputType = {
+    id: string | null
+    selectionProcessId: string | null
+    candidateId: string | null
+    professionalSummary: string | null
+    strengths: string | null
+    improvementAreas: string | null
+    interviewResults: string | null
+    competencyEvaluation: string | null
+    identifiedRisks: string | null
+    recommendation: $Enums.HRRecommendation | null
+    recommendationNotes: string | null
+    createdById: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type HRCandidateAnalysisCountAggregateOutputType = {
+    id: number
+    selectionProcessId: number
+    candidateId: number
+    professionalSummary: number
+    strengths: number
+    improvementAreas: number
+    interviewResults: number
+    competencyEvaluation: number
+    identifiedRisks: number
+    recommendation: number
+    recommendationNotes: number
+    createdById: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type HRCandidateAnalysisMinAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    candidateId?: true
+    professionalSummary?: true
+    strengths?: true
+    improvementAreas?: true
+    interviewResults?: true
+    competencyEvaluation?: true
+    identifiedRisks?: true
+    recommendation?: true
+    recommendationNotes?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type HRCandidateAnalysisMaxAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    candidateId?: true
+    professionalSummary?: true
+    strengths?: true
+    improvementAreas?: true
+    interviewResults?: true
+    competencyEvaluation?: true
+    identifiedRisks?: true
+    recommendation?: true
+    recommendationNotes?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type HRCandidateAnalysisCountAggregateInputType = {
+    id?: true
+    selectionProcessId?: true
+    candidateId?: true
+    professionalSummary?: true
+    strengths?: true
+    improvementAreas?: true
+    interviewResults?: true
+    competencyEvaluation?: true
+    identifiedRisks?: true
+    recommendation?: true
+    recommendationNotes?: true
+    createdById?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type HRCandidateAnalysisAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HRCandidateAnalysis to aggregate.
+     */
+    where?: HRCandidateAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRCandidateAnalyses to fetch.
+     */
+    orderBy?: HRCandidateAnalysisOrderByWithRelationInput | HRCandidateAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HRCandidateAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRCandidateAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRCandidateAnalyses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HRCandidateAnalyses
+    **/
+    _count?: true | HRCandidateAnalysisCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HRCandidateAnalysisMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HRCandidateAnalysisMaxAggregateInputType
+  }
+
+  export type GetHRCandidateAnalysisAggregateType<T extends HRCandidateAnalysisAggregateArgs> = {
+        [P in keyof T & keyof AggregateHRCandidateAnalysis]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHRCandidateAnalysis[P]>
+      : GetScalarType<T[P], AggregateHRCandidateAnalysis[P]>
+  }
+
+
+
+
+  export type HRCandidateAnalysisGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HRCandidateAnalysisWhereInput
+    orderBy?: HRCandidateAnalysisOrderByWithAggregationInput | HRCandidateAnalysisOrderByWithAggregationInput[]
+    by: HRCandidateAnalysisScalarFieldEnum[] | HRCandidateAnalysisScalarFieldEnum
+    having?: HRCandidateAnalysisScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HRCandidateAnalysisCountAggregateInputType | true
+    _min?: HRCandidateAnalysisMinAggregateInputType
+    _max?: HRCandidateAnalysisMaxAggregateInputType
+  }
+
+  export type HRCandidateAnalysisGroupByOutputType = {
+    id: string
+    selectionProcessId: string
+    candidateId: string
+    professionalSummary: string | null
+    strengths: string | null
+    improvementAreas: string | null
+    interviewResults: string | null
+    competencyEvaluation: string | null
+    identifiedRisks: string | null
+    recommendation: $Enums.HRRecommendation
+    recommendationNotes: string | null
+    createdById: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: HRCandidateAnalysisCountAggregateOutputType | null
+    _min: HRCandidateAnalysisMinAggregateOutputType | null
+    _max: HRCandidateAnalysisMaxAggregateOutputType | null
+  }
+
+  type GetHRCandidateAnalysisGroupByPayload<T extends HRCandidateAnalysisGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HRCandidateAnalysisGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HRCandidateAnalysisGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HRCandidateAnalysisGroupByOutputType[P]>
+            : GetScalarType<T[P], HRCandidateAnalysisGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HRCandidateAnalysisSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    selectionProcessId?: boolean
+    candidateId?: boolean
+    professionalSummary?: boolean
+    strengths?: boolean
+    improvementAreas?: boolean
+    interviewResults?: boolean
+    competencyEvaluation?: boolean
+    identifiedRisks?: boolean
+    recommendation?: boolean
+    recommendationNotes?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    documents?: boolean | HRCandidateAnalysis$documentsArgs<ExtArgs>
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+    _count?: boolean | HRCandidateAnalysisCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hRCandidateAnalysis"]>
+
+  export type HRCandidateAnalysisSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    selectionProcessId?: boolean
+    candidateId?: boolean
+    professionalSummary?: boolean
+    strengths?: boolean
+    improvementAreas?: boolean
+    interviewResults?: boolean
+    competencyEvaluation?: boolean
+    identifiedRisks?: boolean
+    recommendation?: boolean
+    recommendationNotes?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hRCandidateAnalysis"]>
+
+  export type HRCandidateAnalysisSelectScalar = {
+    id?: boolean
+    selectionProcessId?: boolean
+    candidateId?: boolean
+    professionalSummary?: boolean
+    strengths?: boolean
+    improvementAreas?: boolean
+    interviewResults?: boolean
+    competencyEvaluation?: boolean
+    identifiedRisks?: boolean
+    recommendation?: boolean
+    recommendationNotes?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type HRCandidateAnalysisInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    documents?: boolean | HRCandidateAnalysis$documentsArgs<ExtArgs>
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+    _count?: boolean | HRCandidateAnalysisCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type HRCandidateAnalysisIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    selectionProcess?: boolean | SelectionProcessDefaultArgs<ExtArgs>
+    candidate?: boolean | EmployeeDefaultArgs<ExtArgs>
+  }
+
+  export type $HRCandidateAnalysisPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HRCandidateAnalysis"
+    objects: {
+      documents: Prisma.$HRAnalysisDocumentPayload<ExtArgs>[]
+      selectionProcess: Prisma.$SelectionProcessPayload<ExtArgs>
+      candidate: Prisma.$EmployeePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      selectionProcessId: string
+      candidateId: string
+      professionalSummary: string | null
+      strengths: string | null
+      improvementAreas: string | null
+      interviewResults: string | null
+      competencyEvaluation: string | null
+      identifiedRisks: string | null
+      recommendation: $Enums.HRRecommendation
+      recommendationNotes: string | null
+      createdById: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["hRCandidateAnalysis"]>
+    composites: {}
+  }
+
+  type HRCandidateAnalysisGetPayload<S extends boolean | null | undefined | HRCandidateAnalysisDefaultArgs> = $Result.GetResult<Prisma.$HRCandidateAnalysisPayload, S>
+
+  type HRCandidateAnalysisCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<HRCandidateAnalysisFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: HRCandidateAnalysisCountAggregateInputType | true
+    }
+
+  export interface HRCandidateAnalysisDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HRCandidateAnalysis'], meta: { name: 'HRCandidateAnalysis' } }
+    /**
+     * Find zero or one HRCandidateAnalysis that matches the filter.
+     * @param {HRCandidateAnalysisFindUniqueArgs} args - Arguments to find a HRCandidateAnalysis
+     * @example
+     * // Get one HRCandidateAnalysis
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HRCandidateAnalysisFindUniqueArgs>(args: SelectSubset<T, HRCandidateAnalysisFindUniqueArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one HRCandidateAnalysis that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {HRCandidateAnalysisFindUniqueOrThrowArgs} args - Arguments to find a HRCandidateAnalysis
+     * @example
+     * // Get one HRCandidateAnalysis
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HRCandidateAnalysisFindUniqueOrThrowArgs>(args: SelectSubset<T, HRCandidateAnalysisFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first HRCandidateAnalysis that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRCandidateAnalysisFindFirstArgs} args - Arguments to find a HRCandidateAnalysis
+     * @example
+     * // Get one HRCandidateAnalysis
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HRCandidateAnalysisFindFirstArgs>(args?: SelectSubset<T, HRCandidateAnalysisFindFirstArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first HRCandidateAnalysis that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRCandidateAnalysisFindFirstOrThrowArgs} args - Arguments to find a HRCandidateAnalysis
+     * @example
+     * // Get one HRCandidateAnalysis
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HRCandidateAnalysisFindFirstOrThrowArgs>(args?: SelectSubset<T, HRCandidateAnalysisFindFirstOrThrowArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more HRCandidateAnalyses that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRCandidateAnalysisFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HRCandidateAnalyses
+     * const hRCandidateAnalyses = await prisma.hRCandidateAnalysis.findMany()
+     * 
+     * // Get first 10 HRCandidateAnalyses
+     * const hRCandidateAnalyses = await prisma.hRCandidateAnalysis.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const hRCandidateAnalysisWithIdOnly = await prisma.hRCandidateAnalysis.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HRCandidateAnalysisFindManyArgs>(args?: SelectSubset<T, HRCandidateAnalysisFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a HRCandidateAnalysis.
+     * @param {HRCandidateAnalysisCreateArgs} args - Arguments to create a HRCandidateAnalysis.
+     * @example
+     * // Create one HRCandidateAnalysis
+     * const HRCandidateAnalysis = await prisma.hRCandidateAnalysis.create({
+     *   data: {
+     *     // ... data to create a HRCandidateAnalysis
+     *   }
+     * })
+     * 
+     */
+    create<T extends HRCandidateAnalysisCreateArgs>(args: SelectSubset<T, HRCandidateAnalysisCreateArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many HRCandidateAnalyses.
+     * @param {HRCandidateAnalysisCreateManyArgs} args - Arguments to create many HRCandidateAnalyses.
+     * @example
+     * // Create many HRCandidateAnalyses
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HRCandidateAnalysisCreateManyArgs>(args?: SelectSubset<T, HRCandidateAnalysisCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HRCandidateAnalyses and returns the data saved in the database.
+     * @param {HRCandidateAnalysisCreateManyAndReturnArgs} args - Arguments to create many HRCandidateAnalyses.
+     * @example
+     * // Create many HRCandidateAnalyses
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HRCandidateAnalyses and only return the `id`
+     * const hRCandidateAnalysisWithIdOnly = await prisma.hRCandidateAnalysis.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HRCandidateAnalysisCreateManyAndReturnArgs>(args?: SelectSubset<T, HRCandidateAnalysisCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a HRCandidateAnalysis.
+     * @param {HRCandidateAnalysisDeleteArgs} args - Arguments to delete one HRCandidateAnalysis.
+     * @example
+     * // Delete one HRCandidateAnalysis
+     * const HRCandidateAnalysis = await prisma.hRCandidateAnalysis.delete({
+     *   where: {
+     *     // ... filter to delete one HRCandidateAnalysis
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HRCandidateAnalysisDeleteArgs>(args: SelectSubset<T, HRCandidateAnalysisDeleteArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one HRCandidateAnalysis.
+     * @param {HRCandidateAnalysisUpdateArgs} args - Arguments to update one HRCandidateAnalysis.
+     * @example
+     * // Update one HRCandidateAnalysis
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HRCandidateAnalysisUpdateArgs>(args: SelectSubset<T, HRCandidateAnalysisUpdateArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more HRCandidateAnalyses.
+     * @param {HRCandidateAnalysisDeleteManyArgs} args - Arguments to filter HRCandidateAnalyses to delete.
+     * @example
+     * // Delete a few HRCandidateAnalyses
+     * const { count } = await prisma.hRCandidateAnalysis.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HRCandidateAnalysisDeleteManyArgs>(args?: SelectSubset<T, HRCandidateAnalysisDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HRCandidateAnalyses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRCandidateAnalysisUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HRCandidateAnalyses
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HRCandidateAnalysisUpdateManyArgs>(args: SelectSubset<T, HRCandidateAnalysisUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one HRCandidateAnalysis.
+     * @param {HRCandidateAnalysisUpsertArgs} args - Arguments to update or create a HRCandidateAnalysis.
+     * @example
+     * // Update or create a HRCandidateAnalysis
+     * const hRCandidateAnalysis = await prisma.hRCandidateAnalysis.upsert({
+     *   create: {
+     *     // ... data to create a HRCandidateAnalysis
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HRCandidateAnalysis we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HRCandidateAnalysisUpsertArgs>(args: SelectSubset<T, HRCandidateAnalysisUpsertArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of HRCandidateAnalyses.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRCandidateAnalysisCountArgs} args - Arguments to filter HRCandidateAnalyses to count.
+     * @example
+     * // Count the number of HRCandidateAnalyses
+     * const count = await prisma.hRCandidateAnalysis.count({
+     *   where: {
+     *     // ... the filter for the HRCandidateAnalyses we want to count
+     *   }
+     * })
+    **/
+    count<T extends HRCandidateAnalysisCountArgs>(
+      args?: Subset<T, HRCandidateAnalysisCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HRCandidateAnalysisCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HRCandidateAnalysis.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRCandidateAnalysisAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HRCandidateAnalysisAggregateArgs>(args: Subset<T, HRCandidateAnalysisAggregateArgs>): Prisma.PrismaPromise<GetHRCandidateAnalysisAggregateType<T>>
+
+    /**
+     * Group by HRCandidateAnalysis.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRCandidateAnalysisGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HRCandidateAnalysisGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HRCandidateAnalysisGroupByArgs['orderBy'] }
+        : { orderBy?: HRCandidateAnalysisGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HRCandidateAnalysisGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHRCandidateAnalysisGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HRCandidateAnalysis model
+   */
+  readonly fields: HRCandidateAnalysisFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HRCandidateAnalysis.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HRCandidateAnalysisClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    documents<T extends HRCandidateAnalysis$documentsArgs<ExtArgs> = {}>(args?: Subset<T, HRCandidateAnalysis$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "findMany"> | Null>
+    selectionProcess<T extends SelectionProcessDefaultArgs<ExtArgs> = {}>(args?: Subset<T, SelectionProcessDefaultArgs<ExtArgs>>): Prisma__SelectionProcessClient<$Result.GetResult<Prisma.$SelectionProcessPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    candidate<T extends EmployeeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, EmployeeDefaultArgs<ExtArgs>>): Prisma__EmployeeClient<$Result.GetResult<Prisma.$EmployeePayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HRCandidateAnalysis model
+   */ 
+  interface HRCandidateAnalysisFieldRefs {
+    readonly id: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly selectionProcessId: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly candidateId: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly professionalSummary: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly strengths: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly improvementAreas: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly interviewResults: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly competencyEvaluation: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly identifiedRisks: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly recommendation: FieldRef<"HRCandidateAnalysis", 'HRRecommendation'>
+    readonly recommendationNotes: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly createdById: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly createdAt: FieldRef<"HRCandidateAnalysis", 'DateTime'>
+    readonly updatedAt: FieldRef<"HRCandidateAnalysis", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HRCandidateAnalysis findUnique
+   */
+  export type HRCandidateAnalysisFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which HRCandidateAnalysis to fetch.
+     */
+    where: HRCandidateAnalysisWhereUniqueInput
+  }
+
+  /**
+   * HRCandidateAnalysis findUniqueOrThrow
+   */
+  export type HRCandidateAnalysisFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which HRCandidateAnalysis to fetch.
+     */
+    where: HRCandidateAnalysisWhereUniqueInput
+  }
+
+  /**
+   * HRCandidateAnalysis findFirst
+   */
+  export type HRCandidateAnalysisFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which HRCandidateAnalysis to fetch.
+     */
+    where?: HRCandidateAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRCandidateAnalyses to fetch.
+     */
+    orderBy?: HRCandidateAnalysisOrderByWithRelationInput | HRCandidateAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HRCandidateAnalyses.
+     */
+    cursor?: HRCandidateAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRCandidateAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRCandidateAnalyses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HRCandidateAnalyses.
+     */
+    distinct?: HRCandidateAnalysisScalarFieldEnum | HRCandidateAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * HRCandidateAnalysis findFirstOrThrow
+   */
+  export type HRCandidateAnalysisFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which HRCandidateAnalysis to fetch.
+     */
+    where?: HRCandidateAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRCandidateAnalyses to fetch.
+     */
+    orderBy?: HRCandidateAnalysisOrderByWithRelationInput | HRCandidateAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HRCandidateAnalyses.
+     */
+    cursor?: HRCandidateAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRCandidateAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRCandidateAnalyses.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HRCandidateAnalyses.
+     */
+    distinct?: HRCandidateAnalysisScalarFieldEnum | HRCandidateAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * HRCandidateAnalysis findMany
+   */
+  export type HRCandidateAnalysisFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter, which HRCandidateAnalyses to fetch.
+     */
+    where?: HRCandidateAnalysisWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRCandidateAnalyses to fetch.
+     */
+    orderBy?: HRCandidateAnalysisOrderByWithRelationInput | HRCandidateAnalysisOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HRCandidateAnalyses.
+     */
+    cursor?: HRCandidateAnalysisWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRCandidateAnalyses from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRCandidateAnalyses.
+     */
+    skip?: number
+    distinct?: HRCandidateAnalysisScalarFieldEnum | HRCandidateAnalysisScalarFieldEnum[]
+  }
+
+  /**
+   * HRCandidateAnalysis create
+   */
+  export type HRCandidateAnalysisCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * The data needed to create a HRCandidateAnalysis.
+     */
+    data: XOR<HRCandidateAnalysisCreateInput, HRCandidateAnalysisUncheckedCreateInput>
+  }
+
+  /**
+   * HRCandidateAnalysis createMany
+   */
+  export type HRCandidateAnalysisCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HRCandidateAnalyses.
+     */
+    data: HRCandidateAnalysisCreateManyInput | HRCandidateAnalysisCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HRCandidateAnalysis createManyAndReturn
+   */
+  export type HRCandidateAnalysisCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many HRCandidateAnalyses.
+     */
+    data: HRCandidateAnalysisCreateManyInput | HRCandidateAnalysisCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HRCandidateAnalysis update
+   */
+  export type HRCandidateAnalysisUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * The data needed to update a HRCandidateAnalysis.
+     */
+    data: XOR<HRCandidateAnalysisUpdateInput, HRCandidateAnalysisUncheckedUpdateInput>
+    /**
+     * Choose, which HRCandidateAnalysis to update.
+     */
+    where: HRCandidateAnalysisWhereUniqueInput
+  }
+
+  /**
+   * HRCandidateAnalysis updateMany
+   */
+  export type HRCandidateAnalysisUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HRCandidateAnalyses.
+     */
+    data: XOR<HRCandidateAnalysisUpdateManyMutationInput, HRCandidateAnalysisUncheckedUpdateManyInput>
+    /**
+     * Filter which HRCandidateAnalyses to update
+     */
+    where?: HRCandidateAnalysisWhereInput
+  }
+
+  /**
+   * HRCandidateAnalysis upsert
+   */
+  export type HRCandidateAnalysisUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * The filter to search for the HRCandidateAnalysis to update in case it exists.
+     */
+    where: HRCandidateAnalysisWhereUniqueInput
+    /**
+     * In case the HRCandidateAnalysis found by the `where` argument doesn't exist, create a new HRCandidateAnalysis with this data.
+     */
+    create: XOR<HRCandidateAnalysisCreateInput, HRCandidateAnalysisUncheckedCreateInput>
+    /**
+     * In case the HRCandidateAnalysis was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HRCandidateAnalysisUpdateInput, HRCandidateAnalysisUncheckedUpdateInput>
+  }
+
+  /**
+   * HRCandidateAnalysis delete
+   */
+  export type HRCandidateAnalysisDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+    /**
+     * Filter which HRCandidateAnalysis to delete.
+     */
+    where: HRCandidateAnalysisWhereUniqueInput
+  }
+
+  /**
+   * HRCandidateAnalysis deleteMany
+   */
+  export type HRCandidateAnalysisDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HRCandidateAnalyses to delete
+     */
+    where?: HRCandidateAnalysisWhereInput
+  }
+
+  /**
+   * HRCandidateAnalysis.documents
+   */
+  export type HRCandidateAnalysis$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    where?: HRAnalysisDocumentWhereInput
+    orderBy?: HRAnalysisDocumentOrderByWithRelationInput | HRAnalysisDocumentOrderByWithRelationInput[]
+    cursor?: HRAnalysisDocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: HRAnalysisDocumentScalarFieldEnum | HRAnalysisDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * HRCandidateAnalysis without action
+   */
+  export type HRCandidateAnalysisDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRCandidateAnalysis
+     */
+    select?: HRCandidateAnalysisSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRCandidateAnalysisInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model HRAnalysisDocument
+   */
+
+  export type AggregateHRAnalysisDocument = {
+    _count: HRAnalysisDocumentCountAggregateOutputType | null
+    _avg: HRAnalysisDocumentAvgAggregateOutputType | null
+    _sum: HRAnalysisDocumentSumAggregateOutputType | null
+    _min: HRAnalysisDocumentMinAggregateOutputType | null
+    _max: HRAnalysisDocumentMaxAggregateOutputType | null
+  }
+
+  export type HRAnalysisDocumentAvgAggregateOutputType = {
+    size: number | null
+  }
+
+  export type HRAnalysisDocumentSumAggregateOutputType = {
+    size: number | null
+  }
+
+  export type HRAnalysisDocumentMinAggregateOutputType = {
+    id: string | null
+    analysisId: string | null
+    name: string | null
+    originalName: string | null
+    mimeType: string | null
+    size: number | null
+    path: string | null
+    uploadedById: string | null
+    createdAt: Date | null
+  }
+
+  export type HRAnalysisDocumentMaxAggregateOutputType = {
+    id: string | null
+    analysisId: string | null
+    name: string | null
+    originalName: string | null
+    mimeType: string | null
+    size: number | null
+    path: string | null
+    uploadedById: string | null
+    createdAt: Date | null
+  }
+
+  export type HRAnalysisDocumentCountAggregateOutputType = {
+    id: number
+    analysisId: number
+    name: number
+    originalName: number
+    mimeType: number
+    size: number
+    path: number
+    uploadedById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type HRAnalysisDocumentAvgAggregateInputType = {
+    size?: true
+  }
+
+  export type HRAnalysisDocumentSumAggregateInputType = {
+    size?: true
+  }
+
+  export type HRAnalysisDocumentMinAggregateInputType = {
+    id?: true
+    analysisId?: true
+    name?: true
+    originalName?: true
+    mimeType?: true
+    size?: true
+    path?: true
+    uploadedById?: true
+    createdAt?: true
+  }
+
+  export type HRAnalysisDocumentMaxAggregateInputType = {
+    id?: true
+    analysisId?: true
+    name?: true
+    originalName?: true
+    mimeType?: true
+    size?: true
+    path?: true
+    uploadedById?: true
+    createdAt?: true
+  }
+
+  export type HRAnalysisDocumentCountAggregateInputType = {
+    id?: true
+    analysisId?: true
+    name?: true
+    originalName?: true
+    mimeType?: true
+    size?: true
+    path?: true
+    uploadedById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type HRAnalysisDocumentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HRAnalysisDocument to aggregate.
+     */
+    where?: HRAnalysisDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRAnalysisDocuments to fetch.
+     */
+    orderBy?: HRAnalysisDocumentOrderByWithRelationInput | HRAnalysisDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: HRAnalysisDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRAnalysisDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRAnalysisDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned HRAnalysisDocuments
+    **/
+    _count?: true | HRAnalysisDocumentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: HRAnalysisDocumentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HRAnalysisDocumentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: HRAnalysisDocumentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: HRAnalysisDocumentMaxAggregateInputType
+  }
+
+  export type GetHRAnalysisDocumentAggregateType<T extends HRAnalysisDocumentAggregateArgs> = {
+        [P in keyof T & keyof AggregateHRAnalysisDocument]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateHRAnalysisDocument[P]>
+      : GetScalarType<T[P], AggregateHRAnalysisDocument[P]>
+  }
+
+
+
+
+  export type HRAnalysisDocumentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: HRAnalysisDocumentWhereInput
+    orderBy?: HRAnalysisDocumentOrderByWithAggregationInput | HRAnalysisDocumentOrderByWithAggregationInput[]
+    by: HRAnalysisDocumentScalarFieldEnum[] | HRAnalysisDocumentScalarFieldEnum
+    having?: HRAnalysisDocumentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: HRAnalysisDocumentCountAggregateInputType | true
+    _avg?: HRAnalysisDocumentAvgAggregateInputType
+    _sum?: HRAnalysisDocumentSumAggregateInputType
+    _min?: HRAnalysisDocumentMinAggregateInputType
+    _max?: HRAnalysisDocumentMaxAggregateInputType
+  }
+
+  export type HRAnalysisDocumentGroupByOutputType = {
+    id: string
+    analysisId: string
+    name: string
+    originalName: string
+    mimeType: string
+    size: number
+    path: string
+    uploadedById: string | null
+    createdAt: Date
+    _count: HRAnalysisDocumentCountAggregateOutputType | null
+    _avg: HRAnalysisDocumentAvgAggregateOutputType | null
+    _sum: HRAnalysisDocumentSumAggregateOutputType | null
+    _min: HRAnalysisDocumentMinAggregateOutputType | null
+    _max: HRAnalysisDocumentMaxAggregateOutputType | null
+  }
+
+  type GetHRAnalysisDocumentGroupByPayload<T extends HRAnalysisDocumentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<HRAnalysisDocumentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof HRAnalysisDocumentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], HRAnalysisDocumentGroupByOutputType[P]>
+            : GetScalarType<T[P], HRAnalysisDocumentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type HRAnalysisDocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    analysisId?: boolean
+    name?: boolean
+    originalName?: boolean
+    mimeType?: boolean
+    size?: boolean
+    path?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+    analysis?: boolean | HRCandidateAnalysisDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hRAnalysisDocument"]>
+
+  export type HRAnalysisDocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    analysisId?: boolean
+    name?: boolean
+    originalName?: boolean
+    mimeType?: boolean
+    size?: boolean
+    path?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+    analysis?: boolean | HRCandidateAnalysisDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["hRAnalysisDocument"]>
+
+  export type HRAnalysisDocumentSelectScalar = {
+    id?: boolean
+    analysisId?: boolean
+    name?: boolean
+    originalName?: boolean
+    mimeType?: boolean
+    size?: boolean
+    path?: boolean
+    uploadedById?: boolean
+    createdAt?: boolean
+  }
+
+  export type HRAnalysisDocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    analysis?: boolean | HRCandidateAnalysisDefaultArgs<ExtArgs>
+  }
+  export type HRAnalysisDocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    analysis?: boolean | HRCandidateAnalysisDefaultArgs<ExtArgs>
+  }
+
+  export type $HRAnalysisDocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "HRAnalysisDocument"
+    objects: {
+      analysis: Prisma.$HRCandidateAnalysisPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      analysisId: string
+      name: string
+      originalName: string
+      mimeType: string
+      size: number
+      path: string
+      uploadedById: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["hRAnalysisDocument"]>
+    composites: {}
+  }
+
+  type HRAnalysisDocumentGetPayload<S extends boolean | null | undefined | HRAnalysisDocumentDefaultArgs> = $Result.GetResult<Prisma.$HRAnalysisDocumentPayload, S>
+
+  type HRAnalysisDocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<HRAnalysisDocumentFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: HRAnalysisDocumentCountAggregateInputType | true
+    }
+
+  export interface HRAnalysisDocumentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['HRAnalysisDocument'], meta: { name: 'HRAnalysisDocument' } }
+    /**
+     * Find zero or one HRAnalysisDocument that matches the filter.
+     * @param {HRAnalysisDocumentFindUniqueArgs} args - Arguments to find a HRAnalysisDocument
+     * @example
+     * // Get one HRAnalysisDocument
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends HRAnalysisDocumentFindUniqueArgs>(args: SelectSubset<T, HRAnalysisDocumentFindUniqueArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one HRAnalysisDocument that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {HRAnalysisDocumentFindUniqueOrThrowArgs} args - Arguments to find a HRAnalysisDocument
+     * @example
+     * // Get one HRAnalysisDocument
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends HRAnalysisDocumentFindUniqueOrThrowArgs>(args: SelectSubset<T, HRAnalysisDocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first HRAnalysisDocument that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRAnalysisDocumentFindFirstArgs} args - Arguments to find a HRAnalysisDocument
+     * @example
+     * // Get one HRAnalysisDocument
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends HRAnalysisDocumentFindFirstArgs>(args?: SelectSubset<T, HRAnalysisDocumentFindFirstArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first HRAnalysisDocument that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRAnalysisDocumentFindFirstOrThrowArgs} args - Arguments to find a HRAnalysisDocument
+     * @example
+     * // Get one HRAnalysisDocument
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends HRAnalysisDocumentFindFirstOrThrowArgs>(args?: SelectSubset<T, HRAnalysisDocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more HRAnalysisDocuments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRAnalysisDocumentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all HRAnalysisDocuments
+     * const hRAnalysisDocuments = await prisma.hRAnalysisDocument.findMany()
+     * 
+     * // Get first 10 HRAnalysisDocuments
+     * const hRAnalysisDocuments = await prisma.hRAnalysisDocument.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const hRAnalysisDocumentWithIdOnly = await prisma.hRAnalysisDocument.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends HRAnalysisDocumentFindManyArgs>(args?: SelectSubset<T, HRAnalysisDocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a HRAnalysisDocument.
+     * @param {HRAnalysisDocumentCreateArgs} args - Arguments to create a HRAnalysisDocument.
+     * @example
+     * // Create one HRAnalysisDocument
+     * const HRAnalysisDocument = await prisma.hRAnalysisDocument.create({
+     *   data: {
+     *     // ... data to create a HRAnalysisDocument
+     *   }
+     * })
+     * 
+     */
+    create<T extends HRAnalysisDocumentCreateArgs>(args: SelectSubset<T, HRAnalysisDocumentCreateArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many HRAnalysisDocuments.
+     * @param {HRAnalysisDocumentCreateManyArgs} args - Arguments to create many HRAnalysisDocuments.
+     * @example
+     * // Create many HRAnalysisDocuments
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends HRAnalysisDocumentCreateManyArgs>(args?: SelectSubset<T, HRAnalysisDocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many HRAnalysisDocuments and returns the data saved in the database.
+     * @param {HRAnalysisDocumentCreateManyAndReturnArgs} args - Arguments to create many HRAnalysisDocuments.
+     * @example
+     * // Create many HRAnalysisDocuments
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many HRAnalysisDocuments and only return the `id`
+     * const hRAnalysisDocumentWithIdOnly = await prisma.hRAnalysisDocument.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends HRAnalysisDocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, HRAnalysisDocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a HRAnalysisDocument.
+     * @param {HRAnalysisDocumentDeleteArgs} args - Arguments to delete one HRAnalysisDocument.
+     * @example
+     * // Delete one HRAnalysisDocument
+     * const HRAnalysisDocument = await prisma.hRAnalysisDocument.delete({
+     *   where: {
+     *     // ... filter to delete one HRAnalysisDocument
+     *   }
+     * })
+     * 
+     */
+    delete<T extends HRAnalysisDocumentDeleteArgs>(args: SelectSubset<T, HRAnalysisDocumentDeleteArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one HRAnalysisDocument.
+     * @param {HRAnalysisDocumentUpdateArgs} args - Arguments to update one HRAnalysisDocument.
+     * @example
+     * // Update one HRAnalysisDocument
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends HRAnalysisDocumentUpdateArgs>(args: SelectSubset<T, HRAnalysisDocumentUpdateArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more HRAnalysisDocuments.
+     * @param {HRAnalysisDocumentDeleteManyArgs} args - Arguments to filter HRAnalysisDocuments to delete.
+     * @example
+     * // Delete a few HRAnalysisDocuments
+     * const { count } = await prisma.hRAnalysisDocument.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends HRAnalysisDocumentDeleteManyArgs>(args?: SelectSubset<T, HRAnalysisDocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more HRAnalysisDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRAnalysisDocumentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many HRAnalysisDocuments
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends HRAnalysisDocumentUpdateManyArgs>(args: SelectSubset<T, HRAnalysisDocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one HRAnalysisDocument.
+     * @param {HRAnalysisDocumentUpsertArgs} args - Arguments to update or create a HRAnalysisDocument.
+     * @example
+     * // Update or create a HRAnalysisDocument
+     * const hRAnalysisDocument = await prisma.hRAnalysisDocument.upsert({
+     *   create: {
+     *     // ... data to create a HRAnalysisDocument
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the HRAnalysisDocument we want to update
+     *   }
+     * })
+     */
+    upsert<T extends HRAnalysisDocumentUpsertArgs>(args: SelectSubset<T, HRAnalysisDocumentUpsertArgs<ExtArgs>>): Prisma__HRAnalysisDocumentClient<$Result.GetResult<Prisma.$HRAnalysisDocumentPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of HRAnalysisDocuments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRAnalysisDocumentCountArgs} args - Arguments to filter HRAnalysisDocuments to count.
+     * @example
+     * // Count the number of HRAnalysisDocuments
+     * const count = await prisma.hRAnalysisDocument.count({
+     *   where: {
+     *     // ... the filter for the HRAnalysisDocuments we want to count
+     *   }
+     * })
+    **/
+    count<T extends HRAnalysisDocumentCountArgs>(
+      args?: Subset<T, HRAnalysisDocumentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], HRAnalysisDocumentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a HRAnalysisDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRAnalysisDocumentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends HRAnalysisDocumentAggregateArgs>(args: Subset<T, HRAnalysisDocumentAggregateArgs>): Prisma.PrismaPromise<GetHRAnalysisDocumentAggregateType<T>>
+
+    /**
+     * Group by HRAnalysisDocument.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {HRAnalysisDocumentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends HRAnalysisDocumentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: HRAnalysisDocumentGroupByArgs['orderBy'] }
+        : { orderBy?: HRAnalysisDocumentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, HRAnalysisDocumentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetHRAnalysisDocumentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the HRAnalysisDocument model
+   */
+  readonly fields: HRAnalysisDocumentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for HRAnalysisDocument.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__HRAnalysisDocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    analysis<T extends HRCandidateAnalysisDefaultArgs<ExtArgs> = {}>(args?: Subset<T, HRCandidateAnalysisDefaultArgs<ExtArgs>>): Prisma__HRCandidateAnalysisClient<$Result.GetResult<Prisma.$HRCandidateAnalysisPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the HRAnalysisDocument model
+   */ 
+  interface HRAnalysisDocumentFieldRefs {
+    readonly id: FieldRef<"HRAnalysisDocument", 'String'>
+    readonly analysisId: FieldRef<"HRAnalysisDocument", 'String'>
+    readonly name: FieldRef<"HRAnalysisDocument", 'String'>
+    readonly originalName: FieldRef<"HRAnalysisDocument", 'String'>
+    readonly mimeType: FieldRef<"HRAnalysisDocument", 'String'>
+    readonly size: FieldRef<"HRAnalysisDocument", 'Int'>
+    readonly path: FieldRef<"HRAnalysisDocument", 'String'>
+    readonly uploadedById: FieldRef<"HRAnalysisDocument", 'String'>
+    readonly createdAt: FieldRef<"HRAnalysisDocument", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * HRAnalysisDocument findUnique
+   */
+  export type HRAnalysisDocumentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which HRAnalysisDocument to fetch.
+     */
+    where: HRAnalysisDocumentWhereUniqueInput
+  }
+
+  /**
+   * HRAnalysisDocument findUniqueOrThrow
+   */
+  export type HRAnalysisDocumentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which HRAnalysisDocument to fetch.
+     */
+    where: HRAnalysisDocumentWhereUniqueInput
+  }
+
+  /**
+   * HRAnalysisDocument findFirst
+   */
+  export type HRAnalysisDocumentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which HRAnalysisDocument to fetch.
+     */
+    where?: HRAnalysisDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRAnalysisDocuments to fetch.
+     */
+    orderBy?: HRAnalysisDocumentOrderByWithRelationInput | HRAnalysisDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HRAnalysisDocuments.
+     */
+    cursor?: HRAnalysisDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRAnalysisDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRAnalysisDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HRAnalysisDocuments.
+     */
+    distinct?: HRAnalysisDocumentScalarFieldEnum | HRAnalysisDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * HRAnalysisDocument findFirstOrThrow
+   */
+  export type HRAnalysisDocumentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which HRAnalysisDocument to fetch.
+     */
+    where?: HRAnalysisDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRAnalysisDocuments to fetch.
+     */
+    orderBy?: HRAnalysisDocumentOrderByWithRelationInput | HRAnalysisDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for HRAnalysisDocuments.
+     */
+    cursor?: HRAnalysisDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRAnalysisDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRAnalysisDocuments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of HRAnalysisDocuments.
+     */
+    distinct?: HRAnalysisDocumentScalarFieldEnum | HRAnalysisDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * HRAnalysisDocument findMany
+   */
+  export type HRAnalysisDocumentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which HRAnalysisDocuments to fetch.
+     */
+    where?: HRAnalysisDocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of HRAnalysisDocuments to fetch.
+     */
+    orderBy?: HRAnalysisDocumentOrderByWithRelationInput | HRAnalysisDocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing HRAnalysisDocuments.
+     */
+    cursor?: HRAnalysisDocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` HRAnalysisDocuments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` HRAnalysisDocuments.
+     */
+    skip?: number
+    distinct?: HRAnalysisDocumentScalarFieldEnum | HRAnalysisDocumentScalarFieldEnum[]
+  }
+
+  /**
+   * HRAnalysisDocument create
+   */
+  export type HRAnalysisDocumentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a HRAnalysisDocument.
+     */
+    data: XOR<HRAnalysisDocumentCreateInput, HRAnalysisDocumentUncheckedCreateInput>
+  }
+
+  /**
+   * HRAnalysisDocument createMany
+   */
+  export type HRAnalysisDocumentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many HRAnalysisDocuments.
+     */
+    data: HRAnalysisDocumentCreateManyInput | HRAnalysisDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * HRAnalysisDocument createManyAndReturn
+   */
+  export type HRAnalysisDocumentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many HRAnalysisDocuments.
+     */
+    data: HRAnalysisDocumentCreateManyInput | HRAnalysisDocumentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * HRAnalysisDocument update
+   */
+  export type HRAnalysisDocumentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a HRAnalysisDocument.
+     */
+    data: XOR<HRAnalysisDocumentUpdateInput, HRAnalysisDocumentUncheckedUpdateInput>
+    /**
+     * Choose, which HRAnalysisDocument to update.
+     */
+    where: HRAnalysisDocumentWhereUniqueInput
+  }
+
+  /**
+   * HRAnalysisDocument updateMany
+   */
+  export type HRAnalysisDocumentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update HRAnalysisDocuments.
+     */
+    data: XOR<HRAnalysisDocumentUpdateManyMutationInput, HRAnalysisDocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which HRAnalysisDocuments to update
+     */
+    where?: HRAnalysisDocumentWhereInput
+  }
+
+  /**
+   * HRAnalysisDocument upsert
+   */
+  export type HRAnalysisDocumentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the HRAnalysisDocument to update in case it exists.
+     */
+    where: HRAnalysisDocumentWhereUniqueInput
+    /**
+     * In case the HRAnalysisDocument found by the `where` argument doesn't exist, create a new HRAnalysisDocument with this data.
+     */
+    create: XOR<HRAnalysisDocumentCreateInput, HRAnalysisDocumentUncheckedCreateInput>
+    /**
+     * In case the HRAnalysisDocument was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<HRAnalysisDocumentUpdateInput, HRAnalysisDocumentUncheckedUpdateInput>
+  }
+
+  /**
+   * HRAnalysisDocument delete
+   */
+  export type HRAnalysisDocumentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+    /**
+     * Filter which HRAnalysisDocument to delete.
+     */
+    where: HRAnalysisDocumentWhereUniqueInput
+  }
+
+  /**
+   * HRAnalysisDocument deleteMany
+   */
+  export type HRAnalysisDocumentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which HRAnalysisDocuments to delete
+     */
+    where?: HRAnalysisDocumentWhereInput
+  }
+
+  /**
+   * HRAnalysisDocument without action
+   */
+  export type HRAnalysisDocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the HRAnalysisDocument
+     */
+    select?: HRAnalysisDocumentSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: HRAnalysisDocumentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model TenantDomain
    */
 
@@ -19689,6 +25644,35 @@ export namespace Prisma {
   export type WorkShiftScalarFieldEnum = (typeof WorkShiftScalarFieldEnum)[keyof typeof WorkShiftScalarFieldEnum]
 
 
+  export const SelectionProcessScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    name: 'name',
+    description: 'description',
+    status: 'status',
+    openedAt: 'openedAt',
+    closedAt: 'closedAt',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    departmentId: 'departmentId',
+    positionId: 'positionId'
+  };
+
+  export type SelectionProcessScalarFieldEnum = (typeof SelectionProcessScalarFieldEnum)[keyof typeof SelectionProcessScalarFieldEnum]
+
+
+  export const SelectionProcessApproverScalarFieldEnum: {
+    id: 'id',
+    selectionProcessId: 'selectionProcessId',
+    employeeId: 'employeeId',
+    order: 'order',
+    createdAt: 'createdAt'
+  };
+
+  export type SelectionProcessApproverScalarFieldEnum = (typeof SelectionProcessApproverScalarFieldEnum)[keyof typeof SelectionProcessApproverScalarFieldEnum]
+
+
   export const EmployeeScalarFieldEnum: {
     id: 'id',
     firstName: 'firstName',
@@ -19734,11 +25718,28 @@ export namespace Prisma {
     departmentId: 'departmentId',
     positionId: 'positionId',
     supervisorId: 'supervisorId',
+    selectionProcessId: 'selectionProcessId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type EmployeeScalarFieldEnum = (typeof EmployeeScalarFieldEnum)[keyof typeof EmployeeScalarFieldEnum]
+
+
+  export const CandidateApprovalScalarFieldEnum: {
+    id: 'id',
+    selectionProcessId: 'selectionProcessId',
+    candidateId: 'candidateId',
+    approverId: 'approverId',
+    approverType: 'approverType',
+    status: 'status',
+    comment: 'comment',
+    decidedAt: 'decidedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CandidateApprovalScalarFieldEnum = (typeof CandidateApprovalScalarFieldEnum)[keyof typeof CandidateApprovalScalarFieldEnum]
 
 
   export const EmployeeLaborDataScalarFieldEnum: {
@@ -19856,6 +25857,41 @@ export namespace Prisma {
   };
 
   export type FamilyMemberScalarFieldEnum = (typeof FamilyMemberScalarFieldEnum)[keyof typeof FamilyMemberScalarFieldEnum]
+
+
+  export const HRCandidateAnalysisScalarFieldEnum: {
+    id: 'id',
+    selectionProcessId: 'selectionProcessId',
+    candidateId: 'candidateId',
+    professionalSummary: 'professionalSummary',
+    strengths: 'strengths',
+    improvementAreas: 'improvementAreas',
+    interviewResults: 'interviewResults',
+    competencyEvaluation: 'competencyEvaluation',
+    identifiedRisks: 'identifiedRisks',
+    recommendation: 'recommendation',
+    recommendationNotes: 'recommendationNotes',
+    createdById: 'createdById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type HRCandidateAnalysisScalarFieldEnum = (typeof HRCandidateAnalysisScalarFieldEnum)[keyof typeof HRCandidateAnalysisScalarFieldEnum]
+
+
+  export const HRAnalysisDocumentScalarFieldEnum: {
+    id: 'id',
+    analysisId: 'analysisId',
+    name: 'name',
+    originalName: 'originalName',
+    mimeType: 'mimeType',
+    size: 'size',
+    path: 'path',
+    uploadedById: 'uploadedById',
+    createdAt: 'createdAt'
+  };
+
+  export type HRAnalysisDocumentScalarFieldEnum = (typeof HRAnalysisDocumentScalarFieldEnum)[keyof typeof HRAnalysisDocumentScalarFieldEnum]
 
 
   export const TenantDomainScalarFieldEnum: {
@@ -20037,6 +26073,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'SelectionProcessStatus'
+   */
+  export type EnumSelectionProcessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SelectionProcessStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'SelectionProcessStatus[]'
+   */
+  export type ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SelectionProcessStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'EmployeeStatus'
    */
   export type EnumEmployeeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'EmployeeStatus'>
@@ -20145,6 +26195,20 @@ export namespace Prisma {
    * Reference to a field of type 'FamilyRelationship[]'
    */
   export type ListEnumFamilyRelationshipFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FamilyRelationship[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'HRRecommendation'
+   */
+  export type EnumHRRecommendationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HRRecommendation'>
+    
+
+
+  /**
+   * Reference to a field of type 'HRRecommendation[]'
+   */
+  export type ListEnumHRRecommendationFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'HRRecommendation[]'>
     
 
 
@@ -20422,6 +26486,7 @@ export namespace Prisma {
     children?: DepartmentListRelationFilter
     employees?: EmployeeListRelationFilter
     positions?: PositionListRelationFilter
+    selectionProcesses?: SelectionProcessListRelationFilter
   }
 
   export type DepartmentOrderByWithRelationInput = {
@@ -20439,6 +26504,7 @@ export namespace Prisma {
     children?: DepartmentOrderByRelationAggregateInput
     employees?: EmployeeOrderByRelationAggregateInput
     positions?: PositionOrderByRelationAggregateInput
+    selectionProcesses?: SelectionProcessOrderByRelationAggregateInput
   }
 
   export type DepartmentWhereUniqueInput = Prisma.AtLeast<{
@@ -20459,6 +26525,7 @@ export namespace Prisma {
     children?: DepartmentListRelationFilter
     employees?: EmployeeListRelationFilter
     positions?: PositionListRelationFilter
+    selectionProcesses?: SelectionProcessListRelationFilter
   }, "id" | "code">
 
   export type DepartmentOrderByWithAggregationInput = {
@@ -20508,6 +26575,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Position"> | Date | string
     department?: XOR<DepartmentNullableRelationFilter, DepartmentWhereInput> | null
     employees?: EmployeeListRelationFilter
+    selectionProcesses?: SelectionProcessListRelationFilter
   }
 
   export type PositionOrderByWithRelationInput = {
@@ -20522,6 +26590,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     department?: DepartmentOrderByWithRelationInput
     employees?: EmployeeOrderByRelationAggregateInput
+    selectionProcesses?: SelectionProcessOrderByRelationAggregateInput
   }
 
   export type PositionWhereUniqueInput = Prisma.AtLeast<{
@@ -20539,6 +26608,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Position"> | Date | string
     department?: XOR<DepartmentNullableRelationFilter, DepartmentWhereInput> | null
     employees?: EmployeeListRelationFilter
+    selectionProcesses?: SelectionProcessListRelationFilter
   }, "id" | "name">
 
   export type PositionOrderByWithAggregationInput = {
@@ -20700,6 +26770,172 @@ export namespace Prisma {
     allowsOvertime?: BoolWithAggregatesFilter<"WorkShift"> | boolean
   }
 
+  export type SelectionProcessWhereInput = {
+    AND?: SelectionProcessWhereInput | SelectionProcessWhereInput[]
+    OR?: SelectionProcessWhereInput[]
+    NOT?: SelectionProcessWhereInput | SelectionProcessWhereInput[]
+    id?: StringFilter<"SelectionProcess"> | string
+    code?: StringFilter<"SelectionProcess"> | string
+    name?: StringFilter<"SelectionProcess"> | string
+    description?: StringNullableFilter<"SelectionProcess"> | string | null
+    status?: EnumSelectionProcessStatusFilter<"SelectionProcess"> | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    closedAt?: DateTimeNullableFilter<"SelectionProcess"> | Date | string | null
+    createdById?: StringNullableFilter<"SelectionProcess"> | string | null
+    createdAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    updatedAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    departmentId?: StringNullableFilter<"SelectionProcess"> | string | null
+    positionId?: StringNullableFilter<"SelectionProcess"> | string | null
+    department?: XOR<DepartmentNullableRelationFilter, DepartmentWhereInput> | null
+    position?: XOR<PositionNullableRelationFilter, PositionWhereInput> | null
+    candidates?: EmployeeListRelationFilter
+    approvers?: SelectionProcessApproverListRelationFilter
+    candidateApprovals?: CandidateApprovalListRelationFilter
+    hrAnalyses?: HRCandidateAnalysisListRelationFilter
+  }
+
+  export type SelectionProcessOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    openedAt?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    departmentId?: SortOrderInput | SortOrder
+    positionId?: SortOrderInput | SortOrder
+    department?: DepartmentOrderByWithRelationInput
+    position?: PositionOrderByWithRelationInput
+    candidates?: EmployeeOrderByRelationAggregateInput
+    approvers?: SelectionProcessApproverOrderByRelationAggregateInput
+    candidateApprovals?: CandidateApprovalOrderByRelationAggregateInput
+    hrAnalyses?: HRCandidateAnalysisOrderByRelationAggregateInput
+  }
+
+  export type SelectionProcessWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    AND?: SelectionProcessWhereInput | SelectionProcessWhereInput[]
+    OR?: SelectionProcessWhereInput[]
+    NOT?: SelectionProcessWhereInput | SelectionProcessWhereInput[]
+    name?: StringFilter<"SelectionProcess"> | string
+    description?: StringNullableFilter<"SelectionProcess"> | string | null
+    status?: EnumSelectionProcessStatusFilter<"SelectionProcess"> | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    closedAt?: DateTimeNullableFilter<"SelectionProcess"> | Date | string | null
+    createdById?: StringNullableFilter<"SelectionProcess"> | string | null
+    createdAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    updatedAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    departmentId?: StringNullableFilter<"SelectionProcess"> | string | null
+    positionId?: StringNullableFilter<"SelectionProcess"> | string | null
+    department?: XOR<DepartmentNullableRelationFilter, DepartmentWhereInput> | null
+    position?: XOR<PositionNullableRelationFilter, PositionWhereInput> | null
+    candidates?: EmployeeListRelationFilter
+    approvers?: SelectionProcessApproverListRelationFilter
+    candidateApprovals?: CandidateApprovalListRelationFilter
+    hrAnalyses?: HRCandidateAnalysisListRelationFilter
+  }, "id" | "code">
+
+  export type SelectionProcessOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    openedAt?: SortOrder
+    closedAt?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    departmentId?: SortOrderInput | SortOrder
+    positionId?: SortOrderInput | SortOrder
+    _count?: SelectionProcessCountOrderByAggregateInput
+    _max?: SelectionProcessMaxOrderByAggregateInput
+    _min?: SelectionProcessMinOrderByAggregateInput
+  }
+
+  export type SelectionProcessScalarWhereWithAggregatesInput = {
+    AND?: SelectionProcessScalarWhereWithAggregatesInput | SelectionProcessScalarWhereWithAggregatesInput[]
+    OR?: SelectionProcessScalarWhereWithAggregatesInput[]
+    NOT?: SelectionProcessScalarWhereWithAggregatesInput | SelectionProcessScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SelectionProcess"> | string
+    code?: StringWithAggregatesFilter<"SelectionProcess"> | string
+    name?: StringWithAggregatesFilter<"SelectionProcess"> | string
+    description?: StringNullableWithAggregatesFilter<"SelectionProcess"> | string | null
+    status?: EnumSelectionProcessStatusWithAggregatesFilter<"SelectionProcess"> | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeWithAggregatesFilter<"SelectionProcess"> | Date | string
+    closedAt?: DateTimeNullableWithAggregatesFilter<"SelectionProcess"> | Date | string | null
+    createdById?: StringNullableWithAggregatesFilter<"SelectionProcess"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"SelectionProcess"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SelectionProcess"> | Date | string
+    departmentId?: StringNullableWithAggregatesFilter<"SelectionProcess"> | string | null
+    positionId?: StringNullableWithAggregatesFilter<"SelectionProcess"> | string | null
+  }
+
+  export type SelectionProcessApproverWhereInput = {
+    AND?: SelectionProcessApproverWhereInput | SelectionProcessApproverWhereInput[]
+    OR?: SelectionProcessApproverWhereInput[]
+    NOT?: SelectionProcessApproverWhereInput | SelectionProcessApproverWhereInput[]
+    id?: StringFilter<"SelectionProcessApprover"> | string
+    selectionProcessId?: StringFilter<"SelectionProcessApprover"> | string
+    employeeId?: StringFilter<"SelectionProcessApprover"> | string
+    order?: IntFilter<"SelectionProcessApprover"> | number
+    createdAt?: DateTimeFilter<"SelectionProcessApprover"> | Date | string
+    selectionProcess?: XOR<SelectionProcessRelationFilter, SelectionProcessWhereInput>
+    employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }
+
+  export type SelectionProcessApproverOrderByWithRelationInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    employeeId?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    selectionProcess?: SelectionProcessOrderByWithRelationInput
+    employee?: EmployeeOrderByWithRelationInput
+  }
+
+  export type SelectionProcessApproverWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    selectionProcessId_employeeId?: SelectionProcessApproverSelectionProcessIdEmployeeIdCompoundUniqueInput
+    AND?: SelectionProcessApproverWhereInput | SelectionProcessApproverWhereInput[]
+    OR?: SelectionProcessApproverWhereInput[]
+    NOT?: SelectionProcessApproverWhereInput | SelectionProcessApproverWhereInput[]
+    selectionProcessId?: StringFilter<"SelectionProcessApprover"> | string
+    employeeId?: StringFilter<"SelectionProcessApprover"> | string
+    order?: IntFilter<"SelectionProcessApprover"> | number
+    createdAt?: DateTimeFilter<"SelectionProcessApprover"> | Date | string
+    selectionProcess?: XOR<SelectionProcessRelationFilter, SelectionProcessWhereInput>
+    employee?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }, "id" | "selectionProcessId_employeeId">
+
+  export type SelectionProcessApproverOrderByWithAggregationInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    employeeId?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+    _count?: SelectionProcessApproverCountOrderByAggregateInput
+    _avg?: SelectionProcessApproverAvgOrderByAggregateInput
+    _max?: SelectionProcessApproverMaxOrderByAggregateInput
+    _min?: SelectionProcessApproverMinOrderByAggregateInput
+    _sum?: SelectionProcessApproverSumOrderByAggregateInput
+  }
+
+  export type SelectionProcessApproverScalarWhereWithAggregatesInput = {
+    AND?: SelectionProcessApproverScalarWhereWithAggregatesInput | SelectionProcessApproverScalarWhereWithAggregatesInput[]
+    OR?: SelectionProcessApproverScalarWhereWithAggregatesInput[]
+    NOT?: SelectionProcessApproverScalarWhereWithAggregatesInput | SelectionProcessApproverScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"SelectionProcessApprover"> | string
+    selectionProcessId?: StringWithAggregatesFilter<"SelectionProcessApprover"> | string
+    employeeId?: StringWithAggregatesFilter<"SelectionProcessApprover"> | string
+    order?: IntWithAggregatesFilter<"SelectionProcessApprover"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"SelectionProcessApprover"> | Date | string
+  }
+
   export type EmployeeWhereInput = {
     AND?: EmployeeWhereInput | EmployeeWhereInput[]
     OR?: EmployeeWhereInput[]
@@ -20748,6 +26984,7 @@ export namespace Prisma {
     departmentId?: StringNullableFilter<"Employee"> | string | null
     positionId?: StringNullableFilter<"Employee"> | string | null
     supervisorId?: StringNullableFilter<"Employee"> | string | null
+    selectionProcessId?: StringNullableFilter<"Employee"> | string | null
     createdAt?: DateTimeFilter<"Employee"> | Date | string
     updatedAt?: DateTimeFilter<"Employee"> | Date | string
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -20755,6 +26992,7 @@ export namespace Prisma {
     position?: XOR<PositionNullableRelationFilter, PositionWhereInput> | null
     supervisor?: XOR<EmployeeNullableRelationFilter, EmployeeWhereInput> | null
     subordinates?: EmployeeListRelationFilter
+    selectionProcess?: XOR<SelectionProcessNullableRelationFilter, SelectionProcessWhereInput> | null
     laborData?: XOR<EmployeeLaborDataNullableRelationFilter, EmployeeLaborDataWhereInput> | null
     attendances?: AttendanceListRelationFilter
     documents?: DocumentListRelationFilter
@@ -20763,6 +27001,9 @@ export namespace Prisma {
     educations?: EducationListRelationFilter
     sentKudos?: KudoListRelationFilter
     receivedKudos?: KudoListRelationFilter
+    approvals?: SelectionProcessApproverListRelationFilter
+    receivedApprovals?: CandidateApprovalListRelationFilter
+    hrAnalyses?: HRCandidateAnalysisListRelationFilter
   }
 
   export type EmployeeOrderByWithRelationInput = {
@@ -20810,6 +27051,7 @@ export namespace Prisma {
     departmentId?: SortOrderInput | SortOrder
     positionId?: SortOrderInput | SortOrder
     supervisorId?: SortOrderInput | SortOrder
+    selectionProcessId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
@@ -20817,6 +27059,7 @@ export namespace Prisma {
     position?: PositionOrderByWithRelationInput
     supervisor?: EmployeeOrderByWithRelationInput
     subordinates?: EmployeeOrderByRelationAggregateInput
+    selectionProcess?: SelectionProcessOrderByWithRelationInput
     laborData?: EmployeeLaborDataOrderByWithRelationInput
     attendances?: AttendanceOrderByRelationAggregateInput
     documents?: DocumentOrderByRelationAggregateInput
@@ -20825,6 +27068,9 @@ export namespace Prisma {
     educations?: EducationOrderByRelationAggregateInput
     sentKudos?: KudoOrderByRelationAggregateInput
     receivedKudos?: KudoOrderByRelationAggregateInput
+    approvals?: SelectionProcessApproverOrderByRelationAggregateInput
+    receivedApprovals?: CandidateApprovalOrderByRelationAggregateInput
+    hrAnalyses?: HRCandidateAnalysisOrderByRelationAggregateInput
   }
 
   export type EmployeeWhereUniqueInput = Prisma.AtLeast<{
@@ -20875,6 +27121,7 @@ export namespace Prisma {
     departmentId?: StringNullableFilter<"Employee"> | string | null
     positionId?: StringNullableFilter<"Employee"> | string | null
     supervisorId?: StringNullableFilter<"Employee"> | string | null
+    selectionProcessId?: StringNullableFilter<"Employee"> | string | null
     createdAt?: DateTimeFilter<"Employee"> | Date | string
     updatedAt?: DateTimeFilter<"Employee"> | Date | string
     user?: XOR<UserNullableRelationFilter, UserWhereInput> | null
@@ -20882,6 +27129,7 @@ export namespace Prisma {
     position?: XOR<PositionNullableRelationFilter, PositionWhereInput> | null
     supervisor?: XOR<EmployeeNullableRelationFilter, EmployeeWhereInput> | null
     subordinates?: EmployeeListRelationFilter
+    selectionProcess?: XOR<SelectionProcessNullableRelationFilter, SelectionProcessWhereInput> | null
     laborData?: XOR<EmployeeLaborDataNullableRelationFilter, EmployeeLaborDataWhereInput> | null
     attendances?: AttendanceListRelationFilter
     documents?: DocumentListRelationFilter
@@ -20890,6 +27138,9 @@ export namespace Prisma {
     educations?: EducationListRelationFilter
     sentKudos?: KudoListRelationFilter
     receivedKudos?: KudoListRelationFilter
+    approvals?: SelectionProcessApproverListRelationFilter
+    receivedApprovals?: CandidateApprovalListRelationFilter
+    hrAnalyses?: HRCandidateAnalysisListRelationFilter
   }, "id" | "documentId" | "userId">
 
   export type EmployeeOrderByWithAggregationInput = {
@@ -20937,6 +27188,7 @@ export namespace Prisma {
     departmentId?: SortOrderInput | SortOrder
     positionId?: SortOrderInput | SortOrder
     supervisorId?: SortOrderInput | SortOrder
+    selectionProcessId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: EmployeeCountOrderByAggregateInput
@@ -20992,8 +27244,93 @@ export namespace Prisma {
     departmentId?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     positionId?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     supervisorId?: StringNullableWithAggregatesFilter<"Employee"> | string | null
+    selectionProcessId?: StringNullableWithAggregatesFilter<"Employee"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Employee"> | Date | string
+  }
+
+  export type CandidateApprovalWhereInput = {
+    AND?: CandidateApprovalWhereInput | CandidateApprovalWhereInput[]
+    OR?: CandidateApprovalWhereInput[]
+    NOT?: CandidateApprovalWhereInput | CandidateApprovalWhereInput[]
+    id?: StringFilter<"CandidateApproval"> | string
+    selectionProcessId?: StringFilter<"CandidateApproval"> | string
+    candidateId?: StringFilter<"CandidateApproval"> | string
+    approverId?: StringFilter<"CandidateApproval"> | string
+    approverType?: StringFilter<"CandidateApproval"> | string
+    status?: StringFilter<"CandidateApproval"> | string
+    comment?: StringNullableFilter<"CandidateApproval"> | string | null
+    decidedAt?: DateTimeNullableFilter<"CandidateApproval"> | Date | string | null
+    createdAt?: DateTimeFilter<"CandidateApproval"> | Date | string
+    updatedAt?: DateTimeFilter<"CandidateApproval"> | Date | string
+    selectionProcess?: XOR<SelectionProcessRelationFilter, SelectionProcessWhereInput>
+    candidate?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }
+
+  export type CandidateApprovalOrderByWithRelationInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    approverId?: SortOrder
+    approverType?: SortOrder
+    status?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    selectionProcess?: SelectionProcessOrderByWithRelationInput
+    candidate?: EmployeeOrderByWithRelationInput
+  }
+
+  export type CandidateApprovalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    selectionProcessId_candidateId_approverId?: CandidateApprovalSelectionProcessIdCandidateIdApproverIdCompoundUniqueInput
+    AND?: CandidateApprovalWhereInput | CandidateApprovalWhereInput[]
+    OR?: CandidateApprovalWhereInput[]
+    NOT?: CandidateApprovalWhereInput | CandidateApprovalWhereInput[]
+    selectionProcessId?: StringFilter<"CandidateApproval"> | string
+    candidateId?: StringFilter<"CandidateApproval"> | string
+    approverId?: StringFilter<"CandidateApproval"> | string
+    approverType?: StringFilter<"CandidateApproval"> | string
+    status?: StringFilter<"CandidateApproval"> | string
+    comment?: StringNullableFilter<"CandidateApproval"> | string | null
+    decidedAt?: DateTimeNullableFilter<"CandidateApproval"> | Date | string | null
+    createdAt?: DateTimeFilter<"CandidateApproval"> | Date | string
+    updatedAt?: DateTimeFilter<"CandidateApproval"> | Date | string
+    selectionProcess?: XOR<SelectionProcessRelationFilter, SelectionProcessWhereInput>
+    candidate?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }, "id" | "selectionProcessId_candidateId_approverId">
+
+  export type CandidateApprovalOrderByWithAggregationInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    approverId?: SortOrder
+    approverType?: SortOrder
+    status?: SortOrder
+    comment?: SortOrderInput | SortOrder
+    decidedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CandidateApprovalCountOrderByAggregateInput
+    _max?: CandidateApprovalMaxOrderByAggregateInput
+    _min?: CandidateApprovalMinOrderByAggregateInput
+  }
+
+  export type CandidateApprovalScalarWhereWithAggregatesInput = {
+    AND?: CandidateApprovalScalarWhereWithAggregatesInput | CandidateApprovalScalarWhereWithAggregatesInput[]
+    OR?: CandidateApprovalScalarWhereWithAggregatesInput[]
+    NOT?: CandidateApprovalScalarWhereWithAggregatesInput | CandidateApprovalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CandidateApproval"> | string
+    selectionProcessId?: StringWithAggregatesFilter<"CandidateApproval"> | string
+    candidateId?: StringWithAggregatesFilter<"CandidateApproval"> | string
+    approverId?: StringWithAggregatesFilter<"CandidateApproval"> | string
+    approverType?: StringWithAggregatesFilter<"CandidateApproval"> | string
+    status?: StringWithAggregatesFilter<"CandidateApproval"> | string
+    comment?: StringNullableWithAggregatesFilter<"CandidateApproval"> | string | null
+    decidedAt?: DateTimeNullableWithAggregatesFilter<"CandidateApproval"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CandidateApproval"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CandidateApproval"> | Date | string
   }
 
   export type EmployeeLaborDataWhereInput = {
@@ -21602,6 +27939,190 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"FamilyMember"> | Date | string
   }
 
+  export type HRCandidateAnalysisWhereInput = {
+    AND?: HRCandidateAnalysisWhereInput | HRCandidateAnalysisWhereInput[]
+    OR?: HRCandidateAnalysisWhereInput[]
+    NOT?: HRCandidateAnalysisWhereInput | HRCandidateAnalysisWhereInput[]
+    id?: StringFilter<"HRCandidateAnalysis"> | string
+    selectionProcessId?: StringFilter<"HRCandidateAnalysis"> | string
+    candidateId?: StringFilter<"HRCandidateAnalysis"> | string
+    professionalSummary?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    strengths?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    improvementAreas?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    interviewResults?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    competencyEvaluation?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    identifiedRisks?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    recommendation?: EnumHRRecommendationFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
+    recommendationNotes?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    createdById?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    createdAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
+    updatedAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
+    documents?: HRAnalysisDocumentListRelationFilter
+    selectionProcess?: XOR<SelectionProcessRelationFilter, SelectionProcessWhereInput>
+    candidate?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }
+
+  export type HRCandidateAnalysisOrderByWithRelationInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    professionalSummary?: SortOrderInput | SortOrder
+    strengths?: SortOrderInput | SortOrder
+    improvementAreas?: SortOrderInput | SortOrder
+    interviewResults?: SortOrderInput | SortOrder
+    competencyEvaluation?: SortOrderInput | SortOrder
+    identifiedRisks?: SortOrderInput | SortOrder
+    recommendation?: SortOrder
+    recommendationNotes?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    documents?: HRAnalysisDocumentOrderByRelationAggregateInput
+    selectionProcess?: SelectionProcessOrderByWithRelationInput
+    candidate?: EmployeeOrderByWithRelationInput
+  }
+
+  export type HRCandidateAnalysisWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    selectionProcessId_candidateId?: HRCandidateAnalysisSelectionProcessIdCandidateIdCompoundUniqueInput
+    AND?: HRCandidateAnalysisWhereInput | HRCandidateAnalysisWhereInput[]
+    OR?: HRCandidateAnalysisWhereInput[]
+    NOT?: HRCandidateAnalysisWhereInput | HRCandidateAnalysisWhereInput[]
+    selectionProcessId?: StringFilter<"HRCandidateAnalysis"> | string
+    candidateId?: StringFilter<"HRCandidateAnalysis"> | string
+    professionalSummary?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    strengths?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    improvementAreas?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    interviewResults?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    competencyEvaluation?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    identifiedRisks?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    recommendation?: EnumHRRecommendationFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
+    recommendationNotes?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    createdById?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    createdAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
+    updatedAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
+    documents?: HRAnalysisDocumentListRelationFilter
+    selectionProcess?: XOR<SelectionProcessRelationFilter, SelectionProcessWhereInput>
+    candidate?: XOR<EmployeeRelationFilter, EmployeeWhereInput>
+  }, "id" | "selectionProcessId_candidateId">
+
+  export type HRCandidateAnalysisOrderByWithAggregationInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    professionalSummary?: SortOrderInput | SortOrder
+    strengths?: SortOrderInput | SortOrder
+    improvementAreas?: SortOrderInput | SortOrder
+    interviewResults?: SortOrderInput | SortOrder
+    competencyEvaluation?: SortOrderInput | SortOrder
+    identifiedRisks?: SortOrderInput | SortOrder
+    recommendation?: SortOrder
+    recommendationNotes?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: HRCandidateAnalysisCountOrderByAggregateInput
+    _max?: HRCandidateAnalysisMaxOrderByAggregateInput
+    _min?: HRCandidateAnalysisMinOrderByAggregateInput
+  }
+
+  export type HRCandidateAnalysisScalarWhereWithAggregatesInput = {
+    AND?: HRCandidateAnalysisScalarWhereWithAggregatesInput | HRCandidateAnalysisScalarWhereWithAggregatesInput[]
+    OR?: HRCandidateAnalysisScalarWhereWithAggregatesInput[]
+    NOT?: HRCandidateAnalysisScalarWhereWithAggregatesInput | HRCandidateAnalysisScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"HRCandidateAnalysis"> | string
+    selectionProcessId?: StringWithAggregatesFilter<"HRCandidateAnalysis"> | string
+    candidateId?: StringWithAggregatesFilter<"HRCandidateAnalysis"> | string
+    professionalSummary?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    strengths?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    improvementAreas?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    interviewResults?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    competencyEvaluation?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    identifiedRisks?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    recommendation?: EnumHRRecommendationWithAggregatesFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
+    recommendationNotes?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    createdById?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"HRCandidateAnalysis"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"HRCandidateAnalysis"> | Date | string
+  }
+
+  export type HRAnalysisDocumentWhereInput = {
+    AND?: HRAnalysisDocumentWhereInput | HRAnalysisDocumentWhereInput[]
+    OR?: HRAnalysisDocumentWhereInput[]
+    NOT?: HRAnalysisDocumentWhereInput | HRAnalysisDocumentWhereInput[]
+    id?: StringFilter<"HRAnalysisDocument"> | string
+    analysisId?: StringFilter<"HRAnalysisDocument"> | string
+    name?: StringFilter<"HRAnalysisDocument"> | string
+    originalName?: StringFilter<"HRAnalysisDocument"> | string
+    mimeType?: StringFilter<"HRAnalysisDocument"> | string
+    size?: IntFilter<"HRAnalysisDocument"> | number
+    path?: StringFilter<"HRAnalysisDocument"> | string
+    uploadedById?: StringNullableFilter<"HRAnalysisDocument"> | string | null
+    createdAt?: DateTimeFilter<"HRAnalysisDocument"> | Date | string
+    analysis?: XOR<HRCandidateAnalysisRelationFilter, HRCandidateAnalysisWhereInput>
+  }
+
+  export type HRAnalysisDocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    analysisId?: SortOrder
+    name?: SortOrder
+    originalName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    path?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    analysis?: HRCandidateAnalysisOrderByWithRelationInput
+  }
+
+  export type HRAnalysisDocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: HRAnalysisDocumentWhereInput | HRAnalysisDocumentWhereInput[]
+    OR?: HRAnalysisDocumentWhereInput[]
+    NOT?: HRAnalysisDocumentWhereInput | HRAnalysisDocumentWhereInput[]
+    analysisId?: StringFilter<"HRAnalysisDocument"> | string
+    name?: StringFilter<"HRAnalysisDocument"> | string
+    originalName?: StringFilter<"HRAnalysisDocument"> | string
+    mimeType?: StringFilter<"HRAnalysisDocument"> | string
+    size?: IntFilter<"HRAnalysisDocument"> | number
+    path?: StringFilter<"HRAnalysisDocument"> | string
+    uploadedById?: StringNullableFilter<"HRAnalysisDocument"> | string | null
+    createdAt?: DateTimeFilter<"HRAnalysisDocument"> | Date | string
+    analysis?: XOR<HRCandidateAnalysisRelationFilter, HRCandidateAnalysisWhereInput>
+  }, "id">
+
+  export type HRAnalysisDocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    analysisId?: SortOrder
+    name?: SortOrder
+    originalName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    path?: SortOrder
+    uploadedById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: HRAnalysisDocumentCountOrderByAggregateInput
+    _avg?: HRAnalysisDocumentAvgOrderByAggregateInput
+    _max?: HRAnalysisDocumentMaxOrderByAggregateInput
+    _min?: HRAnalysisDocumentMinOrderByAggregateInput
+    _sum?: HRAnalysisDocumentSumOrderByAggregateInput
+  }
+
+  export type HRAnalysisDocumentScalarWhereWithAggregatesInput = {
+    AND?: HRAnalysisDocumentScalarWhereWithAggregatesInput | HRAnalysisDocumentScalarWhereWithAggregatesInput[]
+    OR?: HRAnalysisDocumentScalarWhereWithAggregatesInput[]
+    NOT?: HRAnalysisDocumentScalarWhereWithAggregatesInput | HRAnalysisDocumentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"HRAnalysisDocument"> | string
+    analysisId?: StringWithAggregatesFilter<"HRAnalysisDocument"> | string
+    name?: StringWithAggregatesFilter<"HRAnalysisDocument"> | string
+    originalName?: StringWithAggregatesFilter<"HRAnalysisDocument"> | string
+    mimeType?: StringWithAggregatesFilter<"HRAnalysisDocument"> | string
+    size?: IntWithAggregatesFilter<"HRAnalysisDocument"> | number
+    path?: StringWithAggregatesFilter<"HRAnalysisDocument"> | string
+    uploadedById?: StringNullableWithAggregatesFilter<"HRAnalysisDocument"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"HRAnalysisDocument"> | Date | string
+  }
+
   export type TenantDomainWhereInput = {
     AND?: TenantDomainWhereInput | TenantDomainWhereInput[]
     OR?: TenantDomainWhereInput[]
@@ -21951,6 +28472,7 @@ export namespace Prisma {
     children?: DepartmentCreateNestedManyWithoutParentInput
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
     positions?: PositionCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateInput = {
@@ -21967,6 +28489,7 @@ export namespace Prisma {
     children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
     positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUpdateInput = {
@@ -21983,6 +28506,7 @@ export namespace Prisma {
     children?: DepartmentUpdateManyWithoutParentNestedInput
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateInput = {
@@ -21999,6 +28523,7 @@ export namespace Prisma {
     children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentCreateManyInput = {
@@ -22050,6 +28575,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutPositionsInput
     employees?: EmployeeCreateNestedManyWithoutPositionInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutPositionInput
   }
 
   export type PositionUncheckedCreateInput = {
@@ -22063,6 +28589,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     employees?: EmployeeUncheckedCreateNestedManyWithoutPositionInput
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutPositionInput
   }
 
   export type PositionUpdateInput = {
@@ -22076,6 +28603,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutPositionsNestedInput
     employees?: EmployeeUpdateManyWithoutPositionNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutPositionNestedInput
   }
 
   export type PositionUncheckedUpdateInput = {
@@ -22089,6 +28617,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUncheckedUpdateManyWithoutPositionNestedInput
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutPositionNestedInput
   }
 
   export type PositionCreateManyInput = {
@@ -22267,6 +28796,179 @@ export namespace Prisma {
     allowsOvertime?: BoolFieldUpdateOperationsInput | boolean
   }
 
+  export type SelectionProcessCreateInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutSelectionProcessesInput
+    position?: PositionCreateNestedOneWithoutSelectionProcessesInput
+    candidates?: EmployeeCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUncheckedCreateInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
+    positionId?: string | null
+    candidates?: EmployeeUncheckedCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverUncheckedCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutSelectionProcessesNestedInput
+    position?: PositionUpdateOneWithoutSelectionProcessesNestedInput
+    candidates?: EmployeeUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidates?: EmployeeUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessCreateManyInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
+    positionId?: string | null
+  }
+
+  export type SelectionProcessUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SelectionProcessApproverCreateInput = {
+    id?: string
+    order: number
+    createdAt?: Date | string
+    selectionProcess: SelectionProcessCreateNestedOneWithoutApproversInput
+    employee: EmployeeCreateNestedOneWithoutApprovalsInput
+  }
+
+  export type SelectionProcessApproverUncheckedCreateInput = {
+    id?: string
+    selectionProcessId: string
+    employeeId: string
+    order: number
+    createdAt?: Date | string
+  }
+
+  export type SelectionProcessApproverUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectionProcess?: SelectionProcessUpdateOneRequiredWithoutApproversNestedInput
+    employee?: EmployeeUpdateOneRequiredWithoutApprovalsNestedInput
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessApproverCreateManyInput = {
+    id?: string
+    selectionProcessId: string
+    employeeId: string
+    order: number
+    createdAt?: Date | string
+  }
+
+  export type SelectionProcessApproverUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type EmployeeCreateInput = {
     id?: string
     firstName: string
@@ -22315,6 +29017,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -22323,6 +29026,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateInput = {
@@ -22370,6 +29076,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -22381,6 +29088,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUpdateInput = {
@@ -22431,6 +29141,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -22439,6 +29150,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateInput = {
@@ -22486,6 +29200,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -22497,6 +29212,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeCreateManyInput = {
@@ -22544,6 +29262,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22638,6 +29357,96 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CandidateApprovalCreateInput = {
+    id?: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectionProcess: SelectionProcessCreateNestedOneWithoutCandidateApprovalsInput
+    candidate: EmployeeCreateNestedOneWithoutReceivedApprovalsInput
+  }
+
+  export type CandidateApprovalUncheckedCreateInput = {
+    id?: string
+    selectionProcessId: string
+    candidateId: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CandidateApprovalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectionProcess?: SelectionProcessUpdateOneRequiredWithoutCandidateApprovalsNestedInput
+    candidate?: EmployeeUpdateOneRequiredWithoutReceivedApprovalsNestedInput
+  }
+
+  export type CandidateApprovalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CandidateApprovalCreateManyInput = {
+    id?: string
+    selectionProcessId: string
+    candidateId: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CandidateApprovalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CandidateApprovalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23303,6 +30112,210 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type HRCandidateAnalysisCreateInput = {
+    id?: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: HRAnalysisDocumentCreateNestedManyWithoutAnalysisInput
+    selectionProcess: SelectionProcessCreateNestedOneWithoutHrAnalysesInput
+    candidate: EmployeeCreateNestedOneWithoutHrAnalysesInput
+  }
+
+  export type HRCandidateAnalysisUncheckedCreateInput = {
+    id?: string
+    selectionProcessId: string
+    candidateId: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: HRAnalysisDocumentUncheckedCreateNestedManyWithoutAnalysisInput
+  }
+
+  export type HRCandidateAnalysisUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: HRAnalysisDocumentUpdateManyWithoutAnalysisNestedInput
+    selectionProcess?: SelectionProcessUpdateOneRequiredWithoutHrAnalysesNestedInput
+    candidate?: EmployeeUpdateOneRequiredWithoutHrAnalysesNestedInput
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: HRAnalysisDocumentUncheckedUpdateManyWithoutAnalysisNestedInput
+  }
+
+  export type HRCandidateAnalysisCreateManyInput = {
+    id?: string
+    selectionProcessId: string
+    candidateId: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HRCandidateAnalysisUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRAnalysisDocumentCreateInput = {
+    id?: string
+    name: string
+    originalName: string
+    mimeType: string
+    size: number
+    path: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+    analysis: HRCandidateAnalysisCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type HRAnalysisDocumentUncheckedCreateInput = {
+    id?: string
+    analysisId: string
+    name: string
+    originalName: string
+    mimeType: string
+    size: number
+    path: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HRAnalysisDocumentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    analysis?: HRCandidateAnalysisUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type HRAnalysisDocumentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    analysisId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRAnalysisDocumentCreateManyInput = {
+    id?: string
+    analysisId: string
+    name: string
+    originalName: string
+    mimeType: string
+    size: number
+    path: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HRAnalysisDocumentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRAnalysisDocumentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    analysisId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TenantDomainCreateInput = {
     id?: string
     domain: string
@@ -23772,6 +30785,12 @@ export namespace Prisma {
     none?: PositionWhereInput
   }
 
+  export type SelectionProcessListRelationFilter = {
+    every?: SelectionProcessWhereInput
+    some?: SelectionProcessWhereInput
+    none?: SelectionProcessWhereInput
+  }
+
   export type DepartmentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -23781,6 +30800,10 @@ export namespace Prisma {
   }
 
   export type PositionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SelectionProcessOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -23998,6 +31021,150 @@ export namespace Prisma {
     tolerance?: SortOrder
   }
 
+  export type EnumSelectionProcessStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SelectionProcessStatus | EnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSelectionProcessStatusFilter<$PrismaModel> | $Enums.SelectionProcessStatus
+  }
+
+  export type PositionNullableRelationFilter = {
+    is?: PositionWhereInput | null
+    isNot?: PositionWhereInput | null
+  }
+
+  export type SelectionProcessApproverListRelationFilter = {
+    every?: SelectionProcessApproverWhereInput
+    some?: SelectionProcessApproverWhereInput
+    none?: SelectionProcessApproverWhereInput
+  }
+
+  export type CandidateApprovalListRelationFilter = {
+    every?: CandidateApprovalWhereInput
+    some?: CandidateApprovalWhereInput
+    none?: CandidateApprovalWhereInput
+  }
+
+  export type HRCandidateAnalysisListRelationFilter = {
+    every?: HRCandidateAnalysisWhereInput
+    some?: HRCandidateAnalysisWhereInput
+    none?: HRCandidateAnalysisWhereInput
+  }
+
+  export type SelectionProcessApproverOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CandidateApprovalOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type HRCandidateAnalysisOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SelectionProcessCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    openedAt?: SortOrder
+    closedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    departmentId?: SortOrder
+    positionId?: SortOrder
+  }
+
+  export type SelectionProcessMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    openedAt?: SortOrder
+    closedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    departmentId?: SortOrder
+    positionId?: SortOrder
+  }
+
+  export type SelectionProcessMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    openedAt?: SortOrder
+    closedAt?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    departmentId?: SortOrder
+    positionId?: SortOrder
+  }
+
+  export type EnumSelectionProcessStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SelectionProcessStatus | EnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSelectionProcessStatusWithAggregatesFilter<$PrismaModel> | $Enums.SelectionProcessStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSelectionProcessStatusFilter<$PrismaModel>
+    _max?: NestedEnumSelectionProcessStatusFilter<$PrismaModel>
+  }
+
+  export type SelectionProcessRelationFilter = {
+    is?: SelectionProcessWhereInput
+    isNot?: SelectionProcessWhereInput
+  }
+
+  export type EmployeeRelationFilter = {
+    is?: EmployeeWhereInput
+    isNot?: EmployeeWhereInput
+  }
+
+  export type SelectionProcessApproverSelectionProcessIdEmployeeIdCompoundUniqueInput = {
+    selectionProcessId: string
+    employeeId: string
+  }
+
+  export type SelectionProcessApproverCountOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    employeeId?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SelectionProcessApproverAvgOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
+  export type SelectionProcessApproverMaxOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    employeeId?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SelectionProcessApproverMinOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    employeeId?: SortOrder
+    order?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type SelectionProcessApproverSumOrderByAggregateInput = {
+    order?: SortOrder
+  }
+
   export type EnumEmployeeStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.EmployeeStatus | EnumEmployeeStatusFieldRefInput<$PrismaModel>
     in?: $Enums.EmployeeStatus[] | ListEnumEmployeeStatusFieldRefInput<$PrismaModel>
@@ -24010,9 +31177,9 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
-  export type PositionNullableRelationFilter = {
-    is?: PositionWhereInput | null
-    isNot?: PositionWhereInput | null
+  export type SelectionProcessNullableRelationFilter = {
+    is?: SelectionProcessWhereInput | null
+    isNot?: SelectionProcessWhereInput | null
   }
 
   export type EmployeeLaborDataNullableRelationFilter = {
@@ -24115,6 +31282,7 @@ export namespace Prisma {
     departmentId?: SortOrder
     positionId?: SortOrder
     supervisorId?: SortOrder
+    selectionProcessId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24164,6 +31332,7 @@ export namespace Prisma {
     departmentId?: SortOrder
     positionId?: SortOrder
     supervisorId?: SortOrder
+    selectionProcessId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24213,6 +31382,7 @@ export namespace Prisma {
     departmentId?: SortOrder
     positionId?: SortOrder
     supervisorId?: SortOrder
+    selectionProcessId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24227,6 +31397,51 @@ export namespace Prisma {
     _max?: NestedEnumEmployeeStatusFilter<$PrismaModel>
   }
 
+  export type CandidateApprovalSelectionProcessIdCandidateIdApproverIdCompoundUniqueInput = {
+    selectionProcessId: string
+    candidateId: string
+    approverId: string
+  }
+
+  export type CandidateApprovalCountOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    approverId?: SortOrder
+    approverType?: SortOrder
+    status?: SortOrder
+    comment?: SortOrder
+    decidedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CandidateApprovalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    approverId?: SortOrder
+    approverType?: SortOrder
+    status?: SortOrder
+    comment?: SortOrder
+    decidedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CandidateApprovalMinOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    approverId?: SortOrder
+    approverType?: SortOrder
+    status?: SortOrder
+    comment?: SortOrder
+    decidedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type DecimalFilter<$PrismaModel = never> = {
     equals?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     in?: Decimal[] | DecimalJsLike[] | number[] | string[] | ListDecimalFieldRefInput<$PrismaModel>
@@ -24236,11 +31451,6 @@ export namespace Prisma {
     gt?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     gte?: Decimal | DecimalJsLike | number | string | DecimalFieldRefInput<$PrismaModel>
     not?: NestedDecimalFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string
-  }
-
-  export type EmployeeRelationFilter = {
-    is?: EmployeeWhereInput
-    isNot?: EmployeeWhereInput
   }
 
   export type ContractTypeRelationFilter = {
@@ -24797,6 +32007,138 @@ export namespace Prisma {
     _max?: NestedEnumFamilyRelationshipFilter<$PrismaModel>
   }
 
+  export type EnumHRRecommendationFilter<$PrismaModel = never> = {
+    equals?: $Enums.HRRecommendation | EnumHRRecommendationFieldRefInput<$PrismaModel>
+    in?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    not?: NestedEnumHRRecommendationFilter<$PrismaModel> | $Enums.HRRecommendation
+  }
+
+  export type HRAnalysisDocumentListRelationFilter = {
+    every?: HRAnalysisDocumentWhereInput
+    some?: HRAnalysisDocumentWhereInput
+    none?: HRAnalysisDocumentWhereInput
+  }
+
+  export type HRAnalysisDocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type HRCandidateAnalysisSelectionProcessIdCandidateIdCompoundUniqueInput = {
+    selectionProcessId: string
+    candidateId: string
+  }
+
+  export type HRCandidateAnalysisCountOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    professionalSummary?: SortOrder
+    strengths?: SortOrder
+    improvementAreas?: SortOrder
+    interviewResults?: SortOrder
+    competencyEvaluation?: SortOrder
+    identifiedRisks?: SortOrder
+    recommendation?: SortOrder
+    recommendationNotes?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HRCandidateAnalysisMaxOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    professionalSummary?: SortOrder
+    strengths?: SortOrder
+    improvementAreas?: SortOrder
+    interviewResults?: SortOrder
+    competencyEvaluation?: SortOrder
+    identifiedRisks?: SortOrder
+    recommendation?: SortOrder
+    recommendationNotes?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type HRCandidateAnalysisMinOrderByAggregateInput = {
+    id?: SortOrder
+    selectionProcessId?: SortOrder
+    candidateId?: SortOrder
+    professionalSummary?: SortOrder
+    strengths?: SortOrder
+    improvementAreas?: SortOrder
+    interviewResults?: SortOrder
+    competencyEvaluation?: SortOrder
+    identifiedRisks?: SortOrder
+    recommendation?: SortOrder
+    recommendationNotes?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumHRRecommendationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.HRRecommendation | EnumHRRecommendationFieldRefInput<$PrismaModel>
+    in?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    not?: NestedEnumHRRecommendationWithAggregatesFilter<$PrismaModel> | $Enums.HRRecommendation
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumHRRecommendationFilter<$PrismaModel>
+    _max?: NestedEnumHRRecommendationFilter<$PrismaModel>
+  }
+
+  export type HRCandidateAnalysisRelationFilter = {
+    is?: HRCandidateAnalysisWhereInput
+    isNot?: HRCandidateAnalysisWhereInput
+  }
+
+  export type HRAnalysisDocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    analysisId?: SortOrder
+    name?: SortOrder
+    originalName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    path?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type HRAnalysisDocumentAvgOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type HRAnalysisDocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    analysisId?: SortOrder
+    name?: SortOrder
+    originalName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    path?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type HRAnalysisDocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    analysisId?: SortOrder
+    name?: SortOrder
+    originalName?: SortOrder
+    mimeType?: SortOrder
+    size?: SortOrder
+    path?: SortOrder
+    uploadedById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type HRAnalysisDocumentSumOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
   export type TenantDomainCountOrderByAggregateInput = {
     id?: SortOrder
     domain?: SortOrder
@@ -25070,6 +32412,13 @@ export namespace Prisma {
     connect?: PositionWhereUniqueInput | PositionWhereUniqueInput[]
   }
 
+  export type SelectionProcessCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<SelectionProcessCreateWithoutDepartmentInput, SelectionProcessUncheckedCreateWithoutDepartmentInput> | SelectionProcessCreateWithoutDepartmentInput[] | SelectionProcessUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutDepartmentInput | SelectionProcessCreateOrConnectWithoutDepartmentInput[]
+    createMany?: SelectionProcessCreateManyDepartmentInputEnvelope
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+  }
+
   export type DepartmentUncheckedCreateNestedManyWithoutParentInput = {
     create?: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput> | DepartmentCreateWithoutParentInput[] | DepartmentUncheckedCreateWithoutParentInput[]
     connectOrCreate?: DepartmentCreateOrConnectWithoutParentInput | DepartmentCreateOrConnectWithoutParentInput[]
@@ -25089,6 +32438,13 @@ export namespace Prisma {
     connectOrCreate?: PositionCreateOrConnectWithoutDepartmentInput | PositionCreateOrConnectWithoutDepartmentInput[]
     createMany?: PositionCreateManyDepartmentInputEnvelope
     connect?: PositionWhereUniqueInput | PositionWhereUniqueInput[]
+  }
+
+  export type SelectionProcessUncheckedCreateNestedManyWithoutDepartmentInput = {
+    create?: XOR<SelectionProcessCreateWithoutDepartmentInput, SelectionProcessUncheckedCreateWithoutDepartmentInput> | SelectionProcessCreateWithoutDepartmentInput[] | SelectionProcessUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutDepartmentInput | SelectionProcessCreateOrConnectWithoutDepartmentInput[]
+    createMany?: SelectionProcessCreateManyDepartmentInputEnvelope
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
   }
 
   export type EnumAreaTypeFieldUpdateOperationsInput = {
@@ -25147,6 +32503,20 @@ export namespace Prisma {
     deleteMany?: PositionScalarWhereInput | PositionScalarWhereInput[]
   }
 
+  export type SelectionProcessUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutDepartmentInput, SelectionProcessUncheckedCreateWithoutDepartmentInput> | SelectionProcessCreateWithoutDepartmentInput[] | SelectionProcessUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutDepartmentInput | SelectionProcessCreateOrConnectWithoutDepartmentInput[]
+    upsert?: SelectionProcessUpsertWithWhereUniqueWithoutDepartmentInput | SelectionProcessUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: SelectionProcessCreateManyDepartmentInputEnvelope
+    set?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    disconnect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    delete?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    update?: SelectionProcessUpdateWithWhereUniqueWithoutDepartmentInput | SelectionProcessUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: SelectionProcessUpdateManyWithWhereWithoutDepartmentInput | SelectionProcessUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: SelectionProcessScalarWhereInput | SelectionProcessScalarWhereInput[]
+  }
+
   export type DepartmentUncheckedUpdateManyWithoutParentNestedInput = {
     create?: XOR<DepartmentCreateWithoutParentInput, DepartmentUncheckedCreateWithoutParentInput> | DepartmentCreateWithoutParentInput[] | DepartmentUncheckedCreateWithoutParentInput[]
     connectOrCreate?: DepartmentCreateOrConnectWithoutParentInput | DepartmentCreateOrConnectWithoutParentInput[]
@@ -25189,6 +32559,20 @@ export namespace Prisma {
     deleteMany?: PositionScalarWhereInput | PositionScalarWhereInput[]
   }
 
+  export type SelectionProcessUncheckedUpdateManyWithoutDepartmentNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutDepartmentInput, SelectionProcessUncheckedCreateWithoutDepartmentInput> | SelectionProcessCreateWithoutDepartmentInput[] | SelectionProcessUncheckedCreateWithoutDepartmentInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutDepartmentInput | SelectionProcessCreateOrConnectWithoutDepartmentInput[]
+    upsert?: SelectionProcessUpsertWithWhereUniqueWithoutDepartmentInput | SelectionProcessUpsertWithWhereUniqueWithoutDepartmentInput[]
+    createMany?: SelectionProcessCreateManyDepartmentInputEnvelope
+    set?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    disconnect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    delete?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    update?: SelectionProcessUpdateWithWhereUniqueWithoutDepartmentInput | SelectionProcessUpdateWithWhereUniqueWithoutDepartmentInput[]
+    updateMany?: SelectionProcessUpdateManyWithWhereWithoutDepartmentInput | SelectionProcessUpdateManyWithWhereWithoutDepartmentInput[]
+    deleteMany?: SelectionProcessScalarWhereInput | SelectionProcessScalarWhereInput[]
+  }
+
   export type DepartmentCreateNestedOneWithoutPositionsInput = {
     create?: XOR<DepartmentCreateWithoutPositionsInput, DepartmentUncheckedCreateWithoutPositionsInput>
     connectOrCreate?: DepartmentCreateOrConnectWithoutPositionsInput
@@ -25202,11 +32586,25 @@ export namespace Prisma {
     connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
   }
 
+  export type SelectionProcessCreateNestedManyWithoutPositionInput = {
+    create?: XOR<SelectionProcessCreateWithoutPositionInput, SelectionProcessUncheckedCreateWithoutPositionInput> | SelectionProcessCreateWithoutPositionInput[] | SelectionProcessUncheckedCreateWithoutPositionInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutPositionInput | SelectionProcessCreateOrConnectWithoutPositionInput[]
+    createMany?: SelectionProcessCreateManyPositionInputEnvelope
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+  }
+
   export type EmployeeUncheckedCreateNestedManyWithoutPositionInput = {
     create?: XOR<EmployeeCreateWithoutPositionInput, EmployeeUncheckedCreateWithoutPositionInput> | EmployeeCreateWithoutPositionInput[] | EmployeeUncheckedCreateWithoutPositionInput[]
     connectOrCreate?: EmployeeCreateOrConnectWithoutPositionInput | EmployeeCreateOrConnectWithoutPositionInput[]
     createMany?: EmployeeCreateManyPositionInputEnvelope
     connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+  }
+
+  export type SelectionProcessUncheckedCreateNestedManyWithoutPositionInput = {
+    create?: XOR<SelectionProcessCreateWithoutPositionInput, SelectionProcessUncheckedCreateWithoutPositionInput> | SelectionProcessCreateWithoutPositionInput[] | SelectionProcessUncheckedCreateWithoutPositionInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutPositionInput | SelectionProcessCreateOrConnectWithoutPositionInput[]
+    createMany?: SelectionProcessCreateManyPositionInputEnvelope
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -25245,6 +32643,20 @@ export namespace Prisma {
     deleteMany?: EmployeeScalarWhereInput | EmployeeScalarWhereInput[]
   }
 
+  export type SelectionProcessUpdateManyWithoutPositionNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutPositionInput, SelectionProcessUncheckedCreateWithoutPositionInput> | SelectionProcessCreateWithoutPositionInput[] | SelectionProcessUncheckedCreateWithoutPositionInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutPositionInput | SelectionProcessCreateOrConnectWithoutPositionInput[]
+    upsert?: SelectionProcessUpsertWithWhereUniqueWithoutPositionInput | SelectionProcessUpsertWithWhereUniqueWithoutPositionInput[]
+    createMany?: SelectionProcessCreateManyPositionInputEnvelope
+    set?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    disconnect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    delete?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    update?: SelectionProcessUpdateWithWhereUniqueWithoutPositionInput | SelectionProcessUpdateWithWhereUniqueWithoutPositionInput[]
+    updateMany?: SelectionProcessUpdateManyWithWhereWithoutPositionInput | SelectionProcessUpdateManyWithWhereWithoutPositionInput[]
+    deleteMany?: SelectionProcessScalarWhereInput | SelectionProcessScalarWhereInput[]
+  }
+
   export type EmployeeUncheckedUpdateManyWithoutPositionNestedInput = {
     create?: XOR<EmployeeCreateWithoutPositionInput, EmployeeUncheckedCreateWithoutPositionInput> | EmployeeCreateWithoutPositionInput[] | EmployeeUncheckedCreateWithoutPositionInput[]
     connectOrCreate?: EmployeeCreateOrConnectWithoutPositionInput | EmployeeCreateOrConnectWithoutPositionInput[]
@@ -25257,6 +32669,20 @@ export namespace Prisma {
     update?: EmployeeUpdateWithWhereUniqueWithoutPositionInput | EmployeeUpdateWithWhereUniqueWithoutPositionInput[]
     updateMany?: EmployeeUpdateManyWithWhereWithoutPositionInput | EmployeeUpdateManyWithWhereWithoutPositionInput[]
     deleteMany?: EmployeeScalarWhereInput | EmployeeScalarWhereInput[]
+  }
+
+  export type SelectionProcessUncheckedUpdateManyWithoutPositionNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutPositionInput, SelectionProcessUncheckedCreateWithoutPositionInput> | SelectionProcessCreateWithoutPositionInput[] | SelectionProcessUncheckedCreateWithoutPositionInput[]
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutPositionInput | SelectionProcessCreateOrConnectWithoutPositionInput[]
+    upsert?: SelectionProcessUpsertWithWhereUniqueWithoutPositionInput | SelectionProcessUpsertWithWhereUniqueWithoutPositionInput[]
+    createMany?: SelectionProcessCreateManyPositionInputEnvelope
+    set?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    disconnect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    delete?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    connect?: SelectionProcessWhereUniqueInput | SelectionProcessWhereUniqueInput[]
+    update?: SelectionProcessUpdateWithWhereUniqueWithoutPositionInput | SelectionProcessUpdateWithWhereUniqueWithoutPositionInput[]
+    updateMany?: SelectionProcessUpdateManyWithWhereWithoutPositionInput | SelectionProcessUpdateManyWithWhereWithoutPositionInput[]
+    deleteMany?: SelectionProcessScalarWhereInput | SelectionProcessScalarWhereInput[]
   }
 
   export type EmployeeLaborDataCreateNestedManyWithoutContractTypeInput = {
@@ -25343,6 +32769,238 @@ export namespace Prisma {
     deleteMany?: EmployeeLaborDataScalarWhereInput | EmployeeLaborDataScalarWhereInput[]
   }
 
+  export type DepartmentCreateNestedOneWithoutSelectionProcessesInput = {
+    create?: XOR<DepartmentCreateWithoutSelectionProcessesInput, DepartmentUncheckedCreateWithoutSelectionProcessesInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutSelectionProcessesInput
+    connect?: DepartmentWhereUniqueInput
+  }
+
+  export type PositionCreateNestedOneWithoutSelectionProcessesInput = {
+    create?: XOR<PositionCreateWithoutSelectionProcessesInput, PositionUncheckedCreateWithoutSelectionProcessesInput>
+    connectOrCreate?: PositionCreateOrConnectWithoutSelectionProcessesInput
+    connect?: PositionWhereUniqueInput
+  }
+
+  export type EmployeeCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<EmployeeCreateWithoutSelectionProcessInput, EmployeeUncheckedCreateWithoutSelectionProcessInput> | EmployeeCreateWithoutSelectionProcessInput[] | EmployeeUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSelectionProcessInput | EmployeeCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: EmployeeCreateManySelectionProcessInputEnvelope
+    connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+  }
+
+  export type SelectionProcessApproverCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput> | SelectionProcessApproverCreateWithoutSelectionProcessInput[] | SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput | SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: SelectionProcessApproverCreateManySelectionProcessInputEnvelope
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+  }
+
+  export type CandidateApprovalCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<CandidateApprovalCreateWithoutSelectionProcessInput, CandidateApprovalUncheckedCreateWithoutSelectionProcessInput> | CandidateApprovalCreateWithoutSelectionProcessInput[] | CandidateApprovalUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutSelectionProcessInput | CandidateApprovalCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: CandidateApprovalCreateManySelectionProcessInputEnvelope
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+  }
+
+  export type HRCandidateAnalysisCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput> | HRCandidateAnalysisCreateWithoutSelectionProcessInput[] | HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput | HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: HRCandidateAnalysisCreateManySelectionProcessInputEnvelope
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+  }
+
+  export type EmployeeUncheckedCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<EmployeeCreateWithoutSelectionProcessInput, EmployeeUncheckedCreateWithoutSelectionProcessInput> | EmployeeCreateWithoutSelectionProcessInput[] | EmployeeUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSelectionProcessInput | EmployeeCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: EmployeeCreateManySelectionProcessInputEnvelope
+    connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+  }
+
+  export type SelectionProcessApproverUncheckedCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput> | SelectionProcessApproverCreateWithoutSelectionProcessInput[] | SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput | SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: SelectionProcessApproverCreateManySelectionProcessInputEnvelope
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+  }
+
+  export type CandidateApprovalUncheckedCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<CandidateApprovalCreateWithoutSelectionProcessInput, CandidateApprovalUncheckedCreateWithoutSelectionProcessInput> | CandidateApprovalCreateWithoutSelectionProcessInput[] | CandidateApprovalUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutSelectionProcessInput | CandidateApprovalCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: CandidateApprovalCreateManySelectionProcessInputEnvelope
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+  }
+
+  export type HRCandidateAnalysisUncheckedCreateNestedManyWithoutSelectionProcessInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput> | HRCandidateAnalysisCreateWithoutSelectionProcessInput[] | HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput | HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput[]
+    createMany?: HRCandidateAnalysisCreateManySelectionProcessInputEnvelope
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+  }
+
+  export type EnumSelectionProcessStatusFieldUpdateOperationsInput = {
+    set?: $Enums.SelectionProcessStatus
+  }
+
+  export type DepartmentUpdateOneWithoutSelectionProcessesNestedInput = {
+    create?: XOR<DepartmentCreateWithoutSelectionProcessesInput, DepartmentUncheckedCreateWithoutSelectionProcessesInput>
+    connectOrCreate?: DepartmentCreateOrConnectWithoutSelectionProcessesInput
+    upsert?: DepartmentUpsertWithoutSelectionProcessesInput
+    disconnect?: DepartmentWhereInput | boolean
+    delete?: DepartmentWhereInput | boolean
+    connect?: DepartmentWhereUniqueInput
+    update?: XOR<XOR<DepartmentUpdateToOneWithWhereWithoutSelectionProcessesInput, DepartmentUpdateWithoutSelectionProcessesInput>, DepartmentUncheckedUpdateWithoutSelectionProcessesInput>
+  }
+
+  export type PositionUpdateOneWithoutSelectionProcessesNestedInput = {
+    create?: XOR<PositionCreateWithoutSelectionProcessesInput, PositionUncheckedCreateWithoutSelectionProcessesInput>
+    connectOrCreate?: PositionCreateOrConnectWithoutSelectionProcessesInput
+    upsert?: PositionUpsertWithoutSelectionProcessesInput
+    disconnect?: PositionWhereInput | boolean
+    delete?: PositionWhereInput | boolean
+    connect?: PositionWhereUniqueInput
+    update?: XOR<XOR<PositionUpdateToOneWithWhereWithoutSelectionProcessesInput, PositionUpdateWithoutSelectionProcessesInput>, PositionUncheckedUpdateWithoutSelectionProcessesInput>
+  }
+
+  export type EmployeeUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<EmployeeCreateWithoutSelectionProcessInput, EmployeeUncheckedCreateWithoutSelectionProcessInput> | EmployeeCreateWithoutSelectionProcessInput[] | EmployeeUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSelectionProcessInput | EmployeeCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: EmployeeUpsertWithWhereUniqueWithoutSelectionProcessInput | EmployeeUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: EmployeeCreateManySelectionProcessInputEnvelope
+    set?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    disconnect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    delete?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    update?: EmployeeUpdateWithWhereUniqueWithoutSelectionProcessInput | EmployeeUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: EmployeeUpdateManyWithWhereWithoutSelectionProcessInput | EmployeeUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: EmployeeScalarWhereInput | EmployeeScalarWhereInput[]
+  }
+
+  export type SelectionProcessApproverUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput> | SelectionProcessApproverCreateWithoutSelectionProcessInput[] | SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput | SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: SelectionProcessApproverUpsertWithWhereUniqueWithoutSelectionProcessInput | SelectionProcessApproverUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: SelectionProcessApproverCreateManySelectionProcessInputEnvelope
+    set?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    disconnect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    delete?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    update?: SelectionProcessApproverUpdateWithWhereUniqueWithoutSelectionProcessInput | SelectionProcessApproverUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: SelectionProcessApproverUpdateManyWithWhereWithoutSelectionProcessInput | SelectionProcessApproverUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: SelectionProcessApproverScalarWhereInput | SelectionProcessApproverScalarWhereInput[]
+  }
+
+  export type CandidateApprovalUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<CandidateApprovalCreateWithoutSelectionProcessInput, CandidateApprovalUncheckedCreateWithoutSelectionProcessInput> | CandidateApprovalCreateWithoutSelectionProcessInput[] | CandidateApprovalUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutSelectionProcessInput | CandidateApprovalCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: CandidateApprovalUpsertWithWhereUniqueWithoutSelectionProcessInput | CandidateApprovalUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: CandidateApprovalCreateManySelectionProcessInputEnvelope
+    set?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    disconnect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    delete?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    update?: CandidateApprovalUpdateWithWhereUniqueWithoutSelectionProcessInput | CandidateApprovalUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: CandidateApprovalUpdateManyWithWhereWithoutSelectionProcessInput | CandidateApprovalUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: CandidateApprovalScalarWhereInput | CandidateApprovalScalarWhereInput[]
+  }
+
+  export type HRCandidateAnalysisUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput> | HRCandidateAnalysisCreateWithoutSelectionProcessInput[] | HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput | HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: HRCandidateAnalysisUpsertWithWhereUniqueWithoutSelectionProcessInput | HRCandidateAnalysisUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: HRCandidateAnalysisCreateManySelectionProcessInputEnvelope
+    set?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    disconnect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    delete?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    update?: HRCandidateAnalysisUpdateWithWhereUniqueWithoutSelectionProcessInput | HRCandidateAnalysisUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: HRCandidateAnalysisUpdateManyWithWhereWithoutSelectionProcessInput | HRCandidateAnalysisUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: HRCandidateAnalysisScalarWhereInput | HRCandidateAnalysisScalarWhereInput[]
+  }
+
+  export type EmployeeUncheckedUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<EmployeeCreateWithoutSelectionProcessInput, EmployeeUncheckedCreateWithoutSelectionProcessInput> | EmployeeCreateWithoutSelectionProcessInput[] | EmployeeUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: EmployeeCreateOrConnectWithoutSelectionProcessInput | EmployeeCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: EmployeeUpsertWithWhereUniqueWithoutSelectionProcessInput | EmployeeUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: EmployeeCreateManySelectionProcessInputEnvelope
+    set?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    disconnect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    delete?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+    update?: EmployeeUpdateWithWhereUniqueWithoutSelectionProcessInput | EmployeeUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: EmployeeUpdateManyWithWhereWithoutSelectionProcessInput | EmployeeUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: EmployeeScalarWhereInput | EmployeeScalarWhereInput[]
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput> | SelectionProcessApproverCreateWithoutSelectionProcessInput[] | SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput | SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: SelectionProcessApproverUpsertWithWhereUniqueWithoutSelectionProcessInput | SelectionProcessApproverUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: SelectionProcessApproverCreateManySelectionProcessInputEnvelope
+    set?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    disconnect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    delete?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    update?: SelectionProcessApproverUpdateWithWhereUniqueWithoutSelectionProcessInput | SelectionProcessApproverUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: SelectionProcessApproverUpdateManyWithWhereWithoutSelectionProcessInput | SelectionProcessApproverUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: SelectionProcessApproverScalarWhereInput | SelectionProcessApproverScalarWhereInput[]
+  }
+
+  export type CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<CandidateApprovalCreateWithoutSelectionProcessInput, CandidateApprovalUncheckedCreateWithoutSelectionProcessInput> | CandidateApprovalCreateWithoutSelectionProcessInput[] | CandidateApprovalUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutSelectionProcessInput | CandidateApprovalCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: CandidateApprovalUpsertWithWhereUniqueWithoutSelectionProcessInput | CandidateApprovalUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: CandidateApprovalCreateManySelectionProcessInputEnvelope
+    set?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    disconnect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    delete?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    update?: CandidateApprovalUpdateWithWhereUniqueWithoutSelectionProcessInput | CandidateApprovalUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: CandidateApprovalUpdateManyWithWhereWithoutSelectionProcessInput | CandidateApprovalUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: CandidateApprovalScalarWhereInput | CandidateApprovalScalarWhereInput[]
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessNestedInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput> | HRCandidateAnalysisCreateWithoutSelectionProcessInput[] | HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput | HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput[]
+    upsert?: HRCandidateAnalysisUpsertWithWhereUniqueWithoutSelectionProcessInput | HRCandidateAnalysisUpsertWithWhereUniqueWithoutSelectionProcessInput[]
+    createMany?: HRCandidateAnalysisCreateManySelectionProcessInputEnvelope
+    set?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    disconnect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    delete?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    update?: HRCandidateAnalysisUpdateWithWhereUniqueWithoutSelectionProcessInput | HRCandidateAnalysisUpdateWithWhereUniqueWithoutSelectionProcessInput[]
+    updateMany?: HRCandidateAnalysisUpdateManyWithWhereWithoutSelectionProcessInput | HRCandidateAnalysisUpdateManyWithWhereWithoutSelectionProcessInput[]
+    deleteMany?: HRCandidateAnalysisScalarWhereInput | HRCandidateAnalysisScalarWhereInput[]
+  }
+
+  export type SelectionProcessCreateNestedOneWithoutApproversInput = {
+    create?: XOR<SelectionProcessCreateWithoutApproversInput, SelectionProcessUncheckedCreateWithoutApproversInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutApproversInput
+    connect?: SelectionProcessWhereUniqueInput
+  }
+
+  export type EmployeeCreateNestedOneWithoutApprovalsInput = {
+    create?: XOR<EmployeeCreateWithoutApprovalsInput, EmployeeUncheckedCreateWithoutApprovalsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutApprovalsInput
+    connect?: EmployeeWhereUniqueInput
+  }
+
+  export type SelectionProcessUpdateOneRequiredWithoutApproversNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutApproversInput, SelectionProcessUncheckedCreateWithoutApproversInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutApproversInput
+    upsert?: SelectionProcessUpsertWithoutApproversInput
+    connect?: SelectionProcessWhereUniqueInput
+    update?: XOR<XOR<SelectionProcessUpdateToOneWithWhereWithoutApproversInput, SelectionProcessUpdateWithoutApproversInput>, SelectionProcessUncheckedUpdateWithoutApproversInput>
+  }
+
+  export type EmployeeUpdateOneRequiredWithoutApprovalsNestedInput = {
+    create?: XOR<EmployeeCreateWithoutApprovalsInput, EmployeeUncheckedCreateWithoutApprovalsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutApprovalsInput
+    upsert?: EmployeeUpsertWithoutApprovalsInput
+    connect?: EmployeeWhereUniqueInput
+    update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutApprovalsInput, EmployeeUpdateWithoutApprovalsInput>, EmployeeUncheckedUpdateWithoutApprovalsInput>
+  }
+
   export type UserCreateNestedOneWithoutEmployeeInput = {
     create?: XOR<UserCreateWithoutEmployeeInput, UserUncheckedCreateWithoutEmployeeInput>
     connectOrCreate?: UserCreateOrConnectWithoutEmployeeInput
@@ -25372,6 +33030,12 @@ export namespace Prisma {
     connectOrCreate?: EmployeeCreateOrConnectWithoutSupervisorInput | EmployeeCreateOrConnectWithoutSupervisorInput[]
     createMany?: EmployeeCreateManySupervisorInputEnvelope
     connect?: EmployeeWhereUniqueInput | EmployeeWhereUniqueInput[]
+  }
+
+  export type SelectionProcessCreateNestedOneWithoutCandidatesInput = {
+    create?: XOR<SelectionProcessCreateWithoutCandidatesInput, SelectionProcessUncheckedCreateWithoutCandidatesInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutCandidatesInput
+    connect?: SelectionProcessWhereUniqueInput
   }
 
   export type EmployeeLaborDataCreateNestedOneWithoutEmployeeInput = {
@@ -25427,6 +33091,27 @@ export namespace Prisma {
     connectOrCreate?: KudoCreateOrConnectWithoutReceiverInput | KudoCreateOrConnectWithoutReceiverInput[]
     createMany?: KudoCreateManyReceiverInputEnvelope
     connect?: KudoWhereUniqueInput | KudoWhereUniqueInput[]
+  }
+
+  export type SelectionProcessApproverCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutEmployeeInput, SelectionProcessApproverUncheckedCreateWithoutEmployeeInput> | SelectionProcessApproverCreateWithoutEmployeeInput[] | SelectionProcessApproverUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutEmployeeInput | SelectionProcessApproverCreateOrConnectWithoutEmployeeInput[]
+    createMany?: SelectionProcessApproverCreateManyEmployeeInputEnvelope
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+  }
+
+  export type CandidateApprovalCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<CandidateApprovalCreateWithoutCandidateInput, CandidateApprovalUncheckedCreateWithoutCandidateInput> | CandidateApprovalCreateWithoutCandidateInput[] | CandidateApprovalUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutCandidateInput | CandidateApprovalCreateOrConnectWithoutCandidateInput[]
+    createMany?: CandidateApprovalCreateManyCandidateInputEnvelope
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+  }
+
+  export type HRCandidateAnalysisCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutCandidateInput, HRCandidateAnalysisUncheckedCreateWithoutCandidateInput> | HRCandidateAnalysisCreateWithoutCandidateInput[] | HRCandidateAnalysisUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutCandidateInput | HRCandidateAnalysisCreateOrConnectWithoutCandidateInput[]
+    createMany?: HRCandidateAnalysisCreateManyCandidateInputEnvelope
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
   }
 
   export type EmployeeUncheckedCreateNestedManyWithoutSupervisorInput = {
@@ -25491,6 +33176,27 @@ export namespace Prisma {
     connect?: KudoWhereUniqueInput | KudoWhereUniqueInput[]
   }
 
+  export type SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutEmployeeInput, SelectionProcessApproverUncheckedCreateWithoutEmployeeInput> | SelectionProcessApproverCreateWithoutEmployeeInput[] | SelectionProcessApproverUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutEmployeeInput | SelectionProcessApproverCreateOrConnectWithoutEmployeeInput[]
+    createMany?: SelectionProcessApproverCreateManyEmployeeInputEnvelope
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+  }
+
+  export type CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<CandidateApprovalCreateWithoutCandidateInput, CandidateApprovalUncheckedCreateWithoutCandidateInput> | CandidateApprovalCreateWithoutCandidateInput[] | CandidateApprovalUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutCandidateInput | CandidateApprovalCreateOrConnectWithoutCandidateInput[]
+    createMany?: CandidateApprovalCreateManyCandidateInputEnvelope
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+  }
+
+  export type HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutCandidateInput, HRCandidateAnalysisUncheckedCreateWithoutCandidateInput> | HRCandidateAnalysisCreateWithoutCandidateInput[] | HRCandidateAnalysisUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutCandidateInput | HRCandidateAnalysisCreateOrConnectWithoutCandidateInput[]
+    createMany?: HRCandidateAnalysisCreateManyCandidateInputEnvelope
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+  }
+
   export type EnumEmployeeStatusFieldUpdateOperationsInput = {
     set?: $Enums.EmployeeStatus
   }
@@ -25547,6 +33253,16 @@ export namespace Prisma {
     update?: EmployeeUpdateWithWhereUniqueWithoutSupervisorInput | EmployeeUpdateWithWhereUniqueWithoutSupervisorInput[]
     updateMany?: EmployeeUpdateManyWithWhereWithoutSupervisorInput | EmployeeUpdateManyWithWhereWithoutSupervisorInput[]
     deleteMany?: EmployeeScalarWhereInput | EmployeeScalarWhereInput[]
+  }
+
+  export type SelectionProcessUpdateOneWithoutCandidatesNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutCandidatesInput, SelectionProcessUncheckedCreateWithoutCandidatesInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutCandidatesInput
+    upsert?: SelectionProcessUpsertWithoutCandidatesInput
+    disconnect?: SelectionProcessWhereInput | boolean
+    delete?: SelectionProcessWhereInput | boolean
+    connect?: SelectionProcessWhereUniqueInput
+    update?: XOR<XOR<SelectionProcessUpdateToOneWithWhereWithoutCandidatesInput, SelectionProcessUpdateWithoutCandidatesInput>, SelectionProcessUncheckedUpdateWithoutCandidatesInput>
   }
 
   export type EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput = {
@@ -25655,6 +33371,48 @@ export namespace Prisma {
     update?: KudoUpdateWithWhereUniqueWithoutReceiverInput | KudoUpdateWithWhereUniqueWithoutReceiverInput[]
     updateMany?: KudoUpdateManyWithWhereWithoutReceiverInput | KudoUpdateManyWithWhereWithoutReceiverInput[]
     deleteMany?: KudoScalarWhereInput | KudoScalarWhereInput[]
+  }
+
+  export type SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutEmployeeInput, SelectionProcessApproverUncheckedCreateWithoutEmployeeInput> | SelectionProcessApproverCreateWithoutEmployeeInput[] | SelectionProcessApproverUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutEmployeeInput | SelectionProcessApproverCreateOrConnectWithoutEmployeeInput[]
+    upsert?: SelectionProcessApproverUpsertWithWhereUniqueWithoutEmployeeInput | SelectionProcessApproverUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: SelectionProcessApproverCreateManyEmployeeInputEnvelope
+    set?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    disconnect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    delete?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    update?: SelectionProcessApproverUpdateWithWhereUniqueWithoutEmployeeInput | SelectionProcessApproverUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: SelectionProcessApproverUpdateManyWithWhereWithoutEmployeeInput | SelectionProcessApproverUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: SelectionProcessApproverScalarWhereInput | SelectionProcessApproverScalarWhereInput[]
+  }
+
+  export type CandidateApprovalUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<CandidateApprovalCreateWithoutCandidateInput, CandidateApprovalUncheckedCreateWithoutCandidateInput> | CandidateApprovalCreateWithoutCandidateInput[] | CandidateApprovalUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutCandidateInput | CandidateApprovalCreateOrConnectWithoutCandidateInput[]
+    upsert?: CandidateApprovalUpsertWithWhereUniqueWithoutCandidateInput | CandidateApprovalUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: CandidateApprovalCreateManyCandidateInputEnvelope
+    set?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    disconnect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    delete?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    update?: CandidateApprovalUpdateWithWhereUniqueWithoutCandidateInput | CandidateApprovalUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: CandidateApprovalUpdateManyWithWhereWithoutCandidateInput | CandidateApprovalUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: CandidateApprovalScalarWhereInput | CandidateApprovalScalarWhereInput[]
+  }
+
+  export type HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutCandidateInput, HRCandidateAnalysisUncheckedCreateWithoutCandidateInput> | HRCandidateAnalysisCreateWithoutCandidateInput[] | HRCandidateAnalysisUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutCandidateInput | HRCandidateAnalysisCreateOrConnectWithoutCandidateInput[]
+    upsert?: HRCandidateAnalysisUpsertWithWhereUniqueWithoutCandidateInput | HRCandidateAnalysisUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: HRCandidateAnalysisCreateManyCandidateInputEnvelope
+    set?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    disconnect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    delete?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    update?: HRCandidateAnalysisUpdateWithWhereUniqueWithoutCandidateInput | HRCandidateAnalysisUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: HRCandidateAnalysisUpdateManyWithWhereWithoutCandidateInput | HRCandidateAnalysisUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: HRCandidateAnalysisScalarWhereInput | HRCandidateAnalysisScalarWhereInput[]
   }
 
   export type EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput = {
@@ -25777,6 +33535,76 @@ export namespace Prisma {
     update?: KudoUpdateWithWhereUniqueWithoutReceiverInput | KudoUpdateWithWhereUniqueWithoutReceiverInput[]
     updateMany?: KudoUpdateManyWithWhereWithoutReceiverInput | KudoUpdateManyWithWhereWithoutReceiverInput[]
     deleteMany?: KudoScalarWhereInput | KudoScalarWhereInput[]
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput = {
+    create?: XOR<SelectionProcessApproverCreateWithoutEmployeeInput, SelectionProcessApproverUncheckedCreateWithoutEmployeeInput> | SelectionProcessApproverCreateWithoutEmployeeInput[] | SelectionProcessApproverUncheckedCreateWithoutEmployeeInput[]
+    connectOrCreate?: SelectionProcessApproverCreateOrConnectWithoutEmployeeInput | SelectionProcessApproverCreateOrConnectWithoutEmployeeInput[]
+    upsert?: SelectionProcessApproverUpsertWithWhereUniqueWithoutEmployeeInput | SelectionProcessApproverUpsertWithWhereUniqueWithoutEmployeeInput[]
+    createMany?: SelectionProcessApproverCreateManyEmployeeInputEnvelope
+    set?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    disconnect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    delete?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    connect?: SelectionProcessApproverWhereUniqueInput | SelectionProcessApproverWhereUniqueInput[]
+    update?: SelectionProcessApproverUpdateWithWhereUniqueWithoutEmployeeInput | SelectionProcessApproverUpdateWithWhereUniqueWithoutEmployeeInput[]
+    updateMany?: SelectionProcessApproverUpdateManyWithWhereWithoutEmployeeInput | SelectionProcessApproverUpdateManyWithWhereWithoutEmployeeInput[]
+    deleteMany?: SelectionProcessApproverScalarWhereInput | SelectionProcessApproverScalarWhereInput[]
+  }
+
+  export type CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<CandidateApprovalCreateWithoutCandidateInput, CandidateApprovalUncheckedCreateWithoutCandidateInput> | CandidateApprovalCreateWithoutCandidateInput[] | CandidateApprovalUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: CandidateApprovalCreateOrConnectWithoutCandidateInput | CandidateApprovalCreateOrConnectWithoutCandidateInput[]
+    upsert?: CandidateApprovalUpsertWithWhereUniqueWithoutCandidateInput | CandidateApprovalUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: CandidateApprovalCreateManyCandidateInputEnvelope
+    set?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    disconnect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    delete?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    connect?: CandidateApprovalWhereUniqueInput | CandidateApprovalWhereUniqueInput[]
+    update?: CandidateApprovalUpdateWithWhereUniqueWithoutCandidateInput | CandidateApprovalUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: CandidateApprovalUpdateManyWithWhereWithoutCandidateInput | CandidateApprovalUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: CandidateApprovalScalarWhereInput | CandidateApprovalScalarWhereInput[]
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutCandidateInput, HRCandidateAnalysisUncheckedCreateWithoutCandidateInput> | HRCandidateAnalysisCreateWithoutCandidateInput[] | HRCandidateAnalysisUncheckedCreateWithoutCandidateInput[]
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutCandidateInput | HRCandidateAnalysisCreateOrConnectWithoutCandidateInput[]
+    upsert?: HRCandidateAnalysisUpsertWithWhereUniqueWithoutCandidateInput | HRCandidateAnalysisUpsertWithWhereUniqueWithoutCandidateInput[]
+    createMany?: HRCandidateAnalysisCreateManyCandidateInputEnvelope
+    set?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    disconnect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    delete?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    connect?: HRCandidateAnalysisWhereUniqueInput | HRCandidateAnalysisWhereUniqueInput[]
+    update?: HRCandidateAnalysisUpdateWithWhereUniqueWithoutCandidateInput | HRCandidateAnalysisUpdateWithWhereUniqueWithoutCandidateInput[]
+    updateMany?: HRCandidateAnalysisUpdateManyWithWhereWithoutCandidateInput | HRCandidateAnalysisUpdateManyWithWhereWithoutCandidateInput[]
+    deleteMany?: HRCandidateAnalysisScalarWhereInput | HRCandidateAnalysisScalarWhereInput[]
+  }
+
+  export type SelectionProcessCreateNestedOneWithoutCandidateApprovalsInput = {
+    create?: XOR<SelectionProcessCreateWithoutCandidateApprovalsInput, SelectionProcessUncheckedCreateWithoutCandidateApprovalsInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutCandidateApprovalsInput
+    connect?: SelectionProcessWhereUniqueInput
+  }
+
+  export type EmployeeCreateNestedOneWithoutReceivedApprovalsInput = {
+    create?: XOR<EmployeeCreateWithoutReceivedApprovalsInput, EmployeeUncheckedCreateWithoutReceivedApprovalsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutReceivedApprovalsInput
+    connect?: EmployeeWhereUniqueInput
+  }
+
+  export type SelectionProcessUpdateOneRequiredWithoutCandidateApprovalsNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutCandidateApprovalsInput, SelectionProcessUncheckedCreateWithoutCandidateApprovalsInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutCandidateApprovalsInput
+    upsert?: SelectionProcessUpsertWithoutCandidateApprovalsInput
+    connect?: SelectionProcessWhereUniqueInput
+    update?: XOR<XOR<SelectionProcessUpdateToOneWithWhereWithoutCandidateApprovalsInput, SelectionProcessUpdateWithoutCandidateApprovalsInput>, SelectionProcessUncheckedUpdateWithoutCandidateApprovalsInput>
+  }
+
+  export type EmployeeUpdateOneRequiredWithoutReceivedApprovalsNestedInput = {
+    create?: XOR<EmployeeCreateWithoutReceivedApprovalsInput, EmployeeUncheckedCreateWithoutReceivedApprovalsInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutReceivedApprovalsInput
+    upsert?: EmployeeUpsertWithoutReceivedApprovalsInput
+    connect?: EmployeeWhereUniqueInput
+    update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutReceivedApprovalsInput, EmployeeUpdateWithoutReceivedApprovalsInput>, EmployeeUncheckedUpdateWithoutReceivedApprovalsInput>
   }
 
   export type EmployeeCreateNestedOneWithoutLaborDataInput = {
@@ -25981,6 +33809,94 @@ export namespace Prisma {
     upsert?: EmployeeUpsertWithoutFamilyMembersInput
     connect?: EmployeeWhereUniqueInput
     update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutFamilyMembersInput, EmployeeUpdateWithoutFamilyMembersInput>, EmployeeUncheckedUpdateWithoutFamilyMembersInput>
+  }
+
+  export type HRAnalysisDocumentCreateNestedManyWithoutAnalysisInput = {
+    create?: XOR<HRAnalysisDocumentCreateWithoutAnalysisInput, HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput> | HRAnalysisDocumentCreateWithoutAnalysisInput[] | HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput[]
+    connectOrCreate?: HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput | HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput[]
+    createMany?: HRAnalysisDocumentCreateManyAnalysisInputEnvelope
+    connect?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+  }
+
+  export type SelectionProcessCreateNestedOneWithoutHrAnalysesInput = {
+    create?: XOR<SelectionProcessCreateWithoutHrAnalysesInput, SelectionProcessUncheckedCreateWithoutHrAnalysesInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutHrAnalysesInput
+    connect?: SelectionProcessWhereUniqueInput
+  }
+
+  export type EmployeeCreateNestedOneWithoutHrAnalysesInput = {
+    create?: XOR<EmployeeCreateWithoutHrAnalysesInput, EmployeeUncheckedCreateWithoutHrAnalysesInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutHrAnalysesInput
+    connect?: EmployeeWhereUniqueInput
+  }
+
+  export type HRAnalysisDocumentUncheckedCreateNestedManyWithoutAnalysisInput = {
+    create?: XOR<HRAnalysisDocumentCreateWithoutAnalysisInput, HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput> | HRAnalysisDocumentCreateWithoutAnalysisInput[] | HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput[]
+    connectOrCreate?: HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput | HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput[]
+    createMany?: HRAnalysisDocumentCreateManyAnalysisInputEnvelope
+    connect?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+  }
+
+  export type EnumHRRecommendationFieldUpdateOperationsInput = {
+    set?: $Enums.HRRecommendation
+  }
+
+  export type HRAnalysisDocumentUpdateManyWithoutAnalysisNestedInput = {
+    create?: XOR<HRAnalysisDocumentCreateWithoutAnalysisInput, HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput> | HRAnalysisDocumentCreateWithoutAnalysisInput[] | HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput[]
+    connectOrCreate?: HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput | HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput[]
+    upsert?: HRAnalysisDocumentUpsertWithWhereUniqueWithoutAnalysisInput | HRAnalysisDocumentUpsertWithWhereUniqueWithoutAnalysisInput[]
+    createMany?: HRAnalysisDocumentCreateManyAnalysisInputEnvelope
+    set?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    disconnect?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    delete?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    connect?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    update?: HRAnalysisDocumentUpdateWithWhereUniqueWithoutAnalysisInput | HRAnalysisDocumentUpdateWithWhereUniqueWithoutAnalysisInput[]
+    updateMany?: HRAnalysisDocumentUpdateManyWithWhereWithoutAnalysisInput | HRAnalysisDocumentUpdateManyWithWhereWithoutAnalysisInput[]
+    deleteMany?: HRAnalysisDocumentScalarWhereInput | HRAnalysisDocumentScalarWhereInput[]
+  }
+
+  export type SelectionProcessUpdateOneRequiredWithoutHrAnalysesNestedInput = {
+    create?: XOR<SelectionProcessCreateWithoutHrAnalysesInput, SelectionProcessUncheckedCreateWithoutHrAnalysesInput>
+    connectOrCreate?: SelectionProcessCreateOrConnectWithoutHrAnalysesInput
+    upsert?: SelectionProcessUpsertWithoutHrAnalysesInput
+    connect?: SelectionProcessWhereUniqueInput
+    update?: XOR<XOR<SelectionProcessUpdateToOneWithWhereWithoutHrAnalysesInput, SelectionProcessUpdateWithoutHrAnalysesInput>, SelectionProcessUncheckedUpdateWithoutHrAnalysesInput>
+  }
+
+  export type EmployeeUpdateOneRequiredWithoutHrAnalysesNestedInput = {
+    create?: XOR<EmployeeCreateWithoutHrAnalysesInput, EmployeeUncheckedCreateWithoutHrAnalysesInput>
+    connectOrCreate?: EmployeeCreateOrConnectWithoutHrAnalysesInput
+    upsert?: EmployeeUpsertWithoutHrAnalysesInput
+    connect?: EmployeeWhereUniqueInput
+    update?: XOR<XOR<EmployeeUpdateToOneWithWhereWithoutHrAnalysesInput, EmployeeUpdateWithoutHrAnalysesInput>, EmployeeUncheckedUpdateWithoutHrAnalysesInput>
+  }
+
+  export type HRAnalysisDocumentUncheckedUpdateManyWithoutAnalysisNestedInput = {
+    create?: XOR<HRAnalysisDocumentCreateWithoutAnalysisInput, HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput> | HRAnalysisDocumentCreateWithoutAnalysisInput[] | HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput[]
+    connectOrCreate?: HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput | HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput[]
+    upsert?: HRAnalysisDocumentUpsertWithWhereUniqueWithoutAnalysisInput | HRAnalysisDocumentUpsertWithWhereUniqueWithoutAnalysisInput[]
+    createMany?: HRAnalysisDocumentCreateManyAnalysisInputEnvelope
+    set?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    disconnect?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    delete?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    connect?: HRAnalysisDocumentWhereUniqueInput | HRAnalysisDocumentWhereUniqueInput[]
+    update?: HRAnalysisDocumentUpdateWithWhereUniqueWithoutAnalysisInput | HRAnalysisDocumentUpdateWithWhereUniqueWithoutAnalysisInput[]
+    updateMany?: HRAnalysisDocumentUpdateManyWithWhereWithoutAnalysisInput | HRAnalysisDocumentUpdateManyWithWhereWithoutAnalysisInput[]
+    deleteMany?: HRAnalysisDocumentScalarWhereInput | HRAnalysisDocumentScalarWhereInput[]
+  }
+
+  export type HRCandidateAnalysisCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutDocumentsInput, HRCandidateAnalysisUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutDocumentsInput
+    connect?: HRCandidateAnalysisWhereUniqueInput
+  }
+
+  export type HRCandidateAnalysisUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<HRCandidateAnalysisCreateWithoutDocumentsInput, HRCandidateAnalysisUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: HRCandidateAnalysisCreateOrConnectWithoutDocumentsInput
+    upsert?: HRCandidateAnalysisUpsertWithoutDocumentsInput
+    connect?: HRCandidateAnalysisWhereUniqueInput
+    update?: XOR<XOR<HRCandidateAnalysisUpdateToOneWithWhereWithoutDocumentsInput, HRCandidateAnalysisUpdateWithoutDocumentsInput>, HRCandidateAnalysisUncheckedUpdateWithoutDocumentsInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -26247,6 +34163,23 @@ export namespace Prisma {
     _max?: NestedEnumRoleTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumSelectionProcessStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.SelectionProcessStatus | EnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSelectionProcessStatusFilter<$PrismaModel> | $Enums.SelectionProcessStatus
+  }
+
+  export type NestedEnumSelectionProcessStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SelectionProcessStatus | EnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SelectionProcessStatus[] | ListEnumSelectionProcessStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumSelectionProcessStatusWithAggregatesFilter<$PrismaModel> | $Enums.SelectionProcessStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSelectionProcessStatusFilter<$PrismaModel>
+    _max?: NestedEnumSelectionProcessStatusFilter<$PrismaModel>
+  }
+
   export type NestedEnumEmployeeStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.EmployeeStatus | EnumEmployeeStatusFieldRefInput<$PrismaModel>
     in?: $Enums.EmployeeStatus[] | ListEnumEmployeeStatusFieldRefInput<$PrismaModel>
@@ -26469,6 +34402,23 @@ export namespace Prisma {
     _max?: NestedEnumFamilyRelationshipFilter<$PrismaModel>
   }
 
+  export type NestedEnumHRRecommendationFilter<$PrismaModel = never> = {
+    equals?: $Enums.HRRecommendation | EnumHRRecommendationFieldRefInput<$PrismaModel>
+    in?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    not?: NestedEnumHRRecommendationFilter<$PrismaModel> | $Enums.HRRecommendation
+  }
+
+  export type NestedEnumHRRecommendationWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.HRRecommendation | EnumHRRecommendationFieldRefInput<$PrismaModel>
+    in?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    notIn?: $Enums.HRRecommendation[] | ListEnumHRRecommendationFieldRefInput<$PrismaModel>
+    not?: NestedEnumHRRecommendationWithAggregatesFilter<$PrismaModel> | $Enums.HRRecommendation
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumHRRecommendationFilter<$PrismaModel>
+    _max?: NestedEnumHRRecommendationFilter<$PrismaModel>
+  }
+
   export type UserCreateWithoutSystemUserTypeInput = {
     id?: string
     email: string
@@ -26628,6 +34578,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -26636,6 +34587,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutUserInput = {
@@ -26682,6 +34636,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -26693,6 +34648,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutUserInput = {
@@ -26855,6 +34813,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -26863,6 +34822,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutUserInput = {
@@ -26909,6 +34871,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -26920,6 +34883,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type RequestUpsertWithWhereUniqueWithoutUserInput = {
@@ -27083,6 +35049,7 @@ export namespace Prisma {
     parent?: DepartmentCreateNestedOneWithoutChildrenInput
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
     positions?: PositionCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutChildrenInput = {
@@ -27098,6 +35065,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
     positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutChildrenInput = {
@@ -27118,6 +35086,7 @@ export namespace Prisma {
     children?: DepartmentCreateNestedManyWithoutParentInput
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
     positions?: PositionCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutParentInput = {
@@ -27133,6 +35102,7 @@ export namespace Prisma {
     children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
     positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutParentInput = {
@@ -27192,6 +35162,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -27200,6 +35171,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutDepartmentInput = {
@@ -27246,6 +35220,7 @@ export namespace Prisma {
     userId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -27257,6 +35232,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutDepartmentInput = {
@@ -27279,6 +35257,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     employees?: EmployeeCreateNestedManyWithoutPositionInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutPositionInput
   }
 
   export type PositionUncheckedCreateWithoutDepartmentInput = {
@@ -27291,6 +35270,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     employees?: EmployeeUncheckedCreateNestedManyWithoutPositionInput
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutPositionInput
   }
 
   export type PositionCreateOrConnectWithoutDepartmentInput = {
@@ -27300,6 +35280,52 @@ export namespace Prisma {
 
   export type PositionCreateManyDepartmentInputEnvelope = {
     data: PositionCreateManyDepartmentInput | PositionCreateManyDepartmentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SelectionProcessCreateWithoutDepartmentInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    position?: PositionCreateNestedOneWithoutSelectionProcessesInput
+    candidates?: EmployeeCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUncheckedCreateWithoutDepartmentInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    positionId?: string | null
+    candidates?: EmployeeUncheckedCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverUncheckedCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessCreateOrConnectWithoutDepartmentInput = {
+    where: SelectionProcessWhereUniqueInput
+    create: XOR<SelectionProcessCreateWithoutDepartmentInput, SelectionProcessUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type SelectionProcessCreateManyDepartmentInputEnvelope = {
+    data: SelectionProcessCreateManyDepartmentInput | SelectionProcessCreateManyDepartmentInput[]
     skipDuplicates?: boolean
   }
 
@@ -27327,6 +35353,7 @@ export namespace Prisma {
     parent?: DepartmentUpdateOneWithoutChildrenNestedInput
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutChildrenInput = {
@@ -27342,6 +35369,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUpsertWithWhereUniqueWithoutParentInput = {
@@ -27440,6 +35468,7 @@ export namespace Prisma {
     departmentId?: StringNullableFilter<"Employee"> | string | null
     positionId?: StringNullableFilter<"Employee"> | string | null
     supervisorId?: StringNullableFilter<"Employee"> | string | null
+    selectionProcessId?: StringNullableFilter<"Employee"> | string | null
     createdAt?: DateTimeFilter<"Employee"> | Date | string
     updatedAt?: DateTimeFilter<"Employee"> | Date | string
   }
@@ -27475,6 +35504,40 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Position"> | Date | string
   }
 
+  export type SelectionProcessUpsertWithWhereUniqueWithoutDepartmentInput = {
+    where: SelectionProcessWhereUniqueInput
+    update: XOR<SelectionProcessUpdateWithoutDepartmentInput, SelectionProcessUncheckedUpdateWithoutDepartmentInput>
+    create: XOR<SelectionProcessCreateWithoutDepartmentInput, SelectionProcessUncheckedCreateWithoutDepartmentInput>
+  }
+
+  export type SelectionProcessUpdateWithWhereUniqueWithoutDepartmentInput = {
+    where: SelectionProcessWhereUniqueInput
+    data: XOR<SelectionProcessUpdateWithoutDepartmentInput, SelectionProcessUncheckedUpdateWithoutDepartmentInput>
+  }
+
+  export type SelectionProcessUpdateManyWithWhereWithoutDepartmentInput = {
+    where: SelectionProcessScalarWhereInput
+    data: XOR<SelectionProcessUpdateManyMutationInput, SelectionProcessUncheckedUpdateManyWithoutDepartmentInput>
+  }
+
+  export type SelectionProcessScalarWhereInput = {
+    AND?: SelectionProcessScalarWhereInput | SelectionProcessScalarWhereInput[]
+    OR?: SelectionProcessScalarWhereInput[]
+    NOT?: SelectionProcessScalarWhereInput | SelectionProcessScalarWhereInput[]
+    id?: StringFilter<"SelectionProcess"> | string
+    code?: StringFilter<"SelectionProcess"> | string
+    name?: StringFilter<"SelectionProcess"> | string
+    description?: StringNullableFilter<"SelectionProcess"> | string | null
+    status?: EnumSelectionProcessStatusFilter<"SelectionProcess"> | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    closedAt?: DateTimeNullableFilter<"SelectionProcess"> | Date | string | null
+    createdById?: StringNullableFilter<"SelectionProcess"> | string | null
+    createdAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    updatedAt?: DateTimeFilter<"SelectionProcess"> | Date | string
+    departmentId?: StringNullableFilter<"SelectionProcess"> | string | null
+    positionId?: StringNullableFilter<"SelectionProcess"> | string | null
+  }
+
   export type DepartmentCreateWithoutPositionsInput = {
     id?: string
     name: string
@@ -27488,6 +35551,7 @@ export namespace Prisma {
     parent?: DepartmentCreateNestedOneWithoutChildrenInput
     children?: DepartmentCreateNestedManyWithoutParentInput
     employees?: EmployeeCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutPositionsInput = {
@@ -27503,6 +35567,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
     employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutPositionsInput = {
@@ -27557,6 +35622,7 @@ export namespace Prisma {
     department?: DepartmentCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -27565,6 +35631,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutPositionInput = {
@@ -27611,6 +35680,7 @@ export namespace Prisma {
     userId?: string | null
     departmentId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -27622,6 +35692,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutPositionInput = {
@@ -27631,6 +35704,52 @@ export namespace Prisma {
 
   export type EmployeeCreateManyPositionInputEnvelope = {
     data: EmployeeCreateManyPositionInput | EmployeeCreateManyPositionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SelectionProcessCreateWithoutPositionInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutSelectionProcessesInput
+    candidates?: EmployeeCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUncheckedCreateWithoutPositionInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
+    candidates?: EmployeeUncheckedCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverUncheckedCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessCreateOrConnectWithoutPositionInput = {
+    where: SelectionProcessWhereUniqueInput
+    create: XOR<SelectionProcessCreateWithoutPositionInput, SelectionProcessUncheckedCreateWithoutPositionInput>
+  }
+
+  export type SelectionProcessCreateManyPositionInputEnvelope = {
+    data: SelectionProcessCreateManyPositionInput | SelectionProcessCreateManyPositionInput[]
     skipDuplicates?: boolean
   }
 
@@ -27658,6 +35777,7 @@ export namespace Prisma {
     parent?: DepartmentUpdateOneWithoutChildrenNestedInput
     children?: DepartmentUpdateManyWithoutParentNestedInput
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutPositionsInput = {
@@ -27673,6 +35793,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type EmployeeUpsertWithWhereUniqueWithoutPositionInput = {
@@ -27689,6 +35810,22 @@ export namespace Prisma {
   export type EmployeeUpdateManyWithWhereWithoutPositionInput = {
     where: EmployeeScalarWhereInput
     data: XOR<EmployeeUpdateManyMutationInput, EmployeeUncheckedUpdateManyWithoutPositionInput>
+  }
+
+  export type SelectionProcessUpsertWithWhereUniqueWithoutPositionInput = {
+    where: SelectionProcessWhereUniqueInput
+    update: XOR<SelectionProcessUpdateWithoutPositionInput, SelectionProcessUncheckedUpdateWithoutPositionInput>
+    create: XOR<SelectionProcessCreateWithoutPositionInput, SelectionProcessUncheckedCreateWithoutPositionInput>
+  }
+
+  export type SelectionProcessUpdateWithWhereUniqueWithoutPositionInput = {
+    where: SelectionProcessWhereUniqueInput
+    data: XOR<SelectionProcessUpdateWithoutPositionInput, SelectionProcessUncheckedUpdateWithoutPositionInput>
+  }
+
+  export type SelectionProcessUpdateManyWithWhereWithoutPositionInput = {
+    where: SelectionProcessScalarWhereInput
+    data: XOR<SelectionProcessUpdateManyMutationInput, SelectionProcessUncheckedUpdateManyWithoutPositionInput>
   }
 
   export type EmployeeLaborDataCreateWithoutContractTypeInput = {
@@ -27802,6 +35939,847 @@ export namespace Prisma {
     data: XOR<EmployeeLaborDataUpdateManyMutationInput, EmployeeLaborDataUncheckedUpdateManyWithoutWorkShiftInput>
   }
 
+  export type DepartmentCreateWithoutSelectionProcessesInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    leaderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parent?: DepartmentCreateNestedOneWithoutChildrenInput
+    children?: DepartmentCreateNestedManyWithoutParentInput
+    employees?: EmployeeCreateNestedManyWithoutDepartmentInput
+    positions?: PositionCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentUncheckedCreateWithoutSelectionProcessesInput = {
+    id?: string
+    name: string
+    code?: string | null
+    description?: string | null
+    areaType?: $Enums.AreaType
+    isActive?: boolean
+    parentId?: string | null
+    leaderId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
+    employees?: EmployeeUncheckedCreateNestedManyWithoutDepartmentInput
+    positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
+  }
+
+  export type DepartmentCreateOrConnectWithoutSelectionProcessesInput = {
+    where: DepartmentWhereUniqueInput
+    create: XOR<DepartmentCreateWithoutSelectionProcessesInput, DepartmentUncheckedCreateWithoutSelectionProcessesInput>
+  }
+
+  export type PositionCreateWithoutSelectionProcessesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutPositionsInput
+    employees?: EmployeeCreateNestedManyWithoutPositionInput
+  }
+
+  export type PositionUncheckedCreateWithoutSelectionProcessesInput = {
+    id?: string
+    name: string
+    description?: string | null
+    hierarchyLevel?: number
+    roleType?: $Enums.RoleType
+    isActive?: boolean
+    departmentId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    employees?: EmployeeUncheckedCreateNestedManyWithoutPositionInput
+  }
+
+  export type PositionCreateOrConnectWithoutSelectionProcessesInput = {
+    where: PositionWhereUniqueInput
+    create: XOR<PositionCreateWithoutSelectionProcessesInput, PositionUncheckedCreateWithoutSelectionProcessesInput>
+  }
+
+  export type EmployeeCreateWithoutSelectionProcessInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutEmployeeInput
+    department?: DepartmentCreateNestedOneWithoutEmployeesInput
+    position?: PositionCreateNestedOneWithoutEmployeesInput
+    supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
+    subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentCreateNestedManyWithoutEmployeeInput
+    requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutSelectionProcessInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    userId?: string | null
+    departmentId?: string | null
+    positionId?: string | null
+    supervisorId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
+    requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutSelectionProcessInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutSelectionProcessInput, EmployeeUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type EmployeeCreateManySelectionProcessInputEnvelope = {
+    data: EmployeeCreateManySelectionProcessInput | EmployeeCreateManySelectionProcessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SelectionProcessApproverCreateWithoutSelectionProcessInput = {
+    id?: string
+    order: number
+    createdAt?: Date | string
+    employee: EmployeeCreateNestedOneWithoutApprovalsInput
+  }
+
+  export type SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput = {
+    id?: string
+    employeeId: string
+    order: number
+    createdAt?: Date | string
+  }
+
+  export type SelectionProcessApproverCreateOrConnectWithoutSelectionProcessInput = {
+    where: SelectionProcessApproverWhereUniqueInput
+    create: XOR<SelectionProcessApproverCreateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type SelectionProcessApproverCreateManySelectionProcessInputEnvelope = {
+    data: SelectionProcessApproverCreateManySelectionProcessInput | SelectionProcessApproverCreateManySelectionProcessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CandidateApprovalCreateWithoutSelectionProcessInput = {
+    id?: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    candidate: EmployeeCreateNestedOneWithoutReceivedApprovalsInput
+  }
+
+  export type CandidateApprovalUncheckedCreateWithoutSelectionProcessInput = {
+    id?: string
+    candidateId: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CandidateApprovalCreateOrConnectWithoutSelectionProcessInput = {
+    where: CandidateApprovalWhereUniqueInput
+    create: XOR<CandidateApprovalCreateWithoutSelectionProcessInput, CandidateApprovalUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type CandidateApprovalCreateManySelectionProcessInputEnvelope = {
+    data: CandidateApprovalCreateManySelectionProcessInput | CandidateApprovalCreateManySelectionProcessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type HRCandidateAnalysisCreateWithoutSelectionProcessInput = {
+    id?: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: HRAnalysisDocumentCreateNestedManyWithoutAnalysisInput
+    candidate: EmployeeCreateNestedOneWithoutHrAnalysesInput
+  }
+
+  export type HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput = {
+    id?: string
+    candidateId: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: HRAnalysisDocumentUncheckedCreateNestedManyWithoutAnalysisInput
+  }
+
+  export type HRCandidateAnalysisCreateOrConnectWithoutSelectionProcessInput = {
+    where: HRCandidateAnalysisWhereUniqueInput
+    create: XOR<HRCandidateAnalysisCreateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type HRCandidateAnalysisCreateManySelectionProcessInputEnvelope = {
+    data: HRCandidateAnalysisCreateManySelectionProcessInput | HRCandidateAnalysisCreateManySelectionProcessInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DepartmentUpsertWithoutSelectionProcessesInput = {
+    update: XOR<DepartmentUpdateWithoutSelectionProcessesInput, DepartmentUncheckedUpdateWithoutSelectionProcessesInput>
+    create: XOR<DepartmentCreateWithoutSelectionProcessesInput, DepartmentUncheckedCreateWithoutSelectionProcessesInput>
+    where?: DepartmentWhereInput
+  }
+
+  export type DepartmentUpdateToOneWithWhereWithoutSelectionProcessesInput = {
+    where?: DepartmentWhereInput
+    data: XOR<DepartmentUpdateWithoutSelectionProcessesInput, DepartmentUncheckedUpdateWithoutSelectionProcessesInput>
+  }
+
+  export type DepartmentUpdateWithoutSelectionProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    leaderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: DepartmentUpdateOneWithoutChildrenNestedInput
+    children?: DepartmentUpdateManyWithoutParentNestedInput
+    employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
+    positions?: PositionUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type DepartmentUncheckedUpdateWithoutSelectionProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    areaType?: EnumAreaTypeFieldUpdateOperationsInput | $Enums.AreaType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    leaderId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
+    employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
+    positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
+  }
+
+  export type PositionUpsertWithoutSelectionProcessesInput = {
+    update: XOR<PositionUpdateWithoutSelectionProcessesInput, PositionUncheckedUpdateWithoutSelectionProcessesInput>
+    create: XOR<PositionCreateWithoutSelectionProcessesInput, PositionUncheckedCreateWithoutSelectionProcessesInput>
+    where?: PositionWhereInput
+  }
+
+  export type PositionUpdateToOneWithWhereWithoutSelectionProcessesInput = {
+    where?: PositionWhereInput
+    data: XOR<PositionUpdateWithoutSelectionProcessesInput, PositionUncheckedUpdateWithoutSelectionProcessesInput>
+  }
+
+  export type PositionUpdateWithoutSelectionProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutPositionsNestedInput
+    employees?: EmployeeUpdateManyWithoutPositionNestedInput
+  }
+
+  export type PositionUncheckedUpdateWithoutSelectionProcessesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    hierarchyLevel?: IntFieldUpdateOperationsInput | number
+    roleType?: EnumRoleTypeFieldUpdateOperationsInput | $Enums.RoleType
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employees?: EmployeeUncheckedUpdateManyWithoutPositionNestedInput
+  }
+
+  export type EmployeeUpsertWithWhereUniqueWithoutSelectionProcessInput = {
+    where: EmployeeWhereUniqueInput
+    update: XOR<EmployeeUpdateWithoutSelectionProcessInput, EmployeeUncheckedUpdateWithoutSelectionProcessInput>
+    create: XOR<EmployeeCreateWithoutSelectionProcessInput, EmployeeUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type EmployeeUpdateWithWhereUniqueWithoutSelectionProcessInput = {
+    where: EmployeeWhereUniqueInput
+    data: XOR<EmployeeUpdateWithoutSelectionProcessInput, EmployeeUncheckedUpdateWithoutSelectionProcessInput>
+  }
+
+  export type EmployeeUpdateManyWithWhereWithoutSelectionProcessInput = {
+    where: EmployeeScalarWhereInput
+    data: XOR<EmployeeUpdateManyMutationInput, EmployeeUncheckedUpdateManyWithoutSelectionProcessInput>
+  }
+
+  export type SelectionProcessApproverUpsertWithWhereUniqueWithoutSelectionProcessInput = {
+    where: SelectionProcessApproverWhereUniqueInput
+    update: XOR<SelectionProcessApproverUpdateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedUpdateWithoutSelectionProcessInput>
+    create: XOR<SelectionProcessApproverCreateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type SelectionProcessApproverUpdateWithWhereUniqueWithoutSelectionProcessInput = {
+    where: SelectionProcessApproverWhereUniqueInput
+    data: XOR<SelectionProcessApproverUpdateWithoutSelectionProcessInput, SelectionProcessApproverUncheckedUpdateWithoutSelectionProcessInput>
+  }
+
+  export type SelectionProcessApproverUpdateManyWithWhereWithoutSelectionProcessInput = {
+    where: SelectionProcessApproverScalarWhereInput
+    data: XOR<SelectionProcessApproverUpdateManyMutationInput, SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessInput>
+  }
+
+  export type SelectionProcessApproverScalarWhereInput = {
+    AND?: SelectionProcessApproverScalarWhereInput | SelectionProcessApproverScalarWhereInput[]
+    OR?: SelectionProcessApproverScalarWhereInput[]
+    NOT?: SelectionProcessApproverScalarWhereInput | SelectionProcessApproverScalarWhereInput[]
+    id?: StringFilter<"SelectionProcessApprover"> | string
+    selectionProcessId?: StringFilter<"SelectionProcessApprover"> | string
+    employeeId?: StringFilter<"SelectionProcessApprover"> | string
+    order?: IntFilter<"SelectionProcessApprover"> | number
+    createdAt?: DateTimeFilter<"SelectionProcessApprover"> | Date | string
+  }
+
+  export type CandidateApprovalUpsertWithWhereUniqueWithoutSelectionProcessInput = {
+    where: CandidateApprovalWhereUniqueInput
+    update: XOR<CandidateApprovalUpdateWithoutSelectionProcessInput, CandidateApprovalUncheckedUpdateWithoutSelectionProcessInput>
+    create: XOR<CandidateApprovalCreateWithoutSelectionProcessInput, CandidateApprovalUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type CandidateApprovalUpdateWithWhereUniqueWithoutSelectionProcessInput = {
+    where: CandidateApprovalWhereUniqueInput
+    data: XOR<CandidateApprovalUpdateWithoutSelectionProcessInput, CandidateApprovalUncheckedUpdateWithoutSelectionProcessInput>
+  }
+
+  export type CandidateApprovalUpdateManyWithWhereWithoutSelectionProcessInput = {
+    where: CandidateApprovalScalarWhereInput
+    data: XOR<CandidateApprovalUpdateManyMutationInput, CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessInput>
+  }
+
+  export type CandidateApprovalScalarWhereInput = {
+    AND?: CandidateApprovalScalarWhereInput | CandidateApprovalScalarWhereInput[]
+    OR?: CandidateApprovalScalarWhereInput[]
+    NOT?: CandidateApprovalScalarWhereInput | CandidateApprovalScalarWhereInput[]
+    id?: StringFilter<"CandidateApproval"> | string
+    selectionProcessId?: StringFilter<"CandidateApproval"> | string
+    candidateId?: StringFilter<"CandidateApproval"> | string
+    approverId?: StringFilter<"CandidateApproval"> | string
+    approverType?: StringFilter<"CandidateApproval"> | string
+    status?: StringFilter<"CandidateApproval"> | string
+    comment?: StringNullableFilter<"CandidateApproval"> | string | null
+    decidedAt?: DateTimeNullableFilter<"CandidateApproval"> | Date | string | null
+    createdAt?: DateTimeFilter<"CandidateApproval"> | Date | string
+    updatedAt?: DateTimeFilter<"CandidateApproval"> | Date | string
+  }
+
+  export type HRCandidateAnalysisUpsertWithWhereUniqueWithoutSelectionProcessInput = {
+    where: HRCandidateAnalysisWhereUniqueInput
+    update: XOR<HRCandidateAnalysisUpdateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedUpdateWithoutSelectionProcessInput>
+    create: XOR<HRCandidateAnalysisCreateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedCreateWithoutSelectionProcessInput>
+  }
+
+  export type HRCandidateAnalysisUpdateWithWhereUniqueWithoutSelectionProcessInput = {
+    where: HRCandidateAnalysisWhereUniqueInput
+    data: XOR<HRCandidateAnalysisUpdateWithoutSelectionProcessInput, HRCandidateAnalysisUncheckedUpdateWithoutSelectionProcessInput>
+  }
+
+  export type HRCandidateAnalysisUpdateManyWithWhereWithoutSelectionProcessInput = {
+    where: HRCandidateAnalysisScalarWhereInput
+    data: XOR<HRCandidateAnalysisUpdateManyMutationInput, HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessInput>
+  }
+
+  export type HRCandidateAnalysisScalarWhereInput = {
+    AND?: HRCandidateAnalysisScalarWhereInput | HRCandidateAnalysisScalarWhereInput[]
+    OR?: HRCandidateAnalysisScalarWhereInput[]
+    NOT?: HRCandidateAnalysisScalarWhereInput | HRCandidateAnalysisScalarWhereInput[]
+    id?: StringFilter<"HRCandidateAnalysis"> | string
+    selectionProcessId?: StringFilter<"HRCandidateAnalysis"> | string
+    candidateId?: StringFilter<"HRCandidateAnalysis"> | string
+    professionalSummary?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    strengths?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    improvementAreas?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    interviewResults?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    competencyEvaluation?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    identifiedRisks?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    recommendation?: EnumHRRecommendationFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
+    recommendationNotes?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    createdById?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    createdAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
+    updatedAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
+  }
+
+  export type SelectionProcessCreateWithoutApproversInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutSelectionProcessesInput
+    position?: PositionCreateNestedOneWithoutSelectionProcessesInput
+    candidates?: EmployeeCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUncheckedCreateWithoutApproversInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
+    positionId?: string | null
+    candidates?: EmployeeUncheckedCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessCreateOrConnectWithoutApproversInput = {
+    where: SelectionProcessWhereUniqueInput
+    create: XOR<SelectionProcessCreateWithoutApproversInput, SelectionProcessUncheckedCreateWithoutApproversInput>
+  }
+
+  export type EmployeeCreateWithoutApprovalsInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutEmployeeInput
+    department?: DepartmentCreateNestedOneWithoutEmployeesInput
+    position?: PositionCreateNestedOneWithoutEmployeesInput
+    supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
+    subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
+    laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentCreateNestedManyWithoutEmployeeInput
+    requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutApprovalsInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    userId?: string | null
+    departmentId?: string | null
+    positionId?: string | null
+    supervisorId?: string | null
+    selectionProcessId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
+    requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutApprovalsInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutApprovalsInput, EmployeeUncheckedCreateWithoutApprovalsInput>
+  }
+
+  export type SelectionProcessUpsertWithoutApproversInput = {
+    update: XOR<SelectionProcessUpdateWithoutApproversInput, SelectionProcessUncheckedUpdateWithoutApproversInput>
+    create: XOR<SelectionProcessCreateWithoutApproversInput, SelectionProcessUncheckedCreateWithoutApproversInput>
+    where?: SelectionProcessWhereInput
+  }
+
+  export type SelectionProcessUpdateToOneWithWhereWithoutApproversInput = {
+    where?: SelectionProcessWhereInput
+    data: XOR<SelectionProcessUpdateWithoutApproversInput, SelectionProcessUncheckedUpdateWithoutApproversInput>
+  }
+
+  export type SelectionProcessUpdateWithoutApproversInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutSelectionProcessesNestedInput
+    position?: PositionUpdateOneWithoutSelectionProcessesNestedInput
+    candidates?: EmployeeUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateWithoutApproversInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidates?: EmployeeUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type EmployeeUpsertWithoutApprovalsInput = {
+    update: XOR<EmployeeUpdateWithoutApprovalsInput, EmployeeUncheckedUpdateWithoutApprovalsInput>
+    create: XOR<EmployeeCreateWithoutApprovalsInput, EmployeeUncheckedCreateWithoutApprovalsInput>
+    where?: EmployeeWhereInput
+  }
+
+  export type EmployeeUpdateToOneWithWhereWithoutApprovalsInput = {
+    where?: EmployeeWhereInput
+    data: XOR<EmployeeUpdateWithoutApprovalsInput, EmployeeUncheckedUpdateWithoutApprovalsInput>
+  }
+
+  export type EmployeeUpdateWithoutApprovalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutEmployeeNestedInput
+    department?: DepartmentUpdateOneWithoutEmployeesNestedInput
+    position?: PositionUpdateOneWithoutEmployeesNestedInput
+    supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
+    laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutApprovalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
+  }
+
   export type UserCreateWithoutEmployeeInput = {
     id?: string
     email: string
@@ -27856,6 +36834,7 @@ export namespace Prisma {
     parent?: DepartmentCreateNestedOneWithoutChildrenInput
     children?: DepartmentCreateNestedManyWithoutParentInput
     positions?: PositionCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentUncheckedCreateWithoutEmployeesInput = {
@@ -27871,6 +36850,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     children?: DepartmentUncheckedCreateNestedManyWithoutParentInput
     positions?: PositionUncheckedCreateNestedManyWithoutDepartmentInput
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutDepartmentInput
   }
 
   export type DepartmentCreateOrConnectWithoutEmployeesInput = {
@@ -27888,6 +36868,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     department?: DepartmentCreateNestedOneWithoutPositionsInput
+    selectionProcesses?: SelectionProcessCreateNestedManyWithoutPositionInput
   }
 
   export type PositionUncheckedCreateWithoutEmployeesInput = {
@@ -27900,6 +36881,7 @@ export namespace Prisma {
     departmentId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    selectionProcesses?: SelectionProcessUncheckedCreateNestedManyWithoutPositionInput
   }
 
   export type PositionCreateOrConnectWithoutEmployeesInput = {
@@ -27954,6 +36936,7 @@ export namespace Prisma {
     department?: DepartmentCreateNestedOneWithoutEmployeesInput
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -27962,6 +36945,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutSubordinatesInput = {
@@ -28009,6 +36995,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
@@ -28019,6 +37006,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutSubordinatesInput = {
@@ -28073,6 +37063,7 @@ export namespace Prisma {
     department?: DepartmentCreateNestedOneWithoutEmployeesInput
     position?: PositionCreateNestedOneWithoutEmployeesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -28081,6 +37072,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutSupervisorInput = {
@@ -28127,6 +37121,7 @@ export namespace Prisma {
     userId?: string | null
     departmentId?: string | null
     positionId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -28138,6 +37133,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutSupervisorInput = {
@@ -28148,6 +37146,47 @@ export namespace Prisma {
   export type EmployeeCreateManySupervisorInputEnvelope = {
     data: EmployeeCreateManySupervisorInput | EmployeeCreateManySupervisorInput[]
     skipDuplicates?: boolean
+  }
+
+  export type SelectionProcessCreateWithoutCandidatesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutSelectionProcessesInput
+    position?: PositionCreateNestedOneWithoutSelectionProcessesInput
+    approvers?: SelectionProcessApproverCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUncheckedCreateWithoutCandidatesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
+    positionId?: string | null
+    approvers?: SelectionProcessApproverUncheckedCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessCreateOrConnectWithoutCandidatesInput = {
+    where: SelectionProcessWhereUniqueInput
+    create: XOR<SelectionProcessCreateWithoutCandidatesInput, SelectionProcessUncheckedCreateWithoutCandidatesInput>
   }
 
   export type EmployeeLaborDataCreateWithoutEmployeeInput = {
@@ -28419,6 +37458,108 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type SelectionProcessApproverCreateWithoutEmployeeInput = {
+    id?: string
+    order: number
+    createdAt?: Date | string
+    selectionProcess: SelectionProcessCreateNestedOneWithoutApproversInput
+  }
+
+  export type SelectionProcessApproverUncheckedCreateWithoutEmployeeInput = {
+    id?: string
+    selectionProcessId: string
+    order: number
+    createdAt?: Date | string
+  }
+
+  export type SelectionProcessApproverCreateOrConnectWithoutEmployeeInput = {
+    where: SelectionProcessApproverWhereUniqueInput
+    create: XOR<SelectionProcessApproverCreateWithoutEmployeeInput, SelectionProcessApproverUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type SelectionProcessApproverCreateManyEmployeeInputEnvelope = {
+    data: SelectionProcessApproverCreateManyEmployeeInput | SelectionProcessApproverCreateManyEmployeeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type CandidateApprovalCreateWithoutCandidateInput = {
+    id?: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectionProcess: SelectionProcessCreateNestedOneWithoutCandidateApprovalsInput
+  }
+
+  export type CandidateApprovalUncheckedCreateWithoutCandidateInput = {
+    id?: string
+    selectionProcessId: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CandidateApprovalCreateOrConnectWithoutCandidateInput = {
+    where: CandidateApprovalWhereUniqueInput
+    create: XOR<CandidateApprovalCreateWithoutCandidateInput, CandidateApprovalUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type CandidateApprovalCreateManyCandidateInputEnvelope = {
+    data: CandidateApprovalCreateManyCandidateInput | CandidateApprovalCreateManyCandidateInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type HRCandidateAnalysisCreateWithoutCandidateInput = {
+    id?: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: HRAnalysisDocumentCreateNestedManyWithoutAnalysisInput
+    selectionProcess: SelectionProcessCreateNestedOneWithoutHrAnalysesInput
+  }
+
+  export type HRCandidateAnalysisUncheckedCreateWithoutCandidateInput = {
+    id?: string
+    selectionProcessId: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    documents?: HRAnalysisDocumentUncheckedCreateNestedManyWithoutAnalysisInput
+  }
+
+  export type HRCandidateAnalysisCreateOrConnectWithoutCandidateInput = {
+    where: HRCandidateAnalysisWhereUniqueInput
+    create: XOR<HRCandidateAnalysisCreateWithoutCandidateInput, HRCandidateAnalysisUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type HRCandidateAnalysisCreateManyCandidateInputEnvelope = {
+    data: HRCandidateAnalysisCreateManyCandidateInput | HRCandidateAnalysisCreateManyCandidateInput[]
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutEmployeeInput = {
     update: XOR<UserUpdateWithoutEmployeeInput, UserUncheckedUpdateWithoutEmployeeInput>
     create: XOR<UserCreateWithoutEmployeeInput, UserUncheckedCreateWithoutEmployeeInput>
@@ -28490,6 +37631,7 @@ export namespace Prisma {
     parent?: DepartmentUpdateOneWithoutChildrenNestedInput
     children?: DepartmentUpdateManyWithoutParentNestedInput
     positions?: PositionUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutEmployeesInput = {
@@ -28505,6 +37647,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
     positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type PositionUpsertWithoutEmployeesInput = {
@@ -28528,6 +37671,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     department?: DepartmentUpdateOneWithoutPositionsNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutPositionNestedInput
   }
 
   export type PositionUncheckedUpdateWithoutEmployeesInput = {
@@ -28540,6 +37684,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutPositionNestedInput
   }
 
   export type EmployeeUpsertWithoutSubordinatesInput = {
@@ -28600,6 +37745,7 @@ export namespace Prisma {
     department?: DepartmentUpdateOneWithoutEmployeesNestedInput
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -28608,6 +37754,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutSubordinatesInput = {
@@ -28655,6 +37804,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
@@ -28665,6 +37815,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUpsertWithWhereUniqueWithoutSupervisorInput = {
@@ -28681,6 +37834,53 @@ export namespace Prisma {
   export type EmployeeUpdateManyWithWhereWithoutSupervisorInput = {
     where: EmployeeScalarWhereInput
     data: XOR<EmployeeUpdateManyMutationInput, EmployeeUncheckedUpdateManyWithoutSupervisorInput>
+  }
+
+  export type SelectionProcessUpsertWithoutCandidatesInput = {
+    update: XOR<SelectionProcessUpdateWithoutCandidatesInput, SelectionProcessUncheckedUpdateWithoutCandidatesInput>
+    create: XOR<SelectionProcessCreateWithoutCandidatesInput, SelectionProcessUncheckedCreateWithoutCandidatesInput>
+    where?: SelectionProcessWhereInput
+  }
+
+  export type SelectionProcessUpdateToOneWithWhereWithoutCandidatesInput = {
+    where?: SelectionProcessWhereInput
+    data: XOR<SelectionProcessUpdateWithoutCandidatesInput, SelectionProcessUncheckedUpdateWithoutCandidatesInput>
+  }
+
+  export type SelectionProcessUpdateWithoutCandidatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutSelectionProcessesNestedInput
+    position?: PositionUpdateOneWithoutSelectionProcessesNestedInput
+    approvers?: SelectionProcessApproverUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateWithoutCandidatesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvers?: SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessNestedInput
   }
 
   export type EmployeeLaborDataUpsertWithoutEmployeeInput = {
@@ -28913,6 +38113,402 @@ export namespace Prisma {
     data: XOR<KudoUpdateManyMutationInput, KudoUncheckedUpdateManyWithoutReceiverInput>
   }
 
+  export type SelectionProcessApproverUpsertWithWhereUniqueWithoutEmployeeInput = {
+    where: SelectionProcessApproverWhereUniqueInput
+    update: XOR<SelectionProcessApproverUpdateWithoutEmployeeInput, SelectionProcessApproverUncheckedUpdateWithoutEmployeeInput>
+    create: XOR<SelectionProcessApproverCreateWithoutEmployeeInput, SelectionProcessApproverUncheckedCreateWithoutEmployeeInput>
+  }
+
+  export type SelectionProcessApproverUpdateWithWhereUniqueWithoutEmployeeInput = {
+    where: SelectionProcessApproverWhereUniqueInput
+    data: XOR<SelectionProcessApproverUpdateWithoutEmployeeInput, SelectionProcessApproverUncheckedUpdateWithoutEmployeeInput>
+  }
+
+  export type SelectionProcessApproverUpdateManyWithWhereWithoutEmployeeInput = {
+    where: SelectionProcessApproverScalarWhereInput
+    data: XOR<SelectionProcessApproverUpdateManyMutationInput, SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeInput>
+  }
+
+  export type CandidateApprovalUpsertWithWhereUniqueWithoutCandidateInput = {
+    where: CandidateApprovalWhereUniqueInput
+    update: XOR<CandidateApprovalUpdateWithoutCandidateInput, CandidateApprovalUncheckedUpdateWithoutCandidateInput>
+    create: XOR<CandidateApprovalCreateWithoutCandidateInput, CandidateApprovalUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type CandidateApprovalUpdateWithWhereUniqueWithoutCandidateInput = {
+    where: CandidateApprovalWhereUniqueInput
+    data: XOR<CandidateApprovalUpdateWithoutCandidateInput, CandidateApprovalUncheckedUpdateWithoutCandidateInput>
+  }
+
+  export type CandidateApprovalUpdateManyWithWhereWithoutCandidateInput = {
+    where: CandidateApprovalScalarWhereInput
+    data: XOR<CandidateApprovalUpdateManyMutationInput, CandidateApprovalUncheckedUpdateManyWithoutCandidateInput>
+  }
+
+  export type HRCandidateAnalysisUpsertWithWhereUniqueWithoutCandidateInput = {
+    where: HRCandidateAnalysisWhereUniqueInput
+    update: XOR<HRCandidateAnalysisUpdateWithoutCandidateInput, HRCandidateAnalysisUncheckedUpdateWithoutCandidateInput>
+    create: XOR<HRCandidateAnalysisCreateWithoutCandidateInput, HRCandidateAnalysisUncheckedCreateWithoutCandidateInput>
+  }
+
+  export type HRCandidateAnalysisUpdateWithWhereUniqueWithoutCandidateInput = {
+    where: HRCandidateAnalysisWhereUniqueInput
+    data: XOR<HRCandidateAnalysisUpdateWithoutCandidateInput, HRCandidateAnalysisUncheckedUpdateWithoutCandidateInput>
+  }
+
+  export type HRCandidateAnalysisUpdateManyWithWhereWithoutCandidateInput = {
+    where: HRCandidateAnalysisScalarWhereInput
+    data: XOR<HRCandidateAnalysisUpdateManyMutationInput, HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateInput>
+  }
+
+  export type SelectionProcessCreateWithoutCandidateApprovalsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutSelectionProcessesInput
+    position?: PositionCreateNestedOneWithoutSelectionProcessesInput
+    candidates?: EmployeeCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUncheckedCreateWithoutCandidateApprovalsInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
+    positionId?: string | null
+    candidates?: EmployeeUncheckedCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverUncheckedCreateNestedManyWithoutSelectionProcessInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessCreateOrConnectWithoutCandidateApprovalsInput = {
+    where: SelectionProcessWhereUniqueInput
+    create: XOR<SelectionProcessCreateWithoutCandidateApprovalsInput, SelectionProcessUncheckedCreateWithoutCandidateApprovalsInput>
+  }
+
+  export type EmployeeCreateWithoutReceivedApprovalsInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutEmployeeInput
+    department?: DepartmentCreateNestedOneWithoutEmployeesInput
+    position?: PositionCreateNestedOneWithoutEmployeesInput
+    supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
+    subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
+    laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentCreateNestedManyWithoutEmployeeInput
+    requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutReceivedApprovalsInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    userId?: string | null
+    departmentId?: string | null
+    positionId?: string | null
+    supervisorId?: string | null
+    selectionProcessId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
+    requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutReceivedApprovalsInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutReceivedApprovalsInput, EmployeeUncheckedCreateWithoutReceivedApprovalsInput>
+  }
+
+  export type SelectionProcessUpsertWithoutCandidateApprovalsInput = {
+    update: XOR<SelectionProcessUpdateWithoutCandidateApprovalsInput, SelectionProcessUncheckedUpdateWithoutCandidateApprovalsInput>
+    create: XOR<SelectionProcessCreateWithoutCandidateApprovalsInput, SelectionProcessUncheckedCreateWithoutCandidateApprovalsInput>
+    where?: SelectionProcessWhereInput
+  }
+
+  export type SelectionProcessUpdateToOneWithWhereWithoutCandidateApprovalsInput = {
+    where?: SelectionProcessWhereInput
+    data: XOR<SelectionProcessUpdateWithoutCandidateApprovalsInput, SelectionProcessUncheckedUpdateWithoutCandidateApprovalsInput>
+  }
+
+  export type SelectionProcessUpdateWithoutCandidateApprovalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutSelectionProcessesNestedInput
+    position?: PositionUpdateOneWithoutSelectionProcessesNestedInput
+    candidates?: EmployeeUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateWithoutCandidateApprovalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidates?: EmployeeUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type EmployeeUpsertWithoutReceivedApprovalsInput = {
+    update: XOR<EmployeeUpdateWithoutReceivedApprovalsInput, EmployeeUncheckedUpdateWithoutReceivedApprovalsInput>
+    create: XOR<EmployeeCreateWithoutReceivedApprovalsInput, EmployeeUncheckedCreateWithoutReceivedApprovalsInput>
+    where?: EmployeeWhereInput
+  }
+
+  export type EmployeeUpdateToOneWithWhereWithoutReceivedApprovalsInput = {
+    where?: EmployeeWhereInput
+    data: XOR<EmployeeUpdateWithoutReceivedApprovalsInput, EmployeeUncheckedUpdateWithoutReceivedApprovalsInput>
+  }
+
+  export type EmployeeUpdateWithoutReceivedApprovalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutEmployeeNestedInput
+    department?: DepartmentUpdateOneWithoutEmployeesNestedInput
+    position?: PositionUpdateOneWithoutEmployeesNestedInput
+    supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
+    laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutReceivedApprovalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
+  }
+
   export type EmployeeCreateWithoutLaborDataInput = {
     id?: string
     firstName: string
@@ -28961,6 +38557,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
@@ -28968,6 +38565,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutLaborDataInput = {
@@ -29015,6 +38615,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -29025,6 +38626,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutLaborDataInput = {
@@ -29139,6 +38743,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
@@ -29146,6 +38751,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutLaborDataInput = {
@@ -29193,6 +38801,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -29203,6 +38812,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type ContractTypeUpsertWithoutEmployeesInput = {
@@ -29313,6 +38925,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
@@ -29320,6 +38933,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutAttendancesInput = {
@@ -29367,6 +38983,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -29377,6 +38994,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutAttendancesInput = {
@@ -29443,6 +39063,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
@@ -29450,6 +39071,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutAttendancesInput = {
@@ -29497,6 +39121,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -29507,6 +39132,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeCreateWithoutRequestsInput = {
@@ -29557,6 +39185,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -29564,6 +39193,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutRequestsInput = {
@@ -29611,6 +39243,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -29621,6 +39254,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutRequestsInput = {
@@ -29728,6 +39364,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -29735,6 +39372,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutRequestsInput = {
@@ -29782,6 +39422,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -29792,6 +39433,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type UserUpsertWithoutRequestsInput = {
@@ -29889,6 +39533,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -29896,6 +39541,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutSentKudosInput = {
@@ -29943,6 +39591,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -29953,6 +39602,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutSentKudosInput = {
@@ -30008,6 +39660,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -30015,6 +39668,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutReceivedKudosInput = {
@@ -30062,6 +39718,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -30072,6 +39729,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutReceivedKudosInput = {
@@ -30138,6 +39798,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -30145,6 +39806,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutSentKudosInput = {
@@ -30192,6 +39856,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -30202,6 +39867,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUpsertWithoutReceivedKudosInput = {
@@ -30263,6 +39931,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -30270,6 +39939,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutReceivedKudosInput = {
@@ -30317,6 +39989,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -30327,6 +40000,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeCreateWithoutDocumentsInput = {
@@ -30377,6 +40053,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     requests?: RequestCreateNestedManyWithoutEmployeeInput
@@ -30384,6 +40061,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutDocumentsInput = {
@@ -30431,6 +40111,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -30441,6 +40122,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutDocumentsInput = {
@@ -30507,6 +40191,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     requests?: RequestUpdateManyWithoutEmployeeNestedInput
@@ -30514,6 +40199,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutDocumentsInput = {
@@ -30561,6 +40249,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -30571,6 +40260,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeCreateWithoutEducationsInput = {
@@ -30621,6 +40313,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -30628,6 +40321,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutEducationsInput = {
@@ -30675,6 +40371,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -30685,6 +40382,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutEducationsInput = {
@@ -30751,6 +40451,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -30758,6 +40459,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutEducationsInput = {
@@ -30805,6 +40509,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -30815,6 +40520,9 @@ export namespace Prisma {
     familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeCreateWithoutFamilyMembersInput = {
@@ -30865,6 +40573,7 @@ export namespace Prisma {
     position?: PositionCreateNestedOneWithoutEmployeesInput
     supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
     subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
     laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
     attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
     documents?: DocumentCreateNestedManyWithoutEmployeeInput
@@ -30872,6 +40581,9 @@ export namespace Prisma {
     educations?: EducationCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeUncheckedCreateWithoutFamilyMembersInput = {
@@ -30919,6 +40631,7 @@ export namespace Prisma {
     departmentId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
@@ -30929,6 +40642,9 @@ export namespace Prisma {
     educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
     sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
     receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedCreateNestedManyWithoutCandidateInput
   }
 
   export type EmployeeCreateOrConnectWithoutFamilyMembersInput = {
@@ -30995,6 +40711,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -31002,6 +40719,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutFamilyMembersInput = {
@@ -31049,6 +40769,7 @@ export namespace Prisma {
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -31059,6 +40780,504 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type HRAnalysisDocumentCreateWithoutAnalysisInput = {
+    id?: string
+    name: string
+    originalName: string
+    mimeType: string
+    size: number
+    path: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput = {
+    id?: string
+    name: string
+    originalName: string
+    mimeType: string
+    size: number
+    path: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HRAnalysisDocumentCreateOrConnectWithoutAnalysisInput = {
+    where: HRAnalysisDocumentWhereUniqueInput
+    create: XOR<HRAnalysisDocumentCreateWithoutAnalysisInput, HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput>
+  }
+
+  export type HRAnalysisDocumentCreateManyAnalysisInputEnvelope = {
+    data: HRAnalysisDocumentCreateManyAnalysisInput | HRAnalysisDocumentCreateManyAnalysisInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SelectionProcessCreateWithoutHrAnalysesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    department?: DepartmentCreateNestedOneWithoutSelectionProcessesInput
+    position?: PositionCreateNestedOneWithoutSelectionProcessesInput
+    candidates?: EmployeeCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessUncheckedCreateWithoutHrAnalysesInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
+    positionId?: string | null
+    candidates?: EmployeeUncheckedCreateNestedManyWithoutSelectionProcessInput
+    approvers?: SelectionProcessApproverUncheckedCreateNestedManyWithoutSelectionProcessInput
+    candidateApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutSelectionProcessInput
+  }
+
+  export type SelectionProcessCreateOrConnectWithoutHrAnalysesInput = {
+    where: SelectionProcessWhereUniqueInput
+    create: XOR<SelectionProcessCreateWithoutHrAnalysesInput, SelectionProcessUncheckedCreateWithoutHrAnalysesInput>
+  }
+
+  export type EmployeeCreateWithoutHrAnalysesInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutEmployeeInput
+    department?: DepartmentCreateNestedOneWithoutEmployeesInput
+    position?: PositionCreateNestedOneWithoutEmployeesInput
+    supervisor?: EmployeeCreateNestedOneWithoutSubordinatesInput
+    subordinates?: EmployeeCreateNestedManyWithoutSupervisorInput
+    selectionProcess?: SelectionProcessCreateNestedOneWithoutCandidatesInput
+    laborData?: EmployeeLaborDataCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentCreateNestedManyWithoutEmployeeInput
+    requests?: RequestCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberCreateNestedManyWithoutEmployeeInput
+    educations?: EducationCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeUncheckedCreateWithoutHrAnalysesInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    userId?: string | null
+    departmentId?: string | null
+    positionId?: string | null
+    supervisorId?: string | null
+    selectionProcessId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    subordinates?: EmployeeUncheckedCreateNestedManyWithoutSupervisorInput
+    laborData?: EmployeeLaborDataUncheckedCreateNestedOneWithoutEmployeeInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutEmployeeInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutEmployeeInput
+    requests?: RequestUncheckedCreateNestedManyWithoutEmployeeInput
+    familyMembers?: FamilyMemberUncheckedCreateNestedManyWithoutEmployeeInput
+    educations?: EducationUncheckedCreateNestedManyWithoutEmployeeInput
+    sentKudos?: KudoUncheckedCreateNestedManyWithoutSenderInput
+    receivedKudos?: KudoUncheckedCreateNestedManyWithoutReceiverInput
+    approvals?: SelectionProcessApproverUncheckedCreateNestedManyWithoutEmployeeInput
+    receivedApprovals?: CandidateApprovalUncheckedCreateNestedManyWithoutCandidateInput
+  }
+
+  export type EmployeeCreateOrConnectWithoutHrAnalysesInput = {
+    where: EmployeeWhereUniqueInput
+    create: XOR<EmployeeCreateWithoutHrAnalysesInput, EmployeeUncheckedCreateWithoutHrAnalysesInput>
+  }
+
+  export type HRAnalysisDocumentUpsertWithWhereUniqueWithoutAnalysisInput = {
+    where: HRAnalysisDocumentWhereUniqueInput
+    update: XOR<HRAnalysisDocumentUpdateWithoutAnalysisInput, HRAnalysisDocumentUncheckedUpdateWithoutAnalysisInput>
+    create: XOR<HRAnalysisDocumentCreateWithoutAnalysisInput, HRAnalysisDocumentUncheckedCreateWithoutAnalysisInput>
+  }
+
+  export type HRAnalysisDocumentUpdateWithWhereUniqueWithoutAnalysisInput = {
+    where: HRAnalysisDocumentWhereUniqueInput
+    data: XOR<HRAnalysisDocumentUpdateWithoutAnalysisInput, HRAnalysisDocumentUncheckedUpdateWithoutAnalysisInput>
+  }
+
+  export type HRAnalysisDocumentUpdateManyWithWhereWithoutAnalysisInput = {
+    where: HRAnalysisDocumentScalarWhereInput
+    data: XOR<HRAnalysisDocumentUpdateManyMutationInput, HRAnalysisDocumentUncheckedUpdateManyWithoutAnalysisInput>
+  }
+
+  export type HRAnalysisDocumentScalarWhereInput = {
+    AND?: HRAnalysisDocumentScalarWhereInput | HRAnalysisDocumentScalarWhereInput[]
+    OR?: HRAnalysisDocumentScalarWhereInput[]
+    NOT?: HRAnalysisDocumentScalarWhereInput | HRAnalysisDocumentScalarWhereInput[]
+    id?: StringFilter<"HRAnalysisDocument"> | string
+    analysisId?: StringFilter<"HRAnalysisDocument"> | string
+    name?: StringFilter<"HRAnalysisDocument"> | string
+    originalName?: StringFilter<"HRAnalysisDocument"> | string
+    mimeType?: StringFilter<"HRAnalysisDocument"> | string
+    size?: IntFilter<"HRAnalysisDocument"> | number
+    path?: StringFilter<"HRAnalysisDocument"> | string
+    uploadedById?: StringNullableFilter<"HRAnalysisDocument"> | string | null
+    createdAt?: DateTimeFilter<"HRAnalysisDocument"> | Date | string
+  }
+
+  export type SelectionProcessUpsertWithoutHrAnalysesInput = {
+    update: XOR<SelectionProcessUpdateWithoutHrAnalysesInput, SelectionProcessUncheckedUpdateWithoutHrAnalysesInput>
+    create: XOR<SelectionProcessCreateWithoutHrAnalysesInput, SelectionProcessUncheckedCreateWithoutHrAnalysesInput>
+    where?: SelectionProcessWhereInput
+  }
+
+  export type SelectionProcessUpdateToOneWithWhereWithoutHrAnalysesInput = {
+    where?: SelectionProcessWhereInput
+    data: XOR<SelectionProcessUpdateWithoutHrAnalysesInput, SelectionProcessUncheckedUpdateWithoutHrAnalysesInput>
+  }
+
+  export type SelectionProcessUpdateWithoutHrAnalysesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutSelectionProcessesNestedInput
+    position?: PositionUpdateOneWithoutSelectionProcessesNestedInput
+    candidates?: EmployeeUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateWithoutHrAnalysesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidates?: EmployeeUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type EmployeeUpsertWithoutHrAnalysesInput = {
+    update: XOR<EmployeeUpdateWithoutHrAnalysesInput, EmployeeUncheckedUpdateWithoutHrAnalysesInput>
+    create: XOR<EmployeeCreateWithoutHrAnalysesInput, EmployeeUncheckedCreateWithoutHrAnalysesInput>
+    where?: EmployeeWhereInput
+  }
+
+  export type EmployeeUpdateToOneWithWhereWithoutHrAnalysesInput = {
+    where?: EmployeeWhereInput
+    data: XOR<EmployeeUpdateWithoutHrAnalysesInput, EmployeeUncheckedUpdateWithoutHrAnalysesInput>
+  }
+
+  export type EmployeeUpdateWithoutHrAnalysesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutEmployeeNestedInput
+    department?: DepartmentUpdateOneWithoutEmployeesNestedInput
+    position?: PositionUpdateOneWithoutEmployeesNestedInput
+    supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
+    laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutHrAnalysesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type HRCandidateAnalysisCreateWithoutDocumentsInput = {
+    id?: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    selectionProcess: SelectionProcessCreateNestedOneWithoutHrAnalysesInput
+    candidate: EmployeeCreateNestedOneWithoutHrAnalysesInput
+  }
+
+  export type HRCandidateAnalysisUncheckedCreateWithoutDocumentsInput = {
+    id?: string
+    selectionProcessId: string
+    candidateId: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HRCandidateAnalysisCreateOrConnectWithoutDocumentsInput = {
+    where: HRCandidateAnalysisWhereUniqueInput
+    create: XOR<HRCandidateAnalysisCreateWithoutDocumentsInput, HRCandidateAnalysisUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type HRCandidateAnalysisUpsertWithoutDocumentsInput = {
+    update: XOR<HRCandidateAnalysisUpdateWithoutDocumentsInput, HRCandidateAnalysisUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<HRCandidateAnalysisCreateWithoutDocumentsInput, HRCandidateAnalysisUncheckedCreateWithoutDocumentsInput>
+    where?: HRCandidateAnalysisWhereInput
+  }
+
+  export type HRCandidateAnalysisUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: HRCandidateAnalysisWhereInput
+    data: XOR<HRCandidateAnalysisUpdateWithoutDocumentsInput, HRCandidateAnalysisUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type HRCandidateAnalysisUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectionProcess?: SelectionProcessUpdateOneRequiredWithoutHrAnalysesNestedInput
+    candidate?: EmployeeUpdateOneRequiredWithoutHrAnalysesNestedInput
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateWithoutDocumentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type UserCreateManySystemUserTypeInput = {
@@ -31263,6 +41482,7 @@ export namespace Prisma {
     userId?: string | null
     positionId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31278,6 +41498,20 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type SelectionProcessCreateManyDepartmentInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    positionId?: string | null
+  }
+
   export type DepartmentUpdateWithoutParentInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -31291,6 +41525,7 @@ export namespace Prisma {
     children?: DepartmentUpdateManyWithoutParentNestedInput
     employees?: EmployeeUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateWithoutParentInput = {
@@ -31306,6 +41541,7 @@ export namespace Prisma {
     children?: DepartmentUncheckedUpdateManyWithoutParentNestedInput
     employees?: EmployeeUncheckedUpdateManyWithoutDepartmentNestedInput
     positions?: PositionUncheckedUpdateManyWithoutDepartmentNestedInput
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutDepartmentNestedInput
   }
 
   export type DepartmentUncheckedUpdateManyWithoutParentInput = {
@@ -31367,6 +41603,7 @@ export namespace Prisma {
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -31375,6 +41612,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutDepartmentInput = {
@@ -31421,6 +41661,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -31432,6 +41673,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateManyWithoutDepartmentInput = {
@@ -31478,6 +41722,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31492,6 +41737,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUpdateManyWithoutPositionNestedInput
+    selectionProcesses?: SelectionProcessUpdateManyWithoutPositionNestedInput
   }
 
   export type PositionUncheckedUpdateWithoutDepartmentInput = {
@@ -31504,6 +41750,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     employees?: EmployeeUncheckedUpdateManyWithoutPositionNestedInput
+    selectionProcesses?: SelectionProcessUncheckedUpdateManyWithoutPositionNestedInput
   }
 
   export type PositionUncheckedUpdateManyWithoutDepartmentInput = {
@@ -31515,6 +41762,56 @@ export namespace Prisma {
     isActive?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    position?: PositionUpdateOneWithoutSelectionProcessesNestedInput
+    candidates?: EmployeeUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidates?: EmployeeUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateManyWithoutDepartmentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmployeeCreateManyPositionInput = {
@@ -31561,8 +41858,23 @@ export namespace Prisma {
     userId?: string | null
     departmentId?: string | null
     supervisorId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type SelectionProcessCreateManyPositionInput = {
+    id?: string
+    code: string
+    name: string
+    description?: string | null
+    status?: $Enums.SelectionProcessStatus
+    openedAt?: Date | string
+    closedAt?: Date | string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    departmentId?: string | null
   }
 
   export type EmployeeUpdateWithoutPositionInput = {
@@ -31612,6 +41924,7 @@ export namespace Prisma {
     department?: DepartmentUpdateOneWithoutEmployeesNestedInput
     supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -31620,6 +41933,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutPositionInput = {
@@ -31666,6 +41982,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -31677,6 +41994,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateManyWithoutPositionInput = {
@@ -31723,8 +42043,59 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessUpdateWithoutPositionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    department?: DepartmentUpdateOneWithoutSelectionProcessesNestedInput
+    candidates?: EmployeeUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateWithoutPositionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    candidates?: EmployeeUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    approvers?: SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    candidateApprovals?: CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessNestedInput
+  }
+
+  export type SelectionProcessUncheckedUpdateManyWithoutPositionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumSelectionProcessStatusFieldUpdateOperationsInput | $Enums.SelectionProcessStatus
+    openedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    closedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type EmployeeLaborDataCreateManyContractTypeInput = {
@@ -31815,6 +42186,368 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
   }
 
+  export type EmployeeCreateManySelectionProcessInput = {
+    id?: string
+    firstName: string
+    middleName?: string | null
+    lastName: string
+    secondLastName?: string | null
+    birthDate?: Date | string | null
+    documentId?: string | null
+    gender?: string | null
+    maritalStatus?: string | null
+    nationality?: string | null
+    academicLevel?: string | null
+    birthCountry?: string | null
+    birthRegion?: string | null
+    birthDistrict?: string | null
+    licenseNumber?: string | null
+    documentType?: string | null
+    onboardingStatus?: string | null
+    personalEmail?: string | null
+    phone?: string | null
+    cellPhone?: string | null
+    address?: string | null
+    district?: string | null
+    province?: string | null
+    departmentdirec?: string | null
+    addressRef?: string | null
+    docAddress?: string | null
+    docDistrict?: string | null
+    docDepartment?: string | null
+    docAddressRef?: string | null
+    emergencyName?: string | null
+    emergencyPhone?: string | null
+    emergencyRel?: string | null
+    afpType?: string | null
+    afpEntity?: string | null
+    afpCommission?: string | null
+    bankEntity?: string | null
+    bankAccount?: string | null
+    bankCci?: string | null
+    status?: $Enums.EmployeeStatus
+    hireDate: Date | string
+    userId?: string | null
+    departmentId?: string | null
+    positionId?: string | null
+    supervisorId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SelectionProcessApproverCreateManySelectionProcessInput = {
+    id?: string
+    employeeId: string
+    order: number
+    createdAt?: Date | string
+  }
+
+  export type CandidateApprovalCreateManySelectionProcessInput = {
+    id?: string
+    candidateId: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HRCandidateAnalysisCreateManySelectionProcessInput = {
+    id?: string
+    candidateId: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type EmployeeUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutEmployeeNestedInput
+    department?: DepartmentUpdateOneWithoutEmployeesNestedInput
+    position?: PositionUpdateOneWithoutEmployeesNestedInput
+    supervisor?: EmployeeUpdateOneWithoutSubordinatesNestedInput
+    subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
+    laborData?: EmployeeLaborDataUncheckedUpdateOneWithoutEmployeeNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutEmployeeNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutEmployeeNestedInput
+    requests?: RequestUncheckedUpdateManyWithoutEmployeeNestedInput
+    familyMembers?: FamilyMemberUncheckedUpdateManyWithoutEmployeeNestedInput
+    educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
+    sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
+    receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
+  }
+
+  export type EmployeeUncheckedUpdateManyWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firstName?: StringFieldUpdateOperationsInput | string
+    middleName?: NullableStringFieldUpdateOperationsInput | string | null
+    lastName?: StringFieldUpdateOperationsInput | string
+    secondLastName?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    documentId?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    maritalStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    nationality?: NullableStringFieldUpdateOperationsInput | string | null
+    academicLevel?: NullableStringFieldUpdateOperationsInput | string | null
+    birthCountry?: NullableStringFieldUpdateOperationsInput | string | null
+    birthRegion?: NullableStringFieldUpdateOperationsInput | string | null
+    birthDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    licenseNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    documentType?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    personalEmail?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    cellPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    district?: NullableStringFieldUpdateOperationsInput | string | null
+    province?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentdirec?: NullableStringFieldUpdateOperationsInput | string | null
+    addressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    docDistrict?: NullableStringFieldUpdateOperationsInput | string | null
+    docDepartment?: NullableStringFieldUpdateOperationsInput | string | null
+    docAddressRef?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyName?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    emergencyRel?: NullableStringFieldUpdateOperationsInput | string | null
+    afpType?: NullableStringFieldUpdateOperationsInput | string | null
+    afpEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    afpCommission?: NullableStringFieldUpdateOperationsInput | string | null
+    bankEntity?: NullableStringFieldUpdateOperationsInput | string | null
+    bankAccount?: NullableStringFieldUpdateOperationsInput | string | null
+    bankCci?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    hireDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    departmentId?: NullableStringFieldUpdateOperationsInput | string | null
+    positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    supervisorId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessApproverUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    employee?: EmployeeUpdateOneRequiredWithoutApprovalsNestedInput
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateManyWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    employeeId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CandidateApprovalUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    candidate?: EmployeeUpdateOneRequiredWithoutReceivedApprovalsNestedInput
+  }
+
+  export type CandidateApprovalUncheckedUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CandidateApprovalUncheckedUpdateManyWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRCandidateAnalysisUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: HRAnalysisDocumentUpdateManyWithoutAnalysisNestedInput
+    candidate?: EmployeeUpdateOneRequiredWithoutHrAnalysesNestedInput
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: HRAnalysisDocumentUncheckedUpdateManyWithoutAnalysisNestedInput
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateManyWithoutSelectionProcessInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    candidateId?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type EmployeeCreateManySupervisorInput = {
     id?: string
     firstName: string
@@ -31859,6 +42592,7 @@ export namespace Prisma {
     userId?: string | null
     departmentId?: string | null
     positionId?: string | null
+    selectionProcessId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31949,6 +42683,41 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type SelectionProcessApproverCreateManyEmployeeInput = {
+    id?: string
+    selectionProcessId: string
+    order: number
+    createdAt?: Date | string
+  }
+
+  export type CandidateApprovalCreateManyCandidateInput = {
+    id?: string
+    selectionProcessId: string
+    approverId: string
+    approverType: string
+    status?: string
+    comment?: string | null
+    decidedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type HRCandidateAnalysisCreateManyCandidateInput = {
+    id?: string
+    selectionProcessId: string
+    professionalSummary?: string | null
+    strengths?: string | null
+    improvementAreas?: string | null
+    interviewResults?: string | null
+    competencyEvaluation?: string | null
+    identifiedRisks?: string | null
+    recommendation?: $Enums.HRRecommendation
+    recommendationNotes?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type EmployeeUpdateWithoutSupervisorInput = {
     id?: StringFieldUpdateOperationsInput | string
     firstName?: StringFieldUpdateOperationsInput | string
@@ -31996,6 +42765,7 @@ export namespace Prisma {
     department?: DepartmentUpdateOneWithoutEmployeesNestedInput
     position?: PositionUpdateOneWithoutEmployeesNestedInput
     subordinates?: EmployeeUpdateManyWithoutSupervisorNestedInput
+    selectionProcess?: SelectionProcessUpdateOneWithoutCandidatesNestedInput
     laborData?: EmployeeLaborDataUpdateOneWithoutEmployeeNestedInput
     attendances?: AttendanceUpdateManyWithoutEmployeeNestedInput
     documents?: DocumentUpdateManyWithoutEmployeeNestedInput
@@ -32004,6 +42774,9 @@ export namespace Prisma {
     educations?: EducationUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateWithoutSupervisorInput = {
@@ -32050,6 +42823,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     subordinates?: EmployeeUncheckedUpdateManyWithoutSupervisorNestedInput
@@ -32061,6 +42835,9 @@ export namespace Prisma {
     educations?: EducationUncheckedUpdateManyWithoutEmployeeNestedInput
     sentKudos?: KudoUncheckedUpdateManyWithoutSenderNestedInput
     receivedKudos?: KudoUncheckedUpdateManyWithoutReceiverNestedInput
+    approvals?: SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeNestedInput
+    receivedApprovals?: CandidateApprovalUncheckedUpdateManyWithoutCandidateNestedInput
+    hrAnalyses?: HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateNestedInput
   }
 
   export type EmployeeUncheckedUpdateManyWithoutSupervisorInput = {
@@ -32107,6 +42884,7 @@ export namespace Prisma {
     userId?: NullableStringFieldUpdateOperationsInput | string | null
     departmentId?: NullableStringFieldUpdateOperationsInput | string | null
     positionId?: NullableStringFieldUpdateOperationsInput | string | null
+    selectionProcessId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32369,6 +43147,157 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type SelectionProcessApproverUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectionProcess?: SelectionProcessUpdateOneRequiredWithoutApproversNestedInput
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SelectionProcessApproverUncheckedUpdateManyWithoutEmployeeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    order?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CandidateApprovalUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    selectionProcess?: SelectionProcessUpdateOneRequiredWithoutCandidateApprovalsNestedInput
+  }
+
+  export type CandidateApprovalUncheckedUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CandidateApprovalUncheckedUpdateManyWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    approverId?: StringFieldUpdateOperationsInput | string
+    approverType?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    comment?: NullableStringFieldUpdateOperationsInput | string | null
+    decidedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRCandidateAnalysisUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: HRAnalysisDocumentUpdateManyWithoutAnalysisNestedInput
+    selectionProcess?: SelectionProcessUpdateOneRequiredWithoutHrAnalysesNestedInput
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    documents?: HRAnalysisDocumentUncheckedUpdateManyWithoutAnalysisNestedInput
+  }
+
+  export type HRCandidateAnalysisUncheckedUpdateManyWithoutCandidateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    selectionProcessId?: StringFieldUpdateOperationsInput | string
+    professionalSummary?: NullableStringFieldUpdateOperationsInput | string | null
+    strengths?: NullableStringFieldUpdateOperationsInput | string | null
+    improvementAreas?: NullableStringFieldUpdateOperationsInput | string | null
+    interviewResults?: NullableStringFieldUpdateOperationsInput | string | null
+    competencyEvaluation?: NullableStringFieldUpdateOperationsInput | string | null
+    identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
+    recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
+    recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRAnalysisDocumentCreateManyAnalysisInput = {
+    id?: string
+    name: string
+    originalName: string
+    mimeType: string
+    size: number
+    path: string
+    uploadedById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type HRAnalysisDocumentUpdateWithoutAnalysisInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRAnalysisDocumentUncheckedUpdateWithoutAnalysisInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type HRAnalysisDocumentUncheckedUpdateManyWithoutAnalysisInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    originalName?: StringFieldUpdateOperationsInput | string
+    mimeType?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    path?: StringFieldUpdateOperationsInput | string
+    uploadedById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -32399,9 +43328,17 @@ export namespace Prisma {
      */
     export type WorkShiftCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = WorkShiftCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use SelectionProcessCountOutputTypeDefaultArgs instead
+     */
+    export type SelectionProcessCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SelectionProcessCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use EmployeeCountOutputTypeDefaultArgs instead
      */
     export type EmployeeCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EmployeeCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use HRCandidateAnalysisCountOutputTypeDefaultArgs instead
+     */
+    export type HRCandidateAnalysisCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = HRCandidateAnalysisCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use SystemUserTypeDefaultArgs instead
      */
@@ -32431,9 +43368,21 @@ export namespace Prisma {
      */
     export type WorkShiftArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = WorkShiftDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use SelectionProcessDefaultArgs instead
+     */
+    export type SelectionProcessArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SelectionProcessDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SelectionProcessApproverDefaultArgs instead
+     */
+    export type SelectionProcessApproverArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SelectionProcessApproverDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use EmployeeDefaultArgs instead
      */
     export type EmployeeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EmployeeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use CandidateApprovalDefaultArgs instead
+     */
+    export type CandidateApprovalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = CandidateApprovalDefaultArgs<ExtArgs>
     /**
      * @deprecated Use EmployeeLaborDataDefaultArgs instead
      */
@@ -32462,6 +43411,14 @@ export namespace Prisma {
      * @deprecated Use FamilyMemberDefaultArgs instead
      */
     export type FamilyMemberArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = FamilyMemberDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use HRCandidateAnalysisDefaultArgs instead
+     */
+    export type HRCandidateAnalysisArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = HRCandidateAnalysisDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use HRAnalysisDocumentDefaultArgs instead
+     */
+    export type HRAnalysisDocumentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = HRAnalysisDocumentDefaultArgs<ExtArgs>
     /**
      * @deprecated Use TenantDomainDefaultArgs instead
      */

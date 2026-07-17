@@ -182,8 +182,9 @@ model Department {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
-  employees Employee[]
-  positions Position[]
+  employees          Employee[]
+  positions          Position[]
+  selectionProcesses SelectionProcess[] @relation("ProcessDept")
 
   @@index([parentId])
   @@map("departments")
@@ -201,7 +202,8 @@ model Position {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
 
-  employees Employee[]
+  employees          Employee[]
+  selectionProcesses SelectionProcess[] @relation("ProcessPosition")
 
   @@map("positions")
 }
@@ -233,6 +235,56 @@ model WorkShift {
   employees EmployeeLaborData[]
 
   @@map("work_shifts")
+}
+
+// ── Procesos de Selección ─────────────────────────────────────────────────────
+
+enum SelectionProcessStatus {
+  OPEN // Activo — acepta candidatos
+  CLOSED // Cerrado — proceso finalizado
+  CANCELLED // Cancelado
+}
+
+model SelectionProcess {
+  id          String                 @id @default(uuid())
+  code        String                 @unique
+  name        String
+  description String?
+  status      SelectionProcessStatus @default(OPEN)
+  openedAt    DateTime               @default(now())
+  closedAt    DateTime?
+  createdById String?
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+
+  departmentId String?
+  department   Department? @relation("ProcessDept", fields: [departmentId], references: [id])
+
+  positionId String?
+  position   Position? @relation("ProcessPosition", fields: [positionId], references: [id])
+
+  candidates         Employee[]
+  approvers          SelectionProcessApprover[]
+  candidateApprovals CandidateApproval[]        @relation("ProcessCandidateApprovals")
+  hrAnalyses         HRCandidateAnalysis[]
+
+  @@index([status])
+  @@index([code])
+  @@map("selection_processes")
+}
+
+model SelectionProcessApprover {
+  id                 String           @id @default(uuid())
+  selectionProcessId String
+  selectionProcess   SelectionProcess @relation(fields: [selectionProcessId], references: [id], onDelete: Cascade)
+  employeeId         String
+  employee           Employee         @relation("SPApprover", fields: [employeeId], references: [id], onDelete: Cascade)
+  order              Int
+  createdAt          DateTime         @default(now())
+
+  @@unique([selectionProcessId, employeeId])
+  @@index([selectionProcessId])
+  @@map("selection_process_approvers")
 }
 
 // ── Employees ─────────────────────────────────────────────────────────────────
@@ -292,14 +344,20 @@ model Employee {
   supervisor   Employee?  @relation("Hierarchy", fields: [supervisorId], references: [id])
   subordinates Employee[] @relation("Hierarchy")
 
-  laborData     EmployeeLaborData?
-  attendances   Attendance[]
-  documents     Document[]
-  requests      Request[]
-  familyMembers FamilyMember[]
-  educations    Education[]
-  sentKudos     Kudo[]             @relation("Sender")
-  receivedKudos Kudo[]             @relation("Receiver")
+  selectionProcessId String?
+  selectionProcess   SelectionProcess? @relation(fields: [selectionProcessId], references: [id])
+
+  laborData         EmployeeLaborData?
+  attendances       Attendance[]
+  documents         Document[]
+  requests          Request[]
+  familyMembers     FamilyMember[]
+  educations        Education[]
+  sentKudos         Kudo[]                     @relation("Sender")
+  receivedKudos     Kudo[]                     @relation("Receiver")
+  approvals         SelectionProcessApprover[] @relation("SPApprover")
+  receivedApprovals CandidateApproval[]        @relation("CandidateApprovals")
+  hrAnalyses        HRCandidateAnalysis[]      @relation("HRAnalysis")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -307,6 +365,26 @@ model Employee {
   @@index([status])
   @@index([supervisorId])
   @@map("employees")
+}
+
+model CandidateApproval {
+  id                 String           @id @default(uuid())
+  selectionProcessId String
+  selectionProcess   SelectionProcess @relation("ProcessCandidateApprovals", fields: [selectionProcessId], references: [id], onDelete: Cascade)
+  candidateId        String
+  candidate          Employee         @relation("CandidateApprovals", fields: [candidateId], references: [id], onDelete: Cascade)
+  approverId         String // user.id del JWT — válido para EMPLOYEE y HR
+  approverType       String // 'APPROVER' | 'HR'
+  status             String           @default("PENDING") // 'PENDING' | 'APPROVED' | 'REJECTED'
+  comment            String?
+  decidedAt          DateTime?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  @@unique([selectionProcessId, candidateId, approverId])
+  @@index([selectionProcessId, candidateId])
+  @@index([approverId])
+  @@map("candidate_approvals")
 }
 
 model EmployeeLaborData {
@@ -461,6 +539,57 @@ model FamilyMember {
 
   @@index([employeeId])
   @@map("family_members")
+}
+
+// ── Análisis de RR.HH. por candidato ─────────────────────────────────────────
+
+enum HRRecommendation {
+  PENDING
+  APPROVED
+  CONDITIONALLY_APPROVED
+  REJECTED
+}
+
+model HRCandidateAnalysis {
+  id                 String @id @default(uuid())
+  selectionProcessId String
+  candidateId        String
+
+  professionalSummary  String?          @db.Text
+  strengths            String?          @db.Text
+  improvementAreas     String?          @db.Text
+  interviewResults     String?          @db.Text
+  competencyEvaluation String?          @db.Text
+  identifiedRisks      String?          @db.Text
+  recommendation       HRRecommendation @default(PENDING)
+  recommendationNotes  String?          @db.Text
+
+  documents HRAnalysisDocument[]
+
+  createdById String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  selectionProcess SelectionProcess @relation(fields: [selectionProcessId], references: [id], onDelete: Cascade)
+  candidate        Employee         @relation("HRAnalysis", fields: [candidateId], references: [id], onDelete: Cascade)
+
+  @@unique([selectionProcessId, candidateId])
+  @@map("hr_candidate_analyses")
+}
+
+model HRAnalysisDocument {
+  id           String              @id @default(uuid())
+  analysisId   String
+  name         String
+  originalName String
+  mimeType     String
+  size         Int
+  path         String
+  analysis     HRCandidateAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  uploadedById String?
+  createdAt    DateTime            @default(now())
+
+  @@map("hr_analysis_documents")
 }
 
 // ── Dominios corporativos ─────────────────────────────────────────────────────

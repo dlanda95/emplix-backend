@@ -15,7 +15,6 @@ const router = Router();
 const passwordResetLimiter = rateLimit({
   windowMs:         15 * 60 * 1000,
   max:              5,
-  keyGenerator:     (req) => req.ip ?? 'unknown',
   standardHeaders:  true,
   legacyHeaders:    false,
   message:          { code: 'RATE_LIMIT_EXCEEDED', message: 'Demasiados intentos. Espera 15 minutos.' },
