@@ -126,9 +126,10 @@ model User {
   role         UserRole  @default(EMPLOYEE)
   firstName    String?
   lastName     String?
-  isActive     Boolean   @default(true)
-  lastLoginAt  DateTime?
-  createdAt    DateTime  @default(now())
+  isActive           Boolean   @default(true)
+  mustChangePassword Boolean   @default(false)
+  lastLoginAt        DateTime?
+  createdAt          DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
   systemUserTypeId String?
@@ -563,6 +564,7 @@ model HRCandidateAnalysis {
   identifiedRisks      String?          @db.Text
   recommendation       HRRecommendation @default(PENDING)
   recommendationNotes  String?          @db.Text
+  salaryExpectation    Decimal?         @db.Decimal(12, 2)
 
   documents            HRAnalysisDocument[]
 

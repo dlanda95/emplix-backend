@@ -118,18 +118,19 @@ model SystemUserType {
 // ── Users ─────────────────────────────────────────────────────────────────────
 
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
-  passwordHash String?
-  provider     Provider  @default(LOCAL)
-  providerId   String?
-  role         UserRole  @default(EMPLOYEE)
-  firstName    String?
-  lastName     String?
-  isActive     Boolean   @default(true)
-  lastLoginAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  passwordHash       String?
+  provider           Provider  @default(LOCAL)
+  providerId         String?
+  role               UserRole  @default(EMPLOYEE)
+  firstName          String?
+  lastName           String?
+  isActive           Boolean   @default(true)
+  mustChangePassword Boolean   @default(false)
+  lastLoginAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   systemUserTypeId String?
   systemUserType   SystemUserType? @relation(fields: [systemUserTypeId], references: [id])
@@ -563,6 +564,7 @@ model HRCandidateAnalysis {
   identifiedRisks      String?          @db.Text
   recommendation       HRRecommendation @default(PENDING)
   recommendationNotes  String?          @db.Text
+  salaryExpectation    Decimal?         @db.Decimal(12, 2)
 
   documents HRAnalysisDocument[]
 

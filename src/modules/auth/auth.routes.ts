@@ -2,7 +2,7 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import {
   login, register, checkEmailExists, getMe, microsoftLogin, verifyTenant,
-  forgotPassword, verifyResetToken, resetPassword,
+  forgotPassword, verifyResetToken, resetPassword, changePassword,
 } from './auth.controller';
 import { authMiddleware } from '../../shared/middlewares/auth.middleware';
 import { validate } from '../../shared/middlewares/validate.middleware';
@@ -33,6 +33,7 @@ router.post('/forgot-password',     passwordResetLimiter, forgotPassword);
 router.get('/verify-reset-token',   passwordResetLimiter, verifyResetToken);
 router.post('/reset-password',      passwordResetLimiter, resetPassword);
 
-router.get('/me', authMiddleware, getMe);
+router.get('/me',              authMiddleware, getMe);
+router.post('/change-password', authMiddleware, changePassword);
 
 export default router;

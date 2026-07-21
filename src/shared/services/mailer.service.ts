@@ -154,6 +154,130 @@ export async function sendMail(opts: SendMailOptions): Promise<void> {
 
 // ── Templates ─────────────────────────────────────────────────────────────────
 
+// ── Email de activación de colaborador (ingreso a la empresa) ─────────────────
+export interface EmployeeActivationEmailParams {
+  firstName:       string;
+  lastName:        string;
+  positionName:    string;
+  companyName:     string;
+  corporateEmail:  string;
+  tempPassword:    string;
+  loginUrl:        string;
+}
+
+export function buildEmployeeActivationEmail(p: EmployeeActivationEmailParams): string {
+  const year     = new Date().getFullYear();
+  const fullName = `${p.firstName} ${p.lastName}`.trim();
+  return `
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0;padding:0;background:#f4f5f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f5f7;padding:40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.09);">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#7c1d1d 0%,#9f2626 100%);padding:32px 36px;">
+              <p style="margin:0;font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">⚡ Emplix</p>
+              <p style="margin:6px 0 0;font-size:13px;color:rgba(255,255,255,0.72);">Plataforma de Gestión de Recursos Humanos</p>
+            </td>
+          </tr>
+
+          <!-- Congratulations banner -->
+          <tr>
+            <td style="background:#fef2f2;padding:24px 36px;border-bottom:1px solid #fecaca;">
+              <p style="margin:0;font-size:28px;text-align:center;">🎉</p>
+              <h1 style="margin:10px 0 6px;font-size:22px;font-weight:800;color:#7c1d1d;text-align:center;line-height:1.3;">
+                ¡Felicitaciones, ${fullName}!
+              </h1>
+              <p style="margin:0;font-size:15px;color:#7f1d1d;text-align:center;line-height:1.6;">
+                Has sido incorporado/a oficialmente a <strong>${p.companyName}</strong><br>
+                como <strong>${p.positionName}</strong>.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding:32px 36px;">
+              <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.7;">
+                Nos alegra mucho tenerte en el equipo. A continuación encontrarás tus credenciales
+                de acceso a la plataforma Emplix, donde podrás gestionar tus solicitudes,
+                documentos y mucho más.
+              </p>
+
+              <!-- Credentials box -->
+              <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:22px 26px;margin-bottom:24px;">
+                <p style="margin:0 0 18px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.07em;">
+                  Tus credenciales de acceso
+                </p>
+
+                <div style="margin-bottom:16px;">
+                  <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">
+                    Correo corporativo (usuario)
+                  </p>
+                  <p style="margin:0;font-size:17px;font-weight:700;color:#111827;font-family:'Courier New',Courier,monospace;">
+                    ${p.corporateEmail}
+                  </p>
+                </div>
+
+                <div style="border-top:1px solid #e5e7eb;padding-top:16px;">
+                  <p style="margin:0 0 3px;font-size:11px;color:#9ca3af;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">
+                    Contraseña temporal
+                  </p>
+                  <p style="margin:0;font-size:22px;font-weight:800;color:#7c1d1d;font-family:'Courier New',Courier,monospace;letter-spacing:0.12em;">
+                    ${p.tempPassword}
+                  </p>
+                </div>
+              </div>
+
+              <!-- CTA -->
+              <div style="text-align:center;margin:0 0 26px;">
+                <a href="${p.loginUrl}"
+                   style="display:inline-block;background:#7c1d1d;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;padding:15px 36px;border-radius:8px;letter-spacing:0.02em;">
+                  Ingresar a Emplix
+                </a>
+              </div>
+
+              <!-- Security note -->
+              <div style="background:#fef9c3;border:1px solid #fde047;border-radius:8px;padding:14px 18px;margin-bottom:20px;">
+                <p style="margin:0;font-size:13px;color:#713f12;line-height:1.6;">
+                  🔒 <strong>Por tu seguridad</strong>, se te pedirá crear una nueva contraseña
+                  la primera vez que ingreses. También puedes usar
+                  <em>Iniciar sesión con Microsoft</em> si tu cuenta corporativa ya está disponible.
+                </p>
+              </div>
+
+              <p style="margin:0;font-size:14px;color:#6b7280;line-height:1.6;">
+                Si tienes alguna duda, comunícate con el equipo de Recursos Humanos.
+                ¡Bienvenido/a a bordo! 🚀
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#f9fafb;padding:20px 36px;border-top:1px solid #f0f0f0;">
+              <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">
+                © ${year} ${p.companyName} · Emplix HR — Correo generado automáticamente, no respondas a este mensaje.
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
+
 // ── Parámetros para el email de bienvenida de candidatos ─────────────────────
 export interface CandidateWelcomeEmailParams {
   candidateName: string;

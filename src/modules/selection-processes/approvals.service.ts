@@ -1,6 +1,11 @@
 import { randomUUID } from 'crypto';
+import * as argon2 from 'argon2';
 import { PrismaClient } from '../../generated/tenant-client';
 import { AppError } from '../../shared/middlewares/error.middleware';
+import { generateSecurePassword } from '../../shared/utils/crypto.util';
+import { sendMail, buildEmployeeActivationEmail } from '../../shared/services/mailer.service';
+
+const FRONTEND_URL = process.env.FRONTEND_URL ?? 'http://localhost:4200';
 
 export type ApprovalStatus = 'PENDING' | 'APPROVED' | 'REJECTED';
 export type ApproverType  = 'APPROVER' | 'HR';
@@ -116,12 +121,31 @@ export class ApprovalsService {
 
     // HR approval line (if any HR has submitted)
     const hrApprovals = existingApprovals.filter((a: any) => a.approverType === 'HR');
+
+    // Enrich HR approvals with approver names
+    const hrApproverIds: string[] = Array.from(new Set<string>(hrApprovals.map((a: any) => a.approverId as string)));
+    const hrEmployees = hrApproverIds.length > 0
+      ? await db.employee.findMany({
+          where:  { userId: { in: hrApproverIds } },
+          select: { userId: true, firstName: true, lastName: true },
+        })
+      : [];
+    const hrNameMap = new Map<string, string>(
+      hrEmployees.map((e: any) => [e.userId as string, `${e.firstName} ${e.lastName}`]),
+    );
+
+    const hrApprovalsEnriched = hrApprovals.map((a: any) => ({
+      ...a,
+      approverName: hrNameMap.get(a.approverId) ?? 'Recursos Humanos',
+    }));
+
     const currentUserHR = hrApprovals.find((a: any) => a.approverId === currentUserId);
+    const currentHRName = hrNameMap.get(currentUserId) ?? 'Recursos Humanos';
 
     const hrLine: ApprovalLineItem | null = hrApprovals.length > 0 || HR_ROLES.includes('') ? {
       approverId:    currentUserId,
       approverType:  'HR',
-      approverName:  'Recursos Humanos',
+      approverName:  currentHRName,
       approverRole:  null,
       order:         null,
       status:        (currentUserHR?.status ?? 'PENDING') as ApprovalStatus,
@@ -141,7 +165,7 @@ export class ApprovalsService {
       candidate,
       approverLines,
       hrLine,
-      hrApprovals,
+      hrApprovals: hrApprovalsEnriched,
       fullyApproved,
       anyRejected,
       totalApprovers:  approverLines.length,
@@ -206,10 +230,20 @@ export class ApprovalsService {
   }
 
   // ── Convert candidate to active employee ───────────────────────────────────
-  async convertToEmployee(processId: string, candidateId: string, db: PrismaClient) {
+  async convertToEmployee(
+    processId:      string,
+    candidateId:    string,
+    corporateEmail: string,
+    db:             PrismaClient,
+  ) {
     const candidate = await db.employee.findUnique({
       where:  { id: candidateId },
-      select: { id: true, status: true, selectionProcessId: true },
+      select: {
+        id: true, firstName: true, lastName: true, personalEmail: true,
+        status: true, selectionProcessId: true, userId: true,
+        position: { select: { name: true } },
+        user:     { select: { id: true } },
+      },
     });
     if (!candidate) throw new AppError('Candidato no encontrado.', 404, 'NOT_FOUND');
     if (candidate.selectionProcessId !== processId) {
@@ -218,6 +252,17 @@ export class ApprovalsService {
     if (candidate.status !== 'SELECTED') {
       throw new AppError('Solo candidatos en estado SELECTED pueden ser activados.', 400, 'INVALID_STATUS');
     }
+    if (!candidate.userId) {
+      throw new AppError('El candidato no tiene cuenta de usuario asociada.', 400, 'NO_USER');
+    }
+
+    const emailLower = corporateEmail.toLowerCase().trim();
+    if (!emailLower) throw new AppError('El correo corporativo es requerido.', 400, 'EMAIL_REQUIRED');
+
+    const emailConflict = await db.user.findFirst({
+      where: { email: emailLower, id: { not: candidate.userId } },
+    });
+    if (emailConflict) throw new AppError('El correo corporativo ya está en uso.', 409, 'EMAIL_TAKEN');
 
     // Verify fully approved
     const { fullyApproved } = await this.getCandidateApprovals(processId, candidateId, '', db);
@@ -225,14 +270,51 @@ export class ApprovalsService {
       throw new AppError('El candidato aún no tiene todas las aprobaciones requeridas.', 400, 'NOT_FULLY_APPROVED');
     }
 
-    return db.employee.update({
-      where: { id: candidateId },
-      data:  {
-        status:            'ACTIVE',
-        selectionProcessId: null,  // desvincular del proceso
-      },
-      select: { id: true, firstName: true, lastName: true, status: true },
+    // Generate temporary password
+    const tempPassword = generateSecurePassword(12);
+    const passwordHash = await argon2.hash(tempPassword);
+
+    const employee = await db.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: candidate.userId! },
+        data:  { email: emailLower, passwordHash, mustChangePassword: true },
+      });
+      return tx.employee.update({
+        where:   { id: candidateId },
+        data:    { status: 'ACTIVE' },
+        include: { position: { select: { name: true } }, user: { select: { email: true } } },
+      });
     });
+
+    // Destination: personal email (readable before corporate account is active)
+    // Falls back to corporate email if no personal email on record.
+    const deliveryEmail = candidate.personalEmail?.trim() || emailLower;
+    const loginUrl      = `${FRONTEND_URL}/auth/login`;
+    const companyName   = 'Emplix';
+
+    let emailSent  = false;
+    let emailError: string | undefined;
+    try {
+      await sendMail({
+        to:      deliveryEmail,
+        subject: `¡Bienvenido/a a ${companyName}! — Tus credenciales de acceso`,
+        html:    buildEmployeeActivationEmail({
+          firstName:      candidate.firstName ?? 'Colaborador',
+          lastName:       candidate.lastName  ?? '',
+          positionName:   candidate.position?.name ?? 'Colaborador',
+          companyName,
+          corporateEmail: emailLower,
+          tempPassword,
+          loginUrl,
+        }),
+      });
+      emailSent = true;
+    } catch (err) {
+      emailError = err instanceof Error ? err.message : String(err);
+      console.error('[activateEmployee] email error:', emailError);
+    }
+
+    return { employee, emailSent, emailError, deliveryEmail };
   }
 
   // ── List processes for an approver (EMPLOYEE role) ─────────────────────────

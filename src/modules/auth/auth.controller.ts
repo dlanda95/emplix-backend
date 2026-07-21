@@ -104,3 +104,13 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     ok(res, { message: 'Contraseña actualizada correctamente.' });
   } catch (error) { next(error); }
 };
+
+export const changePassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  try {
+    if (!req.user?.id) { badRequest(res, 'No autorizado'); return; }
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) { badRequest(res, 'Se requieren la contraseña actual y la nueva.'); return; }
+    await authService.changePassword(req.user.id, currentPassword, newPassword, req.tenantPrisma!);
+    ok(res, { message: 'Contraseña actualizada correctamente.' });
+  } catch (error) { next(error); }
+};

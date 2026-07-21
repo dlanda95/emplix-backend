@@ -164,7 +164,7 @@ export class SelectionProcessesService {
     const limit = Math.min(100, Math.max(1, params.limit ?? 25));
     const skip  = (page - 1) * limit;
 
-    const where: any = { selectionProcessId: processId, status: 'SELECTED' };
+    const where: any = { selectionProcessId: processId };
     if (params.onboardingStatus) where.onboardingStatus = params.onboardingStatus;
     if (params.search?.trim()) {
       const q = params.search.trim();

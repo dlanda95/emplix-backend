@@ -12,11 +12,34 @@ export interface UpsertHRAnalysisDto {
   identifiedRisks?:      string | null;
   recommendation?:       string;
   recommendationNotes?:  string | null;
+  salaryExpectation?:    number | null;
 }
 
 const ANALYSIS_INCLUDE = {
   documents: { orderBy: { createdAt: 'asc' as const } },
 };
+
+async function enrichWithCreatorName(analyses: any[], db: PrismaClient): Promise<any[]> {
+  const creatorIds: string[] = Array.from(
+    new Set<string>(analyses.map((a: any) => a.createdById).filter(Boolean) as string[]),
+  );
+  if (creatorIds.length === 0) return analyses.map(a => ({ ...a, createdByName: null }));
+
+  const employees = await db.employee.findMany({
+    where:  { userId: { in: creatorIds } },
+    select: { userId: true, firstName: true, lastName: true },
+  });
+  const nameMap = new Map<string, string>(
+    employees.map((e: any) => [e.userId as string, `${e.firstName} ${e.lastName}`]),
+  );
+  return analyses.map(a => ({
+    ...a,
+    salaryExpectation: a.salaryExpectation !== null && a.salaryExpectation !== undefined
+      ? Number(a.salaryExpectation)
+      : null,
+    createdByName: a.createdById ? (nameMap.get(a.createdById) ?? null) : null,
+  }));
+}
 
 export class HRAnalysisService {
   private readonly storage = new StorageService();
@@ -34,10 +57,13 @@ export class HRAnalysisService {
   }
 
   async getAnalysis(processId: string, candidateId: string, db: PrismaClient) {
-    return (db as any).hRCandidateAnalysis.findUnique({
+    const analysis = await (db as any).hRCandidateAnalysis.findUnique({
       where:   { selectionProcessId_candidateId: { selectionProcessId: processId, candidateId } },
       include: ANALYSIS_INCLUDE,
-    }) ?? null;
+    });
+    if (!analysis) return null;
+    const [enriched] = await enrichWithCreatorName([analysis], db);
+    return enriched;
   }
 
   async upsertAnalysis(
@@ -45,12 +71,14 @@ export class HRAnalysisService {
     createdById: string, db: PrismaClient,
   ) {
     await this.assertCandidate(processId, candidateId, db);
-    return (db as any).hRCandidateAnalysis.upsert({
+    const result = await (db as any).hRCandidateAnalysis.upsert({
       where:  { selectionProcessId_candidateId: { selectionProcessId: processId, candidateId } },
       create: { id: randomUUID(), selectionProcessId: processId, candidateId, createdById, ...dto },
       update: { ...dto },
       include: ANALYSIS_INCLUDE,
     });
+    const [enriched] = await enrichWithCreatorName([result], db);
+    return enriched;
   }
 
   async uploadDocument(
@@ -97,11 +125,12 @@ export class HRAnalysisService {
   }
 
   async getAnalysesForProcess(processId: string, db: PrismaClient) {
-    return (db as any).hRCandidateAnalysis.findMany({
+    const analyses = await (db as any).hRCandidateAnalysis.findMany({
       where:   { selectionProcessId: processId },
       include: ANALYSIS_INCLUDE,
       orderBy: { createdAt: 'asc' as const },
     });
+    return enrichWithCreatorName(analyses, db);
   }
 
   async getDocumentUrl(docId: string, db: PrismaClient): Promise<string> {

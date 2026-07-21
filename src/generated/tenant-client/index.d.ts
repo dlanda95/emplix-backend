@@ -4226,6 +4226,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     isActive: boolean | null
+    mustChangePassword: boolean | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4242,6 +4243,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     isActive: boolean | null
+    mustChangePassword: boolean | null
     lastLoginAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4258,6 +4260,7 @@ export namespace Prisma {
     firstName: number
     lastName: number
     isActive: number
+    mustChangePassword: number
     lastLoginAt: number
     createdAt: number
     updatedAt: number
@@ -4276,6 +4279,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     isActive?: true
+    mustChangePassword?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4292,6 +4296,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     isActive?: true
+    mustChangePassword?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4308,6 +4313,7 @@ export namespace Prisma {
     firstName?: true
     lastName?: true
     isActive?: true
+    mustChangePassword?: true
     lastLoginAt?: true
     createdAt?: true
     updatedAt?: true
@@ -4397,6 +4403,7 @@ export namespace Prisma {
     firstName: string | null
     lastName: string | null
     isActive: boolean
+    mustChangePassword: boolean
     lastLoginAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -4430,6 +4437,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4451,6 +4459,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4468,6 +4477,7 @@ export namespace Prisma {
     firstName?: boolean
     lastName?: boolean
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4503,6 +4513,7 @@ export namespace Prisma {
       firstName: string | null
       lastName: string | null
       isActive: boolean
+      mustChangePassword: boolean
       lastLoginAt: Date | null
       createdAt: Date
       updatedAt: Date
@@ -4913,6 +4924,7 @@ export namespace Prisma {
     readonly firstName: FieldRef<"User", 'String'>
     readonly lastName: FieldRef<"User", 'String'>
     readonly isActive: FieldRef<"User", 'Boolean'>
+    readonly mustChangePassword: FieldRef<"User", 'Boolean'>
     readonly lastLoginAt: FieldRef<"User", 'DateTime'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
@@ -22544,8 +22556,18 @@ export namespace Prisma {
 
   export type AggregateHRCandidateAnalysis = {
     _count: HRCandidateAnalysisCountAggregateOutputType | null
+    _avg: HRCandidateAnalysisAvgAggregateOutputType | null
+    _sum: HRCandidateAnalysisSumAggregateOutputType | null
     _min: HRCandidateAnalysisMinAggregateOutputType | null
     _max: HRCandidateAnalysisMaxAggregateOutputType | null
+  }
+
+  export type HRCandidateAnalysisAvgAggregateOutputType = {
+    salaryExpectation: Decimal | null
+  }
+
+  export type HRCandidateAnalysisSumAggregateOutputType = {
+    salaryExpectation: Decimal | null
   }
 
   export type HRCandidateAnalysisMinAggregateOutputType = {
@@ -22560,6 +22582,7 @@ export namespace Prisma {
     identifiedRisks: string | null
     recommendation: $Enums.HRRecommendation | null
     recommendationNotes: string | null
+    salaryExpectation: Decimal | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -22577,6 +22600,7 @@ export namespace Prisma {
     identifiedRisks: string | null
     recommendation: $Enums.HRRecommendation | null
     recommendationNotes: string | null
+    salaryExpectation: Decimal | null
     createdById: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -22594,12 +22618,21 @@ export namespace Prisma {
     identifiedRisks: number
     recommendation: number
     recommendationNotes: number
+    salaryExpectation: number
     createdById: number
     createdAt: number
     updatedAt: number
     _all: number
   }
 
+
+  export type HRCandidateAnalysisAvgAggregateInputType = {
+    salaryExpectation?: true
+  }
+
+  export type HRCandidateAnalysisSumAggregateInputType = {
+    salaryExpectation?: true
+  }
 
   export type HRCandidateAnalysisMinAggregateInputType = {
     id?: true
@@ -22613,6 +22646,7 @@ export namespace Prisma {
     identifiedRisks?: true
     recommendation?: true
     recommendationNotes?: true
+    salaryExpectation?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -22630,6 +22664,7 @@ export namespace Prisma {
     identifiedRisks?: true
     recommendation?: true
     recommendationNotes?: true
+    salaryExpectation?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -22647,6 +22682,7 @@ export namespace Prisma {
     identifiedRisks?: true
     recommendation?: true
     recommendationNotes?: true
+    salaryExpectation?: true
     createdById?: true
     createdAt?: true
     updatedAt?: true
@@ -22691,6 +22727,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: HRCandidateAnalysisAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: HRCandidateAnalysisSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: HRCandidateAnalysisMinAggregateInputType
@@ -22721,6 +22769,8 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: HRCandidateAnalysisCountAggregateInputType | true
+    _avg?: HRCandidateAnalysisAvgAggregateInputType
+    _sum?: HRCandidateAnalysisSumAggregateInputType
     _min?: HRCandidateAnalysisMinAggregateInputType
     _max?: HRCandidateAnalysisMaxAggregateInputType
   }
@@ -22737,10 +22787,13 @@ export namespace Prisma {
     identifiedRisks: string | null
     recommendation: $Enums.HRRecommendation
     recommendationNotes: string | null
+    salaryExpectation: Decimal | null
     createdById: string | null
     createdAt: Date
     updatedAt: Date
     _count: HRCandidateAnalysisCountAggregateOutputType | null
+    _avg: HRCandidateAnalysisAvgAggregateOutputType | null
+    _sum: HRCandidateAnalysisSumAggregateOutputType | null
     _min: HRCandidateAnalysisMinAggregateOutputType | null
     _max: HRCandidateAnalysisMaxAggregateOutputType | null
   }
@@ -22771,6 +22824,7 @@ export namespace Prisma {
     identifiedRisks?: boolean
     recommendation?: boolean
     recommendationNotes?: boolean
+    salaryExpectation?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22792,6 +22846,7 @@ export namespace Prisma {
     identifiedRisks?: boolean
     recommendation?: boolean
     recommendationNotes?: boolean
+    salaryExpectation?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22811,6 +22866,7 @@ export namespace Prisma {
     identifiedRisks?: boolean
     recommendation?: boolean
     recommendationNotes?: boolean
+    salaryExpectation?: boolean
     createdById?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22846,6 +22902,7 @@ export namespace Prisma {
       identifiedRisks: string | null
       recommendation: $Enums.HRRecommendation
       recommendationNotes: string | null
+      salaryExpectation: Prisma.Decimal | null
       createdById: string | null
       createdAt: Date
       updatedAt: Date
@@ -23256,6 +23313,7 @@ export namespace Prisma {
     readonly identifiedRisks: FieldRef<"HRCandidateAnalysis", 'String'>
     readonly recommendation: FieldRef<"HRCandidateAnalysis", 'HRRecommendation'>
     readonly recommendationNotes: FieldRef<"HRCandidateAnalysis", 'String'>
+    readonly salaryExpectation: FieldRef<"HRCandidateAnalysis", 'Decimal'>
     readonly createdById: FieldRef<"HRCandidateAnalysis", 'String'>
     readonly createdAt: FieldRef<"HRCandidateAnalysis", 'DateTime'>
     readonly updatedAt: FieldRef<"HRCandidateAnalysis", 'DateTime'>
@@ -25568,6 +25626,7 @@ export namespace Prisma {
     firstName: 'firstName',
     lastName: 'lastName',
     isActive: 'isActive',
+    mustChangePassword: 'mustChangePassword',
     lastLoginAt: 'lastLoginAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -25871,6 +25930,7 @@ export namespace Prisma {
     identifiedRisks: 'identifiedRisks',
     recommendation: 'recommendation',
     recommendationNotes: 'recommendationNotes',
+    salaryExpectation: 'salaryExpectation',
     createdById: 'createdById',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -26322,6 +26382,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     isActive?: BoolFilter<"User"> | boolean
+    mustChangePassword?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -26342,6 +26403,7 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26365,6 +26427,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     isActive?: BoolFilter<"User"> | boolean
+    mustChangePassword?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -26385,6 +26448,7 @@ export namespace Prisma {
     firstName?: SortOrderInput | SortOrder
     lastName?: SortOrderInput | SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
     lastLoginAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26407,6 +26471,7 @@ export namespace Prisma {
     firstName?: StringNullableWithAggregatesFilter<"User"> | string | null
     lastName?: StringNullableWithAggregatesFilter<"User"> | string | null
     isActive?: BoolWithAggregatesFilter<"User"> | boolean
+    mustChangePassword?: BoolWithAggregatesFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -27954,6 +28019,7 @@ export namespace Prisma {
     identifiedRisks?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
     recommendation?: EnumHRRecommendationFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
     recommendationNotes?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    salaryExpectation?: DecimalNullableFilter<"HRCandidateAnalysis"> | Decimal | DecimalJsLike | number | string | null
     createdById?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
     createdAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
     updatedAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
@@ -27974,6 +28040,7 @@ export namespace Prisma {
     identifiedRisks?: SortOrderInput | SortOrder
     recommendation?: SortOrder
     recommendationNotes?: SortOrderInput | SortOrder
+    salaryExpectation?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -27998,6 +28065,7 @@ export namespace Prisma {
     identifiedRisks?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
     recommendation?: EnumHRRecommendationFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
     recommendationNotes?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    salaryExpectation?: DecimalNullableFilter<"HRCandidateAnalysis"> | Decimal | DecimalJsLike | number | string | null
     createdById?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
     createdAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
     updatedAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
@@ -28018,12 +28086,15 @@ export namespace Prisma {
     identifiedRisks?: SortOrderInput | SortOrder
     recommendation?: SortOrder
     recommendationNotes?: SortOrderInput | SortOrder
+    salaryExpectation?: SortOrderInput | SortOrder
     createdById?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: HRCandidateAnalysisCountOrderByAggregateInput
+    _avg?: HRCandidateAnalysisAvgOrderByAggregateInput
     _max?: HRCandidateAnalysisMaxOrderByAggregateInput
     _min?: HRCandidateAnalysisMinOrderByAggregateInput
+    _sum?: HRCandidateAnalysisSumOrderByAggregateInput
   }
 
   export type HRCandidateAnalysisScalarWhereWithAggregatesInput = {
@@ -28041,6 +28112,7 @@ export namespace Prisma {
     identifiedRisks?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
     recommendation?: EnumHRRecommendationWithAggregatesFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
     recommendationNotes?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
+    salaryExpectation?: DecimalNullableWithAggregatesFilter<"HRCandidateAnalysis"> | Decimal | DecimalJsLike | number | string | null
     createdById?: StringNullableWithAggregatesFilter<"HRCandidateAnalysis"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"HRCandidateAnalysis"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"HRCandidateAnalysis"> | Date | string
@@ -28290,6 +28362,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28309,6 +28382,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28328,6 +28402,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28347,6 +28422,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28366,6 +28442,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28382,6 +28459,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28397,6 +28475,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30122,6 +30201,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30142,6 +30222,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30158,6 +30239,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30178,6 +30260,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30196,6 +30279,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -30211,6 +30295,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30228,6 +30313,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -30654,6 +30740,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30670,6 +30757,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30686,6 +30774,7 @@ export namespace Prisma {
     firstName?: SortOrder
     lastName?: SortOrder
     isActive?: SortOrder
+    mustChangePassword?: SortOrder
     lastLoginAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -32041,9 +32130,14 @@ export namespace Prisma {
     identifiedRisks?: SortOrder
     recommendation?: SortOrder
     recommendationNotes?: SortOrder
+    salaryExpectation?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type HRCandidateAnalysisAvgOrderByAggregateInput = {
+    salaryExpectation?: SortOrder
   }
 
   export type HRCandidateAnalysisMaxOrderByAggregateInput = {
@@ -32058,6 +32152,7 @@ export namespace Prisma {
     identifiedRisks?: SortOrder
     recommendation?: SortOrder
     recommendationNotes?: SortOrder
+    salaryExpectation?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -32075,9 +32170,14 @@ export namespace Prisma {
     identifiedRisks?: SortOrder
     recommendation?: SortOrder
     recommendationNotes?: SortOrder
+    salaryExpectation?: SortOrder
     createdById?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type HRCandidateAnalysisSumOrderByAggregateInput = {
+    salaryExpectation?: SortOrder
   }
 
   export type EnumHRRecommendationWithAggregatesFilter<$PrismaModel = never> = {
@@ -34429,6 +34529,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34447,6 +34548,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34494,6 +34596,7 @@ export namespace Prisma {
     firstName?: StringNullableFilter<"User"> | string | null
     lastName?: StringNullableFilter<"User"> | string | null
     isActive?: BoolFilter<"User"> | boolean
+    mustChangePassword?: BoolFilter<"User"> | boolean
     lastLoginAt?: DateTimeNullableFilter<"User"> | Date | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
@@ -34958,6 +35061,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34976,6 +35080,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -35010,6 +35115,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35028,6 +35134,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36207,6 +36314,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36225,6 +36333,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36427,6 +36536,7 @@ export namespace Prisma {
     identifiedRisks?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
     recommendation?: EnumHRRecommendationFilter<"HRCandidateAnalysis"> | $Enums.HRRecommendation
     recommendationNotes?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
+    salaryExpectation?: DecimalNullableFilter<"HRCandidateAnalysis"> | Decimal | DecimalJsLike | number | string | null
     createdById?: StringNullableFilter<"HRCandidateAnalysis"> | string | null
     createdAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
     updatedAt?: DateTimeFilter<"HRCandidateAnalysis"> | Date | string
@@ -36790,6 +36900,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36808,6 +36919,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -37526,6 +37638,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -37544,6 +37657,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -37581,6 +37695,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37599,6 +37714,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39274,6 +39390,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39292,6 +39409,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39459,6 +39577,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -39477,6 +39596,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41206,6 +41326,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -41225,6 +41346,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -41256,6 +41378,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41275,6 +41398,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41290,6 +41414,7 @@ export namespace Prisma {
     firstName?: string | null
     lastName?: string | null
     isActive?: boolean
+    mustChangePassword?: boolean
     lastLoginAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -41305,6 +41430,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41323,6 +41449,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41341,6 +41468,7 @@ export namespace Prisma {
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
     lastName?: NullableStringFieldUpdateOperationsInput | string | null
     isActive?: BoolFieldUpdateOperationsInput | boolean
+    mustChangePassword?: BoolFieldUpdateOperationsInput | boolean
     lastLoginAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42265,6 +42393,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42508,6 +42637,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42526,6 +42656,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42543,6 +42674,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42713,6 +42845,7 @@ export namespace Prisma {
     identifiedRisks?: string | null
     recommendation?: $Enums.HRRecommendation
     recommendationNotes?: string | null
+    salaryExpectation?: Decimal | DecimalJsLike | number | string | null
     createdById?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -43214,6 +43347,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43232,6 +43366,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43249,6 +43384,7 @@ export namespace Prisma {
     identifiedRisks?: NullableStringFieldUpdateOperationsInput | string | null
     recommendation?: EnumHRRecommendationFieldUpdateOperationsInput | $Enums.HRRecommendation
     recommendationNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    salaryExpectation?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdById?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

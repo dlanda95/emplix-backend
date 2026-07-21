@@ -140,7 +140,7 @@ export class CandidatesService {
 
   async getCandidate(employeeId: string, db: PrismaClient) {
     const candidate = await db.employee.findFirst({
-      where:   { id: employeeId, status: 'SELECTED' },
+      where:   { id: employeeId },
       include: {
         position:   true,
         department: { include: { parent: { select: { id: true, name: true } } } },

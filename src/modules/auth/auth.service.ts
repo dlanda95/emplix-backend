@@ -83,16 +83,17 @@ export class AuthService {
 
     return {
       user: {
-        id:              user.id,
-        email:           user.email,
-        role:            effectiveRole,
-        firstName:       user.employee?.firstName ?? user.firstName ?? 'Usuario',
-        lastName:        user.employee?.lastName  ?? user.lastName  ?? 'Sistema',
+        id:                user.id,
+        email:             user.email,
+        role:              effectiveRole,
+        firstName:         user.employee?.firstName ?? user.firstName ?? 'Usuario',
+        lastName:          user.employee?.lastName  ?? user.lastName  ?? 'Sistema',
         tenantSlug,
-        isSystemUser:    !user.employee,
-        systemUserType:  user.systemUserType ?? null,
-        employeeStatus:  user.employee?.status          ?? null,
-        onboardingStatus:user.employee?.onboardingStatus ?? null,
+        isSystemUser:      !user.employee,
+        systemUserType:    user.systemUserType ?? null,
+        employeeStatus:    user.employee?.status          ?? null,
+        onboardingStatus:  user.employee?.onboardingStatus ?? null,
+        mustChangePassword: user.mustChangePassword,
       },
       token: this.generateToken(user.id, user.email, effectiveRole, tenantSlug),
     };
@@ -169,12 +170,13 @@ export class AuthService {
 
     return {
       user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        firstName: user.employee?.firstName ?? 'Usuario',
-        lastName: user.employee?.lastName ?? 'Externo',
+        id:                user.id,
+        email:             user.email,
+        role:              user.role,
+        firstName:         user.employee?.firstName ?? 'Usuario',
+        lastName:          user.employee?.lastName  ?? 'Externo',
         tenantSlug,
+        mustChangePassword: user.mustChangePassword,
       },
       token: this.generateToken(user.id, user.email, user.role, tenantSlug),
     };
@@ -243,6 +245,25 @@ export class AuthService {
       }),
       db.passwordResetToken.deleteMany({ where: { userId: record.userId } }),
     ]);
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string, db: PrismaClient): Promise<void> {
+    const user = await db.user.findUnique({
+      where:  { id: userId },
+      select: { id: true, passwordHash: true, isActive: true },
+    });
+
+    if (!user || !user.isActive)  throw new AppError('Cuenta no encontrada.', 404, 'NOT_FOUND');
+    if (!user.passwordHash)       throw new AppError('Esta cuenta usa inicio de sesión con Microsoft.', 400, 'MICROSOFT_ACCOUNT');
+
+    const isValid = await argon2.verify(user.passwordHash, currentPassword);
+    if (!isValid) throw new AppError('La contraseña actual es incorrecta.', 401, 'WRONG_PASSWORD');
+
+    const newHash = await argon2.hash(newPassword);
+    await db.user.update({
+      where: { id: userId },
+      data:  { passwordHash: newHash, mustChangePassword: false },
+    });
   }
 
   private generateToken(id: string, email: string, role: string, tenantSlug: string): string {

@@ -33,7 +33,8 @@ export const submitApproval = async (req: Request, res: Response, next: NextFunc
 export const convertToEmployee = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { id: processId, candidateId } = req.params;
-    const result = await svc.convertToEmployee(processId, candidateId, req.tenantPrisma!);
+    const { corporateEmail } = req.body as { corporateEmail: string };
+    const result = await svc.convertToEmployee(processId, candidateId, corporateEmail, req.tenantPrisma!);
     ok(res, result);
   } catch (e) { next(e); }
 };

@@ -145,6 +145,7 @@ exports.Prisma.UserScalarFieldEnum = {
   firstName: 'firstName',
   lastName: 'lastName',
   isActive: 'isActive',
+  mustChangePassword: 'mustChangePassword',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -397,6 +398,7 @@ exports.Prisma.HRCandidateAnalysisScalarFieldEnum = {
   identifiedRisks: 'identifiedRisks',
   recommendation: 'recommendation',
   recommendationNotes: 'recommendationNotes',
+  salaryExpectation: 'salaryExpectation',
   createdById: 'createdById',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
